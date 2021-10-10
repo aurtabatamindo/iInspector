@@ -32,8 +32,17 @@
             android:textSize="20dp"
             android:textStyle="bold" />
 
-
     </LinearLayout>
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/tanggal_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.891"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardsatu"
@@ -100,7 +109,52 @@
         app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardsatu" />
+        app:layout_constraintTop_toBottomOf="@+id/cardsatu" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inspeksi Berhasil"
+            android:textColor="@color/text_abu"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp" />
+
+        <TextView
+            android:id="@+id/tvPython"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="35dp"
+            android:textStyle="bold"
+            android:textSize="22dp"
+
+            android:textColor="@color/text_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/text_abu"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hasil kalkulasi 30 hari"
+            android:textColor="@color/text_abu"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="70dp"/>
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bintang_icon"
+            android:layout_marginLeft="220dp"
+            android:layout_marginTop="25dp"/>
+
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardtiga"
@@ -111,7 +165,51 @@
         app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/carddua" />
+        app:layout_constraintTop_toBottomOf="@+id/carddua" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inspeksi Gagal"
+            android:textColor="@color/text_abu"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp" />
+
+        <TextView
+            android:id="@+id/tvCPP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="35dp"
+            android:textStyle="bold"
+            android:textSize="22dp"
+
+            android:textColor="@color/text_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/text_abu"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hasil kalkulasi 30 hari"
+            android:textColor="@color/text_abu"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="70dp"/>
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/batang_icon"
+            android:layout_marginLeft="220dp"
+            android:layout_marginTop="25dp"/>
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewGraph"
@@ -131,7 +229,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="2">
-
 
             <org.eazegraph.lib.charts.PieChart
                 android:id="@+id/piechart"
@@ -161,15 +258,15 @@
                     <View
                         android:layout_width="15dp"
                         android:layout_height="match_parent"
-                        android:background="@color/R" />
+                        android:background="@color/Java" />
 
                     <!--Text view to display R -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="R"
-                        android:textColor="@color/R"
+                        android:text="Total Inspeksi"
+                        android:textColor="@color/text_dark"
                         android:textSize="11dp" />
 
 <!--                    <TextView-->
@@ -205,22 +302,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="Python"
-                        android:textColor="@color/Python"
+                        android:text="Inspeksi Berhasil"
+                        android:textColor="@color/text_dark"
                         android:textSize="11dp" />
 
-                    <TextView
-                        android:id="@+id/tvPython"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:fontFamily="sans-serif-light"
-                        android:paddingEnd="10dp"
-                        android:text="0"
-                        android:textAlignment="textEnd"
-                        android:textColor="@color/Python"
-                        android:textSize="11dp"
-                        android:textStyle="bold" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvPython"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentRight="true"-->
+<!--                        android:fontFamily="sans-serif-light"-->
+<!--                        android:paddingEnd="10dp"-->
+<!--                        android:text="0"-->
+<!--                        android:textAlignment="textEnd"-->
+<!--                        android:textColor="@color/Python"-->
+<!--                        android:textSize="11dp"-->
+<!--                        android:textStyle="bold" />-->
 
 
                 </LinearLayout>
@@ -243,59 +340,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="C++"
-                        android:textColor="@color/CPP"
+                        android:text="Inspeksi Gagal"
+                        android:textColor="@color/text_dark"
                         android:textSize="11dp" />
 
-                    <TextView
-                        android:id="@+id/tvCPP"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:fontFamily="sans-serif-light"
-                        android:paddingEnd="10dp"
-                        android:text="0"
-                        android:textAlignment="textEnd"
-                        android:textColor="@color/CPP"
-                        android:textSize="11dp"
-                        android:textStyle="bold" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/tvCPP"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentRight="true"-->
+<!--                        android:fontFamily="sans-serif-light"-->
+<!--                        android:paddingEnd="10dp"-->
+<!--                        android:text="0"-->
+<!--                        android:textAlignment="textEnd"-->
+<!--                        android:textColor="@color/CPP"-->
+<!--                        android:textSize="11dp"-->
+<!--                        android:textStyle="bold" />-->
                 </LinearLayout>
 
                 <!--Linear layout to display Java-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="5dp">
-
-                    <!--View to display the blue color icon-->
-                    <View
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/Java" />
-
-                    <!--Text view to display Java text -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:text="Java"
-                        android:textColor="@color/Java"
-                        android:textSize="11dp" />
-
-                    <TextView
-                        android:id="@+id/tvJava"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:fontFamily="sans-serif-light"
-                        android:paddingEnd="10dp"
-                        android:text="0"
-                        android:textAlignment="textEnd"
-                        android:textColor="@color/Java"
-                        android:textSize="11dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
 
             </LinearLayout>
 

@@ -22,7 +22,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     // Create the object of TextView and PieChart class
-    TextView tvR, tvPython, tvCPP, tvJava;
+    TextView tvR, tvPython, tvCPP;
     PieChart pieChart;
 
 
@@ -35,20 +35,19 @@ public class HomeFragment extends Fragment {
         tvR = root.findViewById(R.id.tvR);
         tvPython = root.findViewById(R.id.tvPython);
         tvCPP = root.findViewById(R.id.tvCPP);
-        tvJava = root.findViewById(R.id.tvJava);
         pieChart = root.findViewById(R.id.piechart);
 
         tvR.setText(Integer.toString(40));
         tvPython.setText(Integer.toString(30));
-        tvCPP.setText(Integer.toString(5));
-        tvJava.setText(Integer.toString(25));
+        tvCPP.setText(Integer.toString(10));
+
 
         // Set the data and color to the pie chart
         pieChart.addPieSlice(
                 new PieModel(
                         "R",
                         Integer.parseInt(tvR.getText().toString()),
-                        Color.parseColor("#FFA726")));
+                        Color.parseColor("#29B6F6")));
         pieChart.addPieSlice(
                 new PieModel(
                         "Python",
@@ -59,11 +58,7 @@ public class HomeFragment extends Fragment {
                         "C++",
                         Integer.parseInt(tvCPP.getText().toString()),
                         Color.parseColor("#EF5350")));
-        pieChart.addPieSlice(
-                new PieModel(
-                        "Java",
-                        Integer.parseInt(tvJava.getText().toString()),
-                        Color.parseColor("#29B6F6")));
+
 
         // To animate the pie chart
         pieChart.startAnimation();
