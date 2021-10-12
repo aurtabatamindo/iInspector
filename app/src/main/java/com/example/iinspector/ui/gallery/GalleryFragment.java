@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -73,6 +74,27 @@ public class GalleryFragment extends Fragment {
         recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
         recyclerView.setAdapter(recyclerViewAdapter);
 
+
+        //click
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                Intent intent = new Intent(getActivity(),InspeksiAwal.class);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 //        //cardviewFirebase
 //        recyclerView = root.findViewById(R.id.recycler_View);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
