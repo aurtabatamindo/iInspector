@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,8 +24,9 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     // Create the object of TextView and PieChart class
-    TextView tvR, tvPython, tvCPP;
+    TextView tvR, tvPython, tvCPP , tgl;
     PieChart pieChart;
+    Button bTgl;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -36,6 +39,8 @@ public class HomeFragment extends Fragment {
         tvPython = root.findViewById(R.id.tvPython);
         tvCPP = root.findViewById(R.id.tvCPP);
         pieChart = root.findViewById(R.id.piechart);
+        bTgl= root.findViewById(R.id.bTgl);
+        tgl = root.findViewById(R.id.tanggal);
 
         tvR.setText(Integer.toString(40));
         tvPython.setText(Integer.toString(30));
@@ -63,6 +68,28 @@ public class HomeFragment extends Fragment {
         // To animate the pie chart
         pieChart.startAnimation();
 
+        bTgl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TampilTanggal();
+            }
+        });
+
         return root;
+    }
+
+    public void TampilTanggal(){
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.show(getFragmentManager(), "data");
+        datePickerFragment.setOnDateClickListener(new DatePickerFragment.onDateClickListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                String tahun = ""+datePicker.getYear();
+                String bulan = ""+(datePicker.getMonth()+1);
+                String hari = ""+datePicker.getDayOfMonth();
+                String text = ""+hari+"/"+bulan+"/"+tahun;
+                tgl.setText(text);
+            }
+        });
     }
 }
