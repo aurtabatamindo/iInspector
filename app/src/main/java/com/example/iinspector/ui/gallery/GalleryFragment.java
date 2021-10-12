@@ -1,6 +1,7 @@
 package com.example.iinspector.ui.gallery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
 import com.example.iinspector.ui.main.SectionsPagerAdapter;
 
