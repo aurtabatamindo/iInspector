@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:text="Nama Inspector" />
+                android:text="Nama Team" />
 
             <Button
                 android:layout_width="40dp"
@@ -317,12 +317,15 @@
         android:id="@+id/btnnext"
         android:layout_width="340dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="30dp"
-        android:text="Lanjut"
-        android:elevation="10dp"
-        android:textColor="@color/Primary"
         android:background="@drawable/btnlanjut"
+        android:elevation="10dp"
+        android:text="Lanjut"
+        android:textColor="@color/Primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView3"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

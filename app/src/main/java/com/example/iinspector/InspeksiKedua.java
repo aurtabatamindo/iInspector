@@ -7,15 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.iinspector.ui.gallery.GalleryFragment;
-
-public class InspeksiAwal extends AppCompatActivity {
-
+public class InspeksiKedua extends AppCompatActivity {
     Button kemali,lanjutkan;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inspeksi_awal);
+        setContentView(R.layout.activity_inspeksi_kedua);
 
         kemali = findViewById(R.id.btnback);
         lanjutkan = findViewById(R.id.btnnext);
@@ -23,25 +20,12 @@ public class InspeksiAwal extends AppCompatActivity {
         kemali.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent kembali = new Intent(InspeksiAwal.this, Side.class);
+                Intent kembali = new Intent(InspeksiKedua.this, InspeksiAwal.class);
                 startActivity(kembali);
                 onBackPressed();
                 finish();
             }
         });
 
-        lanjutkan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
-                startActivity(lanjut);
-                onBackPressed();
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }
