@@ -16,10 +16,11 @@
         app:layout_constraintTop_toTopOf="parent" >
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnback"
             android:layout_width="30dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:background="@drawable/back_icon"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="10dp" />
@@ -54,7 +55,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="380dp"
+        android:layout_width="340dp"
         android:layout_height="130dp"
         android:layout_marginTop="10dp"
         app:cardBackgroundColor="@color/cardAbu"
@@ -74,7 +75,7 @@
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="350dp"
+            android:layout_width="310dp"
             android:layout_height="40dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="40dp"
@@ -107,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="230dp"
+            android:layout_marginLeft="190dp"
             android:layout_marginBottom="15dp"
             android:text="Foto" />
 
@@ -115,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="200dp"
+            android:layout_marginLeft="160dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/photo_icon" />
 
@@ -123,7 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="270dp"
+            android:layout_marginLeft="230dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/tindakan_icon" />
 
@@ -131,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="300dp"
+            android:layout_marginLeft="260dp"
             android:layout_marginBottom="15dp"
             android:text="Tindakan" />
 
@@ -139,7 +140,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
-        android:layout_width="380dp"
+        android:layout_width="340dp"
         android:layout_height="130dp"
         android:layout_marginTop="20dp"
         app:cardBackgroundColor="@color/cardAbu"
@@ -160,7 +161,7 @@
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="350dp"
+            android:layout_width="310dp"
             android:layout_height="40dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="40dp"
@@ -193,7 +194,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="230dp"
+            android:layout_marginLeft="190dp"
             android:layout_marginBottom="15dp"
             android:text="Foto" />
 
@@ -201,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="200dp"
+            android:layout_marginLeft="160dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/photo_icon" />
 
@@ -209,7 +210,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="270dp"
+            android:layout_marginLeft="230dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/tindakan_icon" />
 
@@ -217,7 +218,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="300dp"
+            android:layout_marginLeft="260dp"
             android:layout_marginBottom="15dp"
             android:text="Tindakan" />
 
@@ -225,7 +226,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
-        android:layout_width="380dp"
+        android:layout_width="340dp"
         android:layout_height="200dp"
         android:layout_marginTop="20dp"
         app:cardBackgroundColor="@color/cardAbu"
@@ -246,7 +247,7 @@
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="300dp"
+            android:layout_width="260dp"
             android:layout_height="110dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="40dp"
@@ -282,7 +283,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="230dp"
+            android:layout_marginLeft="190dp"
             android:layout_marginBottom="15dp"
             android:text="Foto" />
 
@@ -290,7 +291,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="200dp"
+            android:layout_marginLeft="160dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/photo_icon" />
 
@@ -298,7 +299,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="270dp"
+            android:layout_marginLeft="230dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/tindakan_icon" />
 
@@ -306,14 +307,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="300dp"
+            android:layout_marginLeft="260dp"
             android:layout_marginBottom="15dp"
             android:text="Tindakan" />
 
     </androidx.cardview.widget.CardView>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="380dp"
+        android:id="@+id/btnnext"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="30dp"

@@ -26,6 +26,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
 
         TextView textView;
 
+
         ViewHolder(View v) {
 
             super(v);
@@ -47,6 +48,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.textView.setText(SubjectValues[position]);
+
     }
 
     @Override
