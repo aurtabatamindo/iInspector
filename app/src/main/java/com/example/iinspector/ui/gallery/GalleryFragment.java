@@ -42,8 +42,8 @@ public class GalleryFragment extends Fragment {
     RecyclerView.Adapter recyclerViewAdapter;
     RecyclerView.LayoutManager recylerViewLayoutManager;
     String[] subjects = {
-            "Floor Inspection", "Centralised inspection", "Combined inspection", "Functional inspection",
-            "First piece inspection", "Pilot Piece Inspection"
+            "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
+            "Inspeksi", "Inspeksi"
     };
 
     public View onCreateView(@NonNull LayoutInflater inflater,
