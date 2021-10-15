@@ -60,4 +60,8 @@ dependencies {
     implementation 'com.github.blackfizz:eazegraph:1.2.5l@aar'
     implementation 'com.nineoldandroids:library:2.4.0'
 
+
+    implementation('com.kyanogen.signatureview:signature-view:1.0') {
+        exclude group: 'com.android.support'
+    }
 }
