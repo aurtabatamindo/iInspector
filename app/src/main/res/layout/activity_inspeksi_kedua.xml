@@ -190,7 +190,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:id="@+id/tambahcatatan"
+                    android:id="@+id/tambah1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -354,6 +354,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
+                    android:id="@+id/tambah2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -455,6 +456,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
+                    android:id="@+id/tambah3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -557,6 +559,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
+                    android:id="@+id/tambah4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -630,11 +633,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="Silahkan isi Disini"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        android:gravity="top"/>
 
                 </androidx.cardview.widget.CardView>
 
                 <TextView
+                    android:id="@+id/tambah5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"

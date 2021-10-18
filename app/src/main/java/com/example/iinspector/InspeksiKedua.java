@@ -25,7 +25,7 @@ import com.kyanogen.signatureview.SignatureView;
 public class InspeksiKedua extends AppCompatActivity {
     Button kemali, selesai;
     CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
-    TextView ya, no, ya2, no2, tpass, tfail, tambahcatatan;
+    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,12 @@ public class InspeksiKedua extends AppCompatActivity {
         fail = findViewById(R.id.fail);
         tpass = findViewById(R.id.tpass);
         tfail = findViewById(R.id.tfail);
-        tambahcatatan = findViewById(R.id.tambahcatatan);
+        tambah1 = findViewById(R.id.tambah1);
+        tambah2 = findViewById(R.id.tambah2);
+        tambah3 = findViewById(R.id.tambah3);
+        tambah4 = findViewById(R.id.tambah4);
+        tambah5 = findViewById(R.id.tambah5);
+
 
         kemali.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,10 +196,34 @@ public class InspeksiKedua extends AppCompatActivity {
             }
         });
 
-        tambahcatatan.setOnClickListener(new View.OnClickListener() {
+        tambah1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog();
+                tambahcatatan();
+            }
+        });
+        tambah2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tambahcatatan();
+            }
+        });
+        tambah3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tambahcatatan();
+            }
+        });
+        tambah4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tambahcatatan();
+            }
+        });
+        tambah5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tambahcatatan();
             }
         });
 
@@ -206,7 +235,7 @@ public class InspeksiKedua extends AppCompatActivity {
         });
     }
 
-    void alertDialog() {
+    void tambahcatatan() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKedua.this);
         alertDialog.setTitle("Tambah Catatan");
 
