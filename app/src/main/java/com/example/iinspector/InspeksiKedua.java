@@ -1,13 +1,18 @@
 package com.example.iinspector;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +20,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -25,7 +31,12 @@ import com.kyanogen.signatureview.SignatureView;
 public class InspeksiKedua extends AppCompatActivity {
     Button kemali, selesai;
     CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
-    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5;
+    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5;
+
+    //camera
+    private static final int CAMERA_REQUEST = 1888;
+    private ImageView imageView;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,11 @@ public class InspeksiKedua extends AppCompatActivity {
         tambah3 = findViewById(R.id.tambah3);
         tambah4 = findViewById(R.id.tambah4);
         tambah5 = findViewById(R.id.tambah5);
+        foto1 = findViewById(R.id.foto1);
+        foto2 = findViewById(R.id.foto2);
+        foto3 = findViewById(R.id.foto3);
+        foto4 = findViewById(R.id.foto4);
+        foto5 = findViewById(R.id.foto5);
 
 
         kemali.setOnClickListener(new View.OnClickListener() {
@@ -233,6 +249,38 @@ public class InspeksiKedua extends AppCompatActivity {
                 ttd();
             }
         });
+
+        foto1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ambilfoto();
+            }
+        });
+
+        foto2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ambilfoto();
+            }
+        });
+        foto3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ambilfoto();
+            }
+        });
+        foto4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ambilfoto();
+            }
+        });
+        foto5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ambilfoto();
+            }
+        });
     }
 
     void tambahcatatan() {
@@ -267,7 +315,7 @@ public class InspeksiKedua extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKedua.this);
         alertDialog.setTitle("Tanda Tangan");
 
-        final SignatureView input = new SignatureView(InspeksiKedua.this,null);
+        final SignatureView input = new SignatureView(InspeksiKedua.this, null);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -277,7 +325,7 @@ public class InspeksiKedua extends AppCompatActivity {
         alertDialog.setPositiveButton("Selesai",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent selesai = new Intent(InspeksiKedua.this,InspeksiSelesai.class);
+                        Intent selesai = new Intent(InspeksiKedua.this, InspeksiSelesai.class);
                         startActivity(selesai);
                         onBackPressed();
                         finish();
@@ -292,5 +340,64 @@ public class InspeksiKedua extends AppCompatActivity {
                 });
 
         alertDialog.show();
+    }
+
+    void ambilfoto() {
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+        } else {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            // Show pop up window
+            LayoutInflater layoutInflater = LayoutInflater.from(InspeksiKedua.this);
+            View promptView = layoutInflater.inflate(R.layout.hasilfoto, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspeksiKedua.this);
+            alertDialogBuilder.setTitle("Tambah Foto");
+            alertDialogBuilder.setView(promptView);
+            imageView = (ImageView) promptView.findViewById(R.id.gambar1);
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photo);
+
+
+            alertDialogBuilder.setPositiveButton("Tambah",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+            alertDialogBuilder.setNegativeButton("Batal",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            alertDialogBuilder.show();
+        }
     }
 }

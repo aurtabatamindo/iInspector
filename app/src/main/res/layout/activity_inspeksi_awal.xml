@@ -106,6 +106,7 @@
             android:text="Tambah Catatan" />
 
         <TextView
+            android:id="@+id/afoto1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -193,6 +194,7 @@
             android:text="Tambah Catatan" />
 
         <TextView
+            android:id="@+id/afoto2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -283,6 +285,7 @@
             android:text="Tambah Catatan" />
 
         <TextView
+            android:id="@+id/afoto3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
