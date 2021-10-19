@@ -19,18 +19,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.iinspector.ui.gallery.GalleryFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class InspeksiAwal extends AppCompatActivity {
 
     Button kemali,lanjutkan;
-    TextView tambah1,tambah2,tambah3, foto1, foto2, foto3;
+    TextView tambah1,tambah2,tambah3, foto1, foto2, foto3,atindakan1,atindakan2,atindakan3;
 
     //camera
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
+    //tindakan
+    FloatingActionButton fab;
+    Toolbar toolbar;
+    AlertDialog.Builder dialog;
+    LayoutInflater inflater;
+    View dialogView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,9 @@ public class InspeksiAwal extends AppCompatActivity {
         foto1 = findViewById(R.id.afoto1);
         foto2 = findViewById(R.id.afoto2);
         foto3 = findViewById(R.id.afoto3);
+        atindakan1 = findViewById(R.id.atindakan1);
+        atindakan2 = findViewById(R.id.atindakan2);
+        atindakan3 = findViewById(R.id.atindakan3);
 
         kemali.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +113,25 @@ public class InspeksiAwal extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ambilfoto();
+            }
+        });
+
+        atindakan1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
+            }
+        });
+        atindakan2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
+            }
+        });
+        atindakan3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
             }
         });
     }
@@ -194,5 +225,30 @@ public class InspeksiAwal extends AppCompatActivity {
 
             alertDialogBuilder.show();
         }
+    }
+
+    private void tindakan() {
+        dialog = new AlertDialog.Builder(InspeksiAwal.this);
+        inflater = getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.tindakan, null);
+        dialog.setView(dialogView);
+        dialog.setCancelable(true);
+        dialog.setTitle("Tambah Tindakan");
+
+        dialog.setPositiveButton("Tambah",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        dialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        dialog.show();
     }
 }

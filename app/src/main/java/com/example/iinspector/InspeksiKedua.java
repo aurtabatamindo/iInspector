@@ -25,19 +25,27 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kyanogen.signatureview.SignatureView;
 
 public class InspeksiKedua extends AppCompatActivity {
     Button kemali, selesai;
     CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
-    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5;
+    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5,tindakan1,tindakan2,tindakan3,tindakan4,tindakan5;
 
     //camera
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
 
+    //tindakan
+    FloatingActionButton fab;
+    Toolbar toolbar;
+    AlertDialog.Builder dialog;
+    LayoutInflater inflater;
+    View dialogView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +84,11 @@ public class InspeksiKedua extends AppCompatActivity {
         foto3 = findViewById(R.id.foto3);
         foto4 = findViewById(R.id.foto4);
         foto5 = findViewById(R.id.foto5);
-
+        tindakan1 = findViewById(R.id.tindakan1);
+        tindakan2 = findViewById(R.id.tindakan2);
+        tindakan3 = findViewById(R.id.tindakan3);
+        tindakan4 = findViewById(R.id.tindakan4);
+        tindakan5 = findViewById(R.id.tindakan5);
 
         kemali.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,8 +293,63 @@ public class InspeksiKedua extends AppCompatActivity {
                 ambilfoto();
             }
         });
+
+        tindakan1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
+            }
+        });
+        tindakan2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
+            }
+        });
+        tindakan3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
+            }
+        });
+        tindakan4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
+            }
+        });
+        tindakan5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tindakan();
+            }
+        });
     }
 
+    private void tindakan() {
+        dialog = new AlertDialog.Builder(InspeksiKedua.this);
+        inflater = getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.tindakan, null);
+        dialog.setView(dialogView);
+        dialog.setCancelable(true);
+        dialog.setTitle("Tambah Tindakan");
+
+        dialog.setPositiveButton("Tambah",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        dialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        dialog.show();
+    }
     void tambahcatatan() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKedua.this);
         alertDialog.setTitle("Tambah Catatan");

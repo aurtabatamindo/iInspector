@@ -224,6 +224,7 @@
                     android:background="@drawable/tindakan_icon" />
 
                 <TextView
+                    android:id="@+id/tindakan1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -389,6 +390,7 @@
                     android:background="@drawable/tindakan_icon" />
 
                 <TextView
+                    android:id="@+id/tindakan2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -492,6 +494,7 @@
                     android:background="@drawable/tindakan_icon" />
 
                 <TextView
+                    android:id="@+id/tindakan3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -596,6 +599,7 @@
                     android:background="@drawable/tindakan_icon" />
 
                 <TextView
+                    android:id="@+id/tindakan4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -677,6 +681,7 @@
                     android:background="@drawable/tindakan_icon" />
 
                 <TextView
+                    android:id="@+id/tindakan5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
