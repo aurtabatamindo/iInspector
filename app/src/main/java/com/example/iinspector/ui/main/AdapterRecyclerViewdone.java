@@ -1,4 +1,4 @@
-package com.example.iinspector.ui.gallery;
+package com.example.iinspector.ui.main;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iinspector.R;
 
-public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerView.ViewHolder> {
+public class AdapterRecyclerViewdone extends RecyclerView.Adapter<AdapterRecyclerViewdone.ViewHolder> {
 
     private String[] SubjectValues;
     private Context context;
 
-    AdapterRecyclerView(Context context1, String[] SubjectValues1) {
+    AdapterRecyclerViewdone(Context context1, String[] SubjectValues1) {
 
         SubjectValues = SubjectValues1;
         context = context1;
@@ -37,7 +37,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
 
     @NonNull
     @Override
-    public AdapterRecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdapterRecyclerViewdone.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.item_laporan, parent, false);
 

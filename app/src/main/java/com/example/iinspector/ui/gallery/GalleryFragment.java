@@ -38,13 +38,13 @@ public class GalleryFragment extends Fragment {
 
     private View itemView;
 
-    //hardCardview
-    RecyclerView.Adapter recyclerViewAdapter;
-    RecyclerView.LayoutManager recylerViewLayoutManager;
-    String[] subjects = {
-            "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
-            "Inspeksi", "Inspeksi"
-    };
+//    //hardCardview
+//    RecyclerView.Adapter recyclerViewAdapter;
+//    RecyclerView.LayoutManager recylerViewLayoutManager;
+//    String[] subjects = {
+//            "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
+//            "Inspeksi", "Inspeksi"
+//    };
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,35 +66,35 @@ public class GalleryFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        //hardCardview
-        context = getContext();
-        recyclerView = root.findViewById(R.id.recycler_View);
-        recylerViewLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(recylerViewLayoutManager);
-        recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
-        recyclerView.setAdapter(recyclerViewAdapter);
+//        //hardCardview
+//        context = getContext();
+//        recyclerView = root.findViewById(R.id.recycler_View);
+//        recylerViewLayoutManager = new LinearLayoutManager(context);
+//        recyclerView.setLayoutManager(recylerViewLayoutManager);
+//        recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
+//        recyclerView.setAdapter(recyclerViewAdapter);
 
 
-        //click
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                Intent intent = new Intent(getActivity(),InspeksiAwal.class);
-                startActivity(intent);
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
+//        //click
+//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//            @Override
+//            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+//                Intent intent = new Intent(getActivity(),InspeksiAwal.class);
+//                startActivity(intent);
+//                return false;
+//            }
+//
+//            @Override
+//            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+//
+//
+//            }
+//
+//            @Override
+//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+//
+//            }
+//        });
 //        //cardviewFirebase
 //        recyclerView = root.findViewById(R.id.recycler_View);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

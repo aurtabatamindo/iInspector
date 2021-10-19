@@ -89,7 +89,6 @@
 
     <TextView
         android:id="@+id/iconstatus"
-        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="200dp"
@@ -98,7 +97,6 @@
 
     <TextView
         android:id="@+id/status"
-        android:visibility="invisible"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="235dp"
