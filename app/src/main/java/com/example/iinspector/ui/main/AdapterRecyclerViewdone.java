@@ -39,7 +39,7 @@ public class AdapterRecyclerViewdone extends RecyclerView.Adapter<AdapterRecycle
     @Override
     public AdapterRecyclerViewdone.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.item_laporan, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_laporandone, parent, false);
 
         return new ViewHolder(view);
     }
