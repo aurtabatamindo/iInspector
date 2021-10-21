@@ -14,7 +14,7 @@
             android:title="@string/menu_inspeksi" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/tentang_icon"
-            android:title="@string/menu_tentang" />
+            android:icon="@drawable/tugas_icon"
+            android:title="@string/menu_tugas" />
     </group>
 </menu>

@@ -10,7 +10,7 @@
 
     <string name="menu_dahsboard">Dashboard</string>
     <string name="menu_inspeksi">Inspeksi</string>
-    <string name="menu_tentang">Tentang</string>
+    <string name="menu_tugas">Tugas</string>
     <string name="title_activity_tab_inspeksi">tabInspeksi</string>
     <string name="tab_text_1">TODO</string>
     <string name="tab_text_2">DONE</string>
