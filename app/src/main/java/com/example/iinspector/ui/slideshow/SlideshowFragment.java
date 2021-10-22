@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,7 @@ public class SlideshowFragment extends Fragment {
     };
     Context context;
     RecyclerView recyclerView;
-
+    Button btnlanjut;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         slideshowViewModel =
@@ -48,26 +49,34 @@ public class SlideshowFragment extends Fragment {
         recyclerViewAdapter = new AdapterRecyclerViewTugas(context, subjects);
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        //click
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                Intent intent = new Intent(getActivity(), InspeksiAwal.class);
-                startActivity(intent);
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
+//        btnlanjut = root.findViewById(R.id.btnlanjut);
+//        btnlanjut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), InspeksiAwal.class);
+//                startActivity(intent);
+//            }
+//        });
+//        //click
+//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//            @Override
+//            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+//                Intent intent = new Intent(getActivity(), InspeksiAwal.class);
+//                startActivity(intent);
+//                return false;
+//            }
+//
+//            @Override
+//            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+//
+//
+//            }
+//
+//            @Override
+//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+//
+//            }
+//        });
 
         return root;
     }

@@ -1,15 +1,19 @@
 package com.example.iinspector.ui.slideshow;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
+import com.example.iinspector.ui.main.AdapterRecyclerView;
 
 public class AdapterRecyclerViewTugas extends RecyclerView.Adapter<AdapterRecyclerViewTugas.ViewHolder> {
 
@@ -23,7 +27,7 @@ public class AdapterRecyclerViewTugas extends RecyclerView.Adapter<AdapterRecycl
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
+        Button btnlanjut;
         TextView textView;
 
 
@@ -32,6 +36,8 @@ public class AdapterRecyclerViewTugas extends RecyclerView.Adapter<AdapterRecycl
             super(v);
 
             textView = v.findViewById(R.id.judul);
+            btnlanjut = v.findViewById(R.id.btnlanjut);
+
         }
     }
 
@@ -48,7 +54,13 @@ public class AdapterRecyclerViewTugas extends RecyclerView.Adapter<AdapterRecycl
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.textView.setText(SubjectValues[position]);
-
+        holder.btnlanjut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, InspeksiAwal.class);
+                context.startActivities(new Intent[]{intent});
+            }
+        });
     }
 
     @Override

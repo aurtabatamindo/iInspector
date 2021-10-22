@@ -73,7 +73,6 @@ public class InspeksiAwal extends AppCompatActivity {
             public void onClick(View v) {
                 Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
                 startActivity(lanjut);
-                onBackPressed();
             }
         });
 

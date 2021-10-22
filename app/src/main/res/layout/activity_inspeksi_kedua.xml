@@ -48,7 +48,7 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hal 2/3"
+        android:text="Hal 2/2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -56,19 +56,19 @@
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.183">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:animateLayoutChanges="true">
 
             <androidx.cardview.widget.CardView
@@ -640,9 +640,9 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="top"
                         android:hint="Silahkan isi Disini"
-                        android:textSize="15dp"
-                        android:gravity="top"/>
+                        android:textSize="15dp" />
 
                 </androidx.cardview.widget.CardView>
 

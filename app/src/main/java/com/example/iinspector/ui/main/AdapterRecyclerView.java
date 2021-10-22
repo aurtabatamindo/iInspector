@@ -1,6 +1,7 @@
 package com.example.iinspector.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
 
 public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerView.ViewHolder> {
@@ -48,7 +50,14 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.textView.setText(SubjectValues[position]);
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, InspeksiAwal.class);
+                context.startActivities(new Intent[]{intent});
 
+            }
+        });
     }
 
     @Override
