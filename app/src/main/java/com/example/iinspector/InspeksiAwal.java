@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.ajts.androidmads.fontutils.FontUtils;
 import com.example.iinspector.ui.gallery.GalleryFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class InspeksiAwal extends AppCompatActivity {
 
@@ -41,6 +49,14 @@ public class InspeksiAwal extends AppCompatActivity {
     LayoutInflater inflater;
     View dialogView;
 
+    //Cuaca
+    public static String BaseUrl = "https://api.openweathermap.org/";
+    public static String AppId = "df844c5fe47723cce56c4601631f9b64";
+    public static String lat = "1.0684909356188659";
+    public static String lon = "104.02529037437219";
+    public static String metric = "metric";
+    private TextView weatherData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +74,15 @@ public class InspeksiAwal extends AppCompatActivity {
         atindakan2 = findViewById(R.id.atindakan2);
         atindakan3 = findViewById(R.id.atindakan3);
 
+
+        //cuaca
+        weatherData = findViewById(R.id.cuaca);
+
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "Lato-Bold.ttf");
+        FontUtils fontUtils = new FontUtils();
+        fontUtils.applyFontToView(weatherData, typeface);
+        getCurrentData();
+
         kemali.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +92,7 @@ public class InspeksiAwal extends AppCompatActivity {
                 finish();
             }
         });
+
 
         lanjutkan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,5 +275,49 @@ public class InspeksiAwal extends AppCompatActivity {
                 });
 
         dialog.show();
+    }
+
+    void getCurrentData() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        WeatherService service = retrofit.create(WeatherService.class);
+        Call<WeatherResponse> call = service.getCurrentWeatherData(lat, lon, metric, AppId);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
+                if (response.code() == 200) {
+                    WeatherResponse weatherResponse = response.body();
+                    assert weatherResponse != null;
+
+                    String stringBuilder =
+//                            "Country: " +
+//                            weatherResponse.sys.country +
+//                            "\n" +
+                            weatherResponse.main.temp + " °C" ;
+//                                    +
+//                            "\n" +
+//                            "Temperature(Min): " +
+//                            weatherResponse.main.temp_min +
+//                            "\n" +
+//                            "Temperature(Max): " +
+//                            weatherResponse.main.temp_max +
+//                            "\n" +
+//                            "Humidity: " +
+//                            weatherResponse.main.humidity +
+//                            "\n" +
+//                            "Pressure: " +
+//                            weatherResponse.main.pressure;
+
+                    weatherData.setText(stringBuilder);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable t) {
+                weatherData.setText(t.getMessage());
+            }
+        });
     }
 }
