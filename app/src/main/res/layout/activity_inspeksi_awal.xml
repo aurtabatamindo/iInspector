@@ -67,7 +67,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="340dp"
-        android:layout_height="130dp"
+        android:layout_height="110dp"
         android:layout_marginTop="10dp"
         app:cardBackgroundColor="@color/cardAbu"
         app:cardCornerRadius="10dp"
@@ -106,55 +106,13 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/tambah1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="15dp"
-            android:text="Tambah Catatan" />
-
-        <TextView
-            android:id="@+id/afoto1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="190dp"
-            android:layout_marginBottom="15dp"
-            android:text="Foto" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="160dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/photo_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="230dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/tindakan_icon" />
-
-        <TextView
-            android:id="@+id/atindakan1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="260dp"
-            android:layout_marginBottom="15dp"
-            android:text="Tindakan" />
 
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="340dp"
-        android:layout_height="130dp"
+        android:layout_height="110dp"
         android:layout_marginTop="10dp"
         app:cardBackgroundColor="@color/cardAbu"
         app:cardCornerRadius="10dp"
@@ -195,55 +153,14 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/tambah2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="15dp"
-            android:text="Tambah Catatan" />
 
-        <TextView
-            android:id="@+id/afoto2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="190dp"
-            android:layout_marginBottom="15dp"
-            android:text="Foto" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="160dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/photo_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="230dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/tindakan_icon" />
-
-        <TextView
-            android:id="@+id/atindakan2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="260dp"
-            android:layout_marginBottom="15dp"
-            android:text="Tindakan" />
 
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="340dp"
-        android:layout_height="150dp"
+        android:layout_height="160dp"
         android:layout_marginTop="10dp"
         app:cardBackgroundColor="@color/cardAbu"
         app:cardCornerRadius="10dp"

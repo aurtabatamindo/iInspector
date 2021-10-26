@@ -139,7 +139,7 @@ public class InspeksiKedua extends AppCompatActivity {
             public void onClick(View v) {
                 int abucard = getResources().getColor(R.color.abucard);
                 if (rya.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rya.setCardBackgroundColor(Color.RED);
+                    rya.setCardBackgroundColor(Color.GREEN);
                     ya.setTextColor(Color.WHITE);
                 } else {
                     rya.setCardBackgroundColor(Color.WHITE);
@@ -154,7 +154,7 @@ public class InspeksiKedua extends AppCompatActivity {
             public void onClick(View v) {
                 int abucard = getResources().getColor(R.color.abucard);
                 if (rno.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rno.setCardBackgroundColor(Color.GREEN);
+                    rno.setCardBackgroundColor(Color.RED);
                     no.setTextColor(Color.WHITE);
                 } else {
                     rno.setCardBackgroundColor(Color.WHITE);
@@ -169,7 +169,7 @@ public class InspeksiKedua extends AppCompatActivity {
             public void onClick(View v) {
                 int abucard = getResources().getColor(R.color.abucard);
                 if (rya2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rya2.setCardBackgroundColor(Color.RED);
+                    rya2.setCardBackgroundColor(Color.GREEN);
                     ya2.setTextColor(Color.WHITE);
                 } else {
                     rya2.setCardBackgroundColor(Color.WHITE);
@@ -184,7 +184,7 @@ public class InspeksiKedua extends AppCompatActivity {
             public void onClick(View v) {
                 int abucard = getResources().getColor(R.color.abucard);
                 if (rno2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rno2.setCardBackgroundColor(Color.GREEN);
+                    rno2.setCardBackgroundColor(Color.RED);
                     no2.setTextColor(Color.WHITE);
                 } else {
                     rno2.setCardBackgroundColor(Color.WHITE);

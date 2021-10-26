@@ -67,11 +67,11 @@ public class InspeksiAwal extends AppCompatActivity {
         tambah1 = findViewById(R.id.tambah1);
         tambah2 = findViewById(R.id.tambah2);
         tambah3 = findViewById(R.id.tambah3);
-        foto1 = findViewById(R.id.afoto1);
-        foto2 = findViewById(R.id.afoto2);
+//        foto1 = findViewById(R.id.afoto1);
+//        foto2 = findViewById(R.id.afoto2);
         foto3 = findViewById(R.id.afoto3);
-        atindakan1 = findViewById(R.id.atindakan1);
-        atindakan2 = findViewById(R.id.atindakan2);
+//        atindakan1 = findViewById(R.id.atindakan1);
+//        atindakan2 = findViewById(R.id.atindakan2);
         atindakan3 = findViewById(R.id.atindakan3);
 
 
@@ -102,18 +102,18 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
 
-        tambah1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
-        tambah2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
+//        tambah1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
+//        tambah2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
         tambah3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,19 +121,19 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
 
-        foto1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
-
-        foto2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
+//        foto1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
+//
+//        foto2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
         foto3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,18 +141,18 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
 
-        atindakan1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
-        atindakan2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
+//        atindakan1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
+//        atindakan2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
         atindakan3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
