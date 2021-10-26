@@ -263,7 +263,22 @@ public class InspeksiAwal extends AppCompatActivity {
         dialog.setPositiveButton("Tambah",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        String email = "aurtafalen@gmail.com";
+                        String subject = "ADA YANG HIGH NICH";
+                        String message = "yak di bantu yak jadi apa ";
 
+                        String mEmail = email.toString();
+                        String mSubject = subject.toString();
+                        String mMessage = message.toString();
+//                        String mEmail = email.getText().toString();
+//                        String mSubject = subject.getText().toString();
+//                        String mMessage = message.getText().toString();
+
+
+                        JavaMailAPI javaMailAPI = new JavaMailAPI(InspeksiAwal.this, mEmail, mSubject, mMessage);
+                        javaMailAPI.execute();
+
+                        Toast.makeText(InspeksiAwal.this, "berhasil", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -320,4 +335,6 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
     }
+
+
 }
