@@ -1,13 +1,19 @@
 package com.example.iinspector;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,7 +25,7 @@ import androidx.appcompat.widget.Toolbar;
 public class Side extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
+    DatabaseReference token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +52,29 @@ public class Side extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.side, menu);
         return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+
+                token = FirebaseDatabase.getInstance().getReference("Tokens")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                token.getRef().removeValue();
+                FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(Side.this, Login.class);
+                startActivity(i);
+                onBackPressed();
+                finish();
+
+                return false;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     @Override

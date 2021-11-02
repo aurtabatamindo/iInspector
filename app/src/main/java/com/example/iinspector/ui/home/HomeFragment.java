@@ -1,5 +1,6 @@
 package com.example.iinspector.ui.home;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.iinspector.InspeksiHasil;
 import com.example.iinspector.R;
 
 import org.eazegraph.lib.charts.PieChart;
@@ -27,7 +30,7 @@ public class HomeFragment extends Fragment {
     TextView tvR, tvPython, tvCPP , tgl;
     PieChart pieChart;
     Button bTgl;
-
+    CardView cardsatu,carddua,cardtiga;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +44,9 @@ public class HomeFragment extends Fragment {
         pieChart = root.findViewById(R.id.piechart);
         bTgl= root.findViewById(R.id.bTgl);
         tgl = root.findViewById(R.id.tanggal);
+        cardsatu = root.findViewById(R.id.cardsatu);
+        carddua = root.findViewById(R.id.carddua);
+        cardtiga = root.findViewById(R.id.cardtiga);
 
         tvR.setText(Integer.toString(40));
         tvPython.setText(Integer.toString(30));
@@ -75,6 +81,28 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        cardsatu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent detailsatu = new Intent(getActivity(), InspeksiHasil.class);
+                startActivity(detailsatu);
+            }
+        });
+
+        carddua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent detaildua = new Intent(getActivity(), InspeksiHasil.class);
+                startActivity(detaildua);
+            }
+        });
+        cardtiga.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent detailtiga = new Intent(getActivity(), InspeksiHasil.class);
+                startActivity(detailtiga);
+            }
+        });
         return root;
     }
 

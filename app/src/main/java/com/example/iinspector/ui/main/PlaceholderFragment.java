@@ -79,27 +79,6 @@ public class PlaceholderFragment extends Fragment {
                 recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
                 recyclerView.setAdapter(recyclerViewAdapter);
 
-//        //click
-//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-//            @Override
-//            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//                Intent intent = new Intent(getActivity(), InspeksiAwal.class);
-//                startActivity(intent);
-//                return false;
-//            }
-//
-//            @Override
-//            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//
-//
-//            }
-//
-//            @Override
-//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-//
-//            }
-//        });
-
                 break;
             }
             case 2: {
@@ -114,48 +93,6 @@ public class PlaceholderFragment extends Fragment {
             }
 
         }
-//        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView = root.findViewById(R.id.section_label);
-//                textView.setText(s);
-//            }
-//        });
-
-//        //hardCardview
-//        context = getContext();
-//        recyclerView = root.findViewById(R.id.recycler_View);
-//        recylerViewLayoutManager = new LinearLayoutManager(context);
-//        recyclerView.setLayoutManager(recylerViewLayoutManager);
-//        recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
-//        recyclerView.setAdapter(recyclerViewAdapter);
-//        //click
-//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-//            @Override
-//            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//                Intent intent = new Intent(getActivity(), InspeksiAwal.class);
-//                startActivity(intent);
-//                return false;
-//            }
-//
-//            @Override
-//            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//
-//
-//            }
-//
-//            @Override
-//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-//
-//            }
-//        });
-//
-//        pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//
-//            }
-//        });
         return rootView;
     }
 

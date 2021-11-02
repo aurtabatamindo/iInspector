@@ -65,4 +65,5 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
 
         return SubjectValues.length;
     }
+
 }

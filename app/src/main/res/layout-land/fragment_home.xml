@@ -10,7 +10,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -59,199 +59,207 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardsatu"
-        android:layout_width="300dp"
+        android:layout_width="270dp"
         android:layout_height="100dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:elevation="10dp"
+        android:foregroundGravity="left"
+        android:layout_marginLeft="30dp"
         app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" >
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Inspeksi"
-            android:textColor="@color/text_abu"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp" />
+            android:text="Total Inspeksi"
+            android:textColor="@color/text_abu" />
 
         <TextView
             android:id="@+id/tvR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="35dp"
-            android:textStyle="bold"
+            android:text="0"
+            android:textColor="@color/text_dark"
             android:textSize="22dp"
 
-            android:textColor="@color/text_dark" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="19dp"
-            android:background="@drawable/turun_icon"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="10dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1%"
-            android:layout_marginTop="70dp"
-            android:layout_marginLeft="35dp"
-            android:textColor="@color/CPP"/>
+            android:background="@drawable/turun_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Turun 30 hari terakhir"
-            android:textColor="@color/text_abu"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="70dp"
+            android:text="1%"
+            android:textColor="@color/CPP" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="60dp"
-            android:layout_marginTop="70dp"/>
+            android:layout_marginTop="70dp"
+            android:text="Turun 30 hari terakhir"
+            android:textColor="@color/text_abu" />
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/team_icon"
-            android:layout_marginLeft="220dp"
-            android:layout_marginTop="25dp"/>
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/team_icon" />
 
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/carddua"
-        android:layout_width="300dp"
+        android:layout_width="270dp"
         android:layout_height="100dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:elevation="10dp"
+        android:foregroundGravity="right"
+        android:layout_marginRight="30dp"
         app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardsatu" >
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Inspeksi Aman"
-            android:textColor="@color/text_abu"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp" />
+            android:text="Inspeksi Aman"
+            android:textColor="@color/text_abu" />
 
         <TextView
             android:id="@+id/tvPython"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="35dp"
-            android:textStyle="bold"
+            android:text="0"
+            android:textColor="@color/text_dark"
             android:textSize="22dp"
 
-            android:textColor="@color/text_dark" />
+            android:textStyle="bold" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="19dp"
-            android:background="@drawable/naik_icon"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="10dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="6%"
-            android:layout_marginTop="70dp"
-            android:layout_marginLeft="35dp"
-            android:textColor="@color/Python"/>
+            android:background="@drawable/naik_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Naik 30 hari terakhir"
-            android:textColor="@color/text_abu"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="70dp"
+            android:text="6%"
+            android:textColor="@color/Python" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="60dp"
-            android:layout_marginTop="70dp"/>
+            android:layout_marginTop="70dp"
+            android:text="Naik 30 hari terakhir"
+            android:textColor="@color/text_abu" />
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/bintang_icon"
-            android:layout_marginLeft="220dp"
-            android:layout_marginTop="25dp"/>
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/bintang_icon" />
 
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardtiga"
-        android:layout_width="300dp"
+        android:layout_width="270dp"
         android:layout_height="100dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
         android:elevation="10dp"
+        android:foregroundGravity="left"
         app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/carddua" >
+        app:layout_constraintTop_toBottomOf="@+id/cardsatu">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Inspeksi Tidak Aman"
-            android:textColor="@color/text_abu"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp" />
+            android:text="Inspeksi Tidak Aman"
+            android:textColor="@color/text_abu" />
 
         <TextView
             android:id="@+id/tvCPP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="35dp"
-            android:textStyle="bold"
+            android:text="0"
+            android:textColor="@color/text_dark"
             android:textSize="22dp"
 
-            android:textColor="@color/text_dark" />
+            android:textStyle="bold" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="19dp"
-            android:background="@drawable/turun_icon"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="10dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="9%"
-            android:layout_marginTop="70dp"
-            android:layout_marginLeft="35dp"
-            android:textColor="@color/CPP"/>
+            android:background="@drawable/turun_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Turun 30 hari terakhir"
-            android:textColor="@color/text_abu"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="70dp"
+            android:text="9%"
+            android:textColor="@color/CPP" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="60dp"
-            android:layout_marginTop="70dp"/>
+            android:layout_marginTop="70dp"
+            android:text="Turun 30 hari terakhir"
+            android:textColor="@color/text_abu" />
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/batang_icon"
-            android:layout_marginLeft="220dp"
-            android:layout_marginTop="25dp"/>
+            android:layout_gravity="right"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/batang_icon" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewGraph"
-        android:layout_width="300dp"
-        android:layout_height="130dp"
-        android:foregroundGravity="bottom"
-        android:layout_marginBottom="5dp"
-        android:elevation="10dp"
+        android:layout_width="270dp"
+        android:layout_height="100dp"
+        android:layout_marginRight="30dp"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardtiga">
+        app:layout_constraintTop_toBottomOf="@+id/carddua">
 
 
         <LinearLayout

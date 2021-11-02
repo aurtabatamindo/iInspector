@@ -20,4 +20,5 @@
         <item>WSH</item>
         <item>FSD</item>
     </string-array>
+    <string name="title_activity_login">login</string>
 </resources>
