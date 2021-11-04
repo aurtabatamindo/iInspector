@@ -2,6 +2,7 @@ package com.example.iinspector;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -65,7 +66,6 @@ public class Side extends AppCompatActivity {
                 Intent i = new Intent(Side.this, Login.class);
                 startActivity(i);
                 onBackPressed();
-                finish();
 
                 return false;
 
@@ -83,4 +83,11 @@ public class Side extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+
 }

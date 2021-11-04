@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InspeksiAwal">
+    tools:context=".InspeksiAwal"
+    android:id="@+id/inspeksiawal">
 
     <FrameLayout
         android:id="@+id/textView4"
@@ -15,15 +16,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnback"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/back_icon"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="10dp" />
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/btnback"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:background="@drawable/back_icon"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            tools:layout_editor_absoluteX="16dp"-->
+<!--            tools:layout_editor_absoluteY="10dp" />-->
 
         <TextView
             android:layout_width="wrap_content"

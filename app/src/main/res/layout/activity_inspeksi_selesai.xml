@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InspeksiSelesai">
+    tools:context=".InspeksiSelesai"
+    android:id="@+id/inspeksiselesai">
 
     <TextView
         android:id="@+id/textView3"
@@ -42,7 +43,7 @@
         android:layout_marginBottom="15dp"
         android:background="@drawable/btnlanjut"
         android:elevation="10dp"
-        android:text="Simpan Dan Keluar"
+        android:text="Keluar"
         android:textColor="@color/Primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

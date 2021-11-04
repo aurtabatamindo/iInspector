@@ -15,6 +15,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.kyanogen.signatureview.SignatureView;
 
 public class InspeksiKedua extends AppCompatActivity {
@@ -51,7 +53,7 @@ public class InspeksiKedua extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_kedua);
 
-        kemali = findViewById(R.id.btnback);
+//        kemali = findViewById(R.id.btnback);
         selesai = findViewById(R.id.btnnext);
         scard1 = findViewById(R.id.scard1);
         cardview1 = findViewById(R.id.cardView1);
@@ -60,8 +62,8 @@ public class InspeksiKedua extends AppCompatActivity {
         cardView4 = findViewById(R.id.cardView4);
         cardView5 = findViewById(R.id.cardView5);
         cardView6 = findViewById(R.id.cardView6);
-        cardView7 = findViewById(R.id.cardView7);
-        cardView8 = findViewById(R.id.cardView8);
+//        cardView7 = findViewById(R.id.cardView7);
+//        cardView8 = findViewById(R.id.cardView8);
         rya = findViewById(R.id.rya);
         rno = findViewById(R.id.rno);
         ya = findViewById(R.id.ya);
@@ -77,28 +79,28 @@ public class InspeksiKedua extends AppCompatActivity {
         tambah1 = findViewById(R.id.tambah1);
         tambah2 = findViewById(R.id.tambah2);
         tambah3 = findViewById(R.id.tambah3);
-        tambah4 = findViewById(R.id.tambah4);
-        tambah5 = findViewById(R.id.tambah5);
+//        tambah4 = findViewById(R.id.tambah4);
+//        tambah5 = findViewById(R.id.tambah5);
         foto1 = findViewById(R.id.foto1);
         foto2 = findViewById(R.id.foto2);
         foto3 = findViewById(R.id.foto3);
-        foto4 = findViewById(R.id.foto4);
-        foto5 = findViewById(R.id.foto5);
+//        foto4 = findViewById(R.id.foto4);
+//        foto5 = findViewById(R.id.foto5);
         tindakan1 = findViewById(R.id.tindakan1);
         tindakan2 = findViewById(R.id.tindakan2);
         tindakan3 = findViewById(R.id.tindakan3);
-        tindakan4 = findViewById(R.id.tindakan4);
-        tindakan5 = findViewById(R.id.tindakan5);
+//        tindakan4 = findViewById(R.id.tindakan4);
+//        tindakan5 = findViewById(R.id.tindakan5);
 
-        kemali.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent kembali = new Intent(InspeksiKedua.this, InspeksiAwal.class);
-                startActivity(kembali);
-                onBackPressed();
-                finish();
-            }
-        });
+//        kemali.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent kembali = new Intent(InspeksiKedua.this, InspeksiAwal.class);
+//                startActivity(kembali);
+//                onBackPressed();
+//                finish();
+//            }
+//        });
 
 
         scard1.setOnClickListener(new View.OnClickListener() {
@@ -122,14 +124,14 @@ public class InspeksiKedua extends AppCompatActivity {
                     cardView4.setVisibility(View.GONE);
                     cardView5.setVisibility(View.GONE);
                     cardView6.setVisibility(View.GONE);
-                    cardView7.setVisibility(View.GONE);
-                    cardView8.setVisibility(View.GONE);
+//                    cardView7.setVisibility(View.GONE);
+//                    cardView8.setVisibility(View.GONE);
                 } else {
                     cardView4.setVisibility(View.VISIBLE);
                     cardView5.setVisibility(View.VISIBLE);
                     cardView6.setVisibility(View.VISIBLE);
-                    cardView7.setVisibility(View.VISIBLE);
-                    cardView8.setVisibility(View.VISIBLE);
+//                    cardView7.setVisibility(View.VISIBLE);
+//                    cardView8.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -242,18 +244,18 @@ public class InspeksiKedua extends AppCompatActivity {
                 tambahcatatan();
             }
         });
-        tambah4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
-        tambah5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
+//        tambah4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
+//        tambah5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
 
         selesai.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,18 +283,18 @@ public class InspeksiKedua extends AppCompatActivity {
                 ambilfoto();
             }
         });
-        foto4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
-        foto5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
+//        foto4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
+//        foto5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
 
         tindakan1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -312,18 +314,18 @@ public class InspeksiKedua extends AppCompatActivity {
                 tindakan();
             }
         });
-        tindakan4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
-        tindakan5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
+//        tindakan4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
+//        tindakan5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
     }
 
     private void tindakan() {
@@ -394,8 +396,8 @@ public class InspeksiKedua extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent selesai = new Intent(InspeksiKedua.this, InspeksiSelesai.class);
                         startActivity(selesai);
-                        onBackPressed();
                         finish();
+
                     }
                 });
 
@@ -467,4 +469,21 @@ public class InspeksiKedua extends AppCompatActivity {
             alertDialogBuilder.show();
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+            Snackbar.make(findViewById(R.id.inspeksikedua),"Inspeksi sedang berjalan anda tidak bisa kembali sesuka hati !",Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }).show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

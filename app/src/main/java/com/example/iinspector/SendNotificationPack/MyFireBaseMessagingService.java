@@ -3,52 +3,75 @@ package com.example.iinspector.SendNotificationPack;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 
+import com.example.iinspector.InspeksiAwal;
+import com.example.iinspector.R;
+import com.example.iinspector.ui.gallery.GalleryFragment;
+import com.example.iinspector.ui.slideshow.SlideshowFragment;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.kishan.askpermission.ShadowFragment;
 
 
 public class MyFireBaseMessagingService extends FirebaseMessagingService {
     String id ="chanel_1";
     String description ="123";
-    int importance = NotificationManager.IMPORTANCE_LOW;
-
+    int importance = NotificationManager.IMPORTANCE_HIGH;
     String title,message;
     Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-    final long[] VIBRATE_PATTERN    = {0, 1000};
+    final long[] VIBRATE_PATTERN  = {0, 5000};
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+
         super.onMessageReceived(remoteMessage);
         title=remoteMessage.getData().get("Title");
         message=remoteMessage.getData().get("Message");
-
-        NotificationChannel channel = new NotificationChannel(id, "123", importance);//Generating channel
-        channel.enableVibration(true);
-        channel.enableLights(true);
-
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.createNotificationChannel(channel);
-        Notification notification = new Notification.Builder(getApplicationContext(),id)
+        Intent intent = new Intent(this, InspeksiAwal.class);
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(id, "123", importance);//Generating channel
+            channel.enableVibration(true);
+            channel.enableLights(true);
+            channel.setVibrationPattern(new long[]{5000, 5000, 5000, 5000, 5000});
+            channel.setLightColor(Color.RED);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), id)
+                .setSmallIcon(R.drawable.status_icon)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setSound(soundUri)
-                .setVibrate(new long[] {2000})
+                .setAutoCancel(true);
 
-//                .setLights(Color.RED, 3000, 3000)
-//                .setVibrate(VIBRATE_PATTERN)
-//                .setAutoCancel(true)
-                .build();
-        manager.notify(1,notification);
+
+//        Intent notificationIntent = new Intent(this.getApplicationContext(), MapsActivity.class);
+//        PendingIntent contentIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, notificationIntent, 0);
+//        notification.contentIntent = contentIntent;
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        stackBuilder.addNextIntent(intent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mBuilder.setContentIntent(resultPendingIntent);
+        manager.notify(1,mBuilder.build());
     }
 
 }

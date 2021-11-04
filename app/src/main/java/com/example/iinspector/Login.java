@@ -6,9 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.iinspector.SendNotificationPack.Token;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -44,11 +50,12 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
     FirebaseAuth mAuth;
     ProgressDialog progress;
     DatabaseReference liattoken;
-
+    CountDownTimer waktumaks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         //login
         user = findViewById(R.id.eUser);
@@ -84,6 +91,8 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
                 } else if (!(username.isEmpty() && password.isEmpty())) {
                     showProgress();
                     progress.show();
+
+
                     mAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
 
                         @Override
@@ -95,13 +104,19 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
                                 cekrulelogin();
 
                             }
-                            else {
+                            else{
                                 progress.dismiss();
-                                showMessageBox("Username atau Password anda salah !");
-                                user.setText("");
-                                pas.setText("");
+                                Snackbar.make(findViewById(R.id.login),"Periksa Kembali Username,Password dan koneksi internet anda !",Snackbar.LENGTH_INDEFINITE)
+                                        .setAction("OK", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                user.setText("");
+                                                pas.setText("");
+                                            }
+                                        }).show();
                             }
-                        }
+
+                            }
                     });
 
 
@@ -110,7 +125,11 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
         });
         }
 
+
+
     }
+
+
 
     private void ceklogin(){
 
@@ -131,8 +150,14 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
 
                 else{
                     progress.dismiss();
-                    showMessageBox2("Akun anda sedang aktif di perangkat lain.");
-
+                    Snackbar.make(findViewById(R.id.login),"Akun anda sedang aktif di perangkat lain !",Snackbar.LENGTH_INDEFINITE)
+                            .setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    user.setText("");
+                                    pas.setText("");
+                                }
+                            }).show();
                 }
             }
 
@@ -155,31 +180,23 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
 //                document.getString("email");
                 if (document.exists()) {
                     ceklogin();
-                }
-                else {
+                }else{
+
                     progress.dismiss();
-                    showMessageBox("Username atau Password anda salah !");
-                    user.setText("");
-                    pas.setText("");
+                    Snackbar.make(findViewById(R.id.login),"Periksa Kembali Username,Password dan koneksi internet anda !",Snackbar.LENGTH_INDEFINITE)
+                            .setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    user.setText("");
+                                    pas.setText("");
+                                }
+                            }).show();
                 }
             }
         });
 
     }
 
-    private void showMessageBox(String message) {
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Gagal Login");
-        alertDialogBuilder.setMessage(message);
-        alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialogBuilder.show();
-    }
 
 
     private void FirebaseInit() {

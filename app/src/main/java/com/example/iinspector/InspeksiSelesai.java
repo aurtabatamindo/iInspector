@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.android.material.slider.BaseOnChangeListener;
+import com.google.android.material.snackbar.Snackbar;
 
 public class InspeksiSelesai extends AppCompatActivity {
 
@@ -22,9 +26,25 @@ public class InspeksiSelesai extends AppCompatActivity {
             public void onClick(View v) {
                 Intent selesai = new Intent(InspeksiSelesai.this,Side.class);
                 startActivity(selesai);
-                onBackPressed();
                 finish();
             }
         });
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+            Snackbar.make(findViewById(R.id.inspeksiselesai),"Inspeksi telah selesai anda tidak bisa kembali sesuka hati !",Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }).show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

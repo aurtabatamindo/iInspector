@@ -1,6 +1,7 @@
 package com.example.iinspector.ui.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,13 +54,34 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, InspeksiAwal.class);
-                context.startActivities(new Intent[]{intent});
+            peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
 
             }
         });
     }
 
+    public void peringatan (String message){
+        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("Apakah pilihan inspeksi sudah benar ?");
+        alertDialogBuilder.setIcon(R.drawable.status_icon);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                Intent intent = new Intent(context, InspeksiAwal.class);
+                context.startActivities(new Intent[]{intent});
+            }
+        });
+        alertDialogBuilder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialogBuilder.show();
+
+    }
     @Override
     public int getItemCount() {
 

@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,8 +24,18 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.ajts.androidmads.fontutils.FontUtils;
+import com.example.iinspector.SendNotificationPack.APIService;
+import com.example.iinspector.SendNotificationPack.Client;
+import com.example.iinspector.SendNotificationPack.Data;
+import com.example.iinspector.SendNotificationPack.MyResponse;
+import com.example.iinspector.SendNotificationPack.NotificationSender;
 import com.example.iinspector.ui.gallery.GalleryFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +52,13 @@ public class InspeksiAwal extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
+    //notif
+    private APIService apiService;
+    final private String admin1 = "wtBD3Nb2S6UO1O5tx1RQLYV7lcn1";
+    final private String title = "!TEMUAN!";
+    final private String pesan = "!RESIKO HIGHT!";
+
 
     //tindakan
     FloatingActionButton fab;
@@ -62,16 +80,16 @@ public class InspeksiAwal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
 
-        kemali = findViewById(R.id.btnback);
+        //notifservice
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+
         lanjutkan = findViewById(R.id.btnnext);
         tambah1 = findViewById(R.id.tambah1);
         tambah2 = findViewById(R.id.tambah2);
         tambah3 = findViewById(R.id.tambah3);
-//        foto1 = findViewById(R.id.afoto1);
-//        foto2 = findViewById(R.id.afoto2);
+
         foto3 = findViewById(R.id.afoto3);
-//        atindakan1 = findViewById(R.id.atindakan1);
-//        atindakan2 = findViewById(R.id.atindakan2);
+
         atindakan3 = findViewById(R.id.atindakan3);
 
 
@@ -83,15 +101,6 @@ public class InspeksiAwal extends AppCompatActivity {
         fontUtils.applyFontToView(weatherData, typeface);
         getCurrentData();
 
-        kemali.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent kembali = new Intent(InspeksiAwal.this, Side.class);
-                startActivity(kembali);
-                onBackPressed();
-                finish();
-            }
-        });
 
 
         lanjutkan.setOnClickListener(new View.OnClickListener() {
@@ -99,21 +108,11 @@ public class InspeksiAwal extends AppCompatActivity {
             public void onClick(View v) {
                 Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
                 startActivity(lanjut);
+                finish();
             }
         });
 
-//        tambah1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
-//        tambah2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
+
         tambah3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,19 +120,7 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
 
-//        foto1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
-//
-//        foto2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
+
         foto3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,18 +128,6 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
 
-//        atindakan1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
-//        atindakan2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
         atindakan3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,7 +238,21 @@ public class InspeksiAwal extends AppCompatActivity {
         dialog.setPositiveButton("Tambah",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                      kirim();
+
+                        FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String usertoken = dataSnapshot.getValue(String.class);
+                                kirimnotif(usertoken, title.toString().trim(), pesan.toString().trim());
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        kirim();
                     }
                 });
 
@@ -321,11 +310,30 @@ public class InspeksiAwal extends AppCompatActivity {
         });
     }
 
+    public void kirimnotif(String usertoken, String title, String message) {
+        Data data = new Data(title, message);
+        NotificationSender sender = new NotificationSender(data, usertoken);
+        apiService.sendNotifcation(sender).enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                if (response.code() == 200) {
+                    if (response.body().success != 1) {
+                        Snackbar.make(findViewById(R.id.inspeksiawal),"Berhasil Mengirim Tindakan",Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+            }
+        });
+    }
 
     public  void kirim(){
         String email = "aurtafalen@batamindo.co.id";
-        String subject = "ADA YANG HIGH NICH";
-        String message = "yak di bantu yak jadi apa ";
+        String subject = "TEMUAN";
+        String message = "RESIKO HIGH";
 
         String mEmail = email.toString();
         String mSubject = subject.toString();
@@ -334,6 +342,22 @@ public class InspeksiAwal extends AppCompatActivity {
         JavaMailAPI javaMailAPI = new JavaMailAPI(InspeksiAwal.this, mEmail, mSubject, mMessage);
         javaMailAPI.execute();
 
-        Toast.makeText(InspeksiAwal.this, "Berhasil Mengirim !", Toast.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.inspeksiawal),"Berhasil Mengirim Tindakan",Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+            Snackbar.make(findViewById(R.id.inspeksiawal),"Inspeksi sedang berjalan anda tidak bisa kembali sesuka hati !",Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }).show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

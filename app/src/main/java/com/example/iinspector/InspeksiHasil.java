@@ -11,7 +11,7 @@ import android.widget.Spinner;
 
 public class InspeksiHasil extends AppCompatActivity {
 
-    Button btnback;
+//    Button btnback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +25,23 @@ public class InspeksiHasil extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        btnback = findViewById(R.id.btnback);
+//        btnback = findViewById(R.id.btnback);
+//
+//        btnback.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent kembali = new Intent(InspeksiHasil.this, Side.class);
+//                startActivity(kembali);
+//            }
+//        });
 
-        btnback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent kembali = new Intent(InspeksiHasil.this, Side.class);
-                startActivity(kembali);
-            }
-        });
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent kembali = new Intent(InspeksiHasil.this,Side.class);
+        startActivity(kembali);
+        finish();
     }
 }
