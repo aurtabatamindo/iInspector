@@ -179,16 +179,29 @@
             app:cardCornerRadius="10dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/hasilLokasi"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:text="Jl. Rasamala,Kota Batam,Kepulauan Riau Indonesia (1.0693735, 104.025111192)" />
+                android:text="Kordinat"
+                />
+
+            <TextView
+                android:id="@+id/alamat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:text="Alamat" />atam,Kepulauan Riau Indonesia (1.0693735, 104.025111192)" />
 
 
         </androidx.cardview.widget.CardView>
 
         <Button
+            android:id="@+id/btnlokasi"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="right"

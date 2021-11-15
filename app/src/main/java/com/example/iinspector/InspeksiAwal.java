@@ -39,6 +39,7 @@ import com.example.iinspector.SendNotificationPack.Data;
 import com.example.iinspector.SendNotificationPack.MyResponse;
 import com.example.iinspector.SendNotificationPack.NotificationSender;
 import com.example.iinspector.ui.gallery.GalleryFragment;
+
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -63,7 +64,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class InspeksiAwal extends AppCompatActivity {
 
     Button kemali, lanjutkan;
-    TextView tambah1, tambah2, tambah3, foto1, foto2, foto3, atindakan1, atindakan2, atindakan3, tglview, lokasi;
+    TextView tambah1, tambah2, tambah3, foto1, foto2, foto3, atindakan1, atindakan2, atindakan3, tglview, lokasi ,alamat;
 
     //getlocation plus adress
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -100,6 +101,9 @@ public class InspeksiAwal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
+
+        //gps
+        resultReceiver = new AddressResultReceiver(new Handler());
 
         //tgl & jam
         String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -138,6 +142,7 @@ public class InspeksiAwal extends AppCompatActivity {
         atindakan3 = findViewById(R.id.atindakan3);
         tglview = findViewById(R.id.tglView);
         lokasi = findViewById(R.id.hasilLokasi);
+        alamat = findViewById(R.id.alamat);
 
         //settgl & setjam
         tglview.setText(tgl);
@@ -243,7 +248,7 @@ public class InspeksiAwal extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
             if (resultCode == Constants.SUCCESS_RESULT){
-                lokasi.setText(resultData.getString(Constants.RESULT_DATA_KEY));
+                alamat.setText(resultData.getString(Constants.RESULT_DATA_KEY));
             }else{
                 Toast.makeText(InspeksiAwal.this,resultData.getString(Constants.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
             }
