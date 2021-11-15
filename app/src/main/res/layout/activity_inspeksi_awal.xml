@@ -93,17 +93,20 @@
             app:cardCornerRadius="10dp">
 
             <TextView
+                android:id="@+id/tglView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:text="DD Mmm YYYY at TT:SS" />
+                android:text="Tanggal" />
 
-            <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="right"
-                android:background="@drawable/next_icon" />
+<!--            <Button-->
+<!--                android:id="@+id/btnTgl"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:background="@drawable/next_icon" />-->
 
         </androidx.cardview.widget.CardView>
 
@@ -139,18 +142,13 @@
             android:layout_marginTop="40dp"
             app:cardCornerRadius="10dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/filterteam"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
                 android:text="Nama Team" />
 
-            <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="right"
-                android:background="@drawable/next_icon" />
 
         </androidx.cardview.widget.CardView>
 
@@ -187,21 +185,24 @@
             app:cardCornerRadius="10dp">
 
             <TextView
+                android:id="@+id/hasilLokasi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:text="Jl. Rasamala,Kota Batam,Kepulauan Riau Indonesia (1.0693735, 104.025111192)" />
-
+                android:text="Lokasi"
+                />
 
         </androidx.cardview.widget.CardView>
 
         <Button
+            android:id="@+id/btnlokasi"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="right"
             android:layout_marginTop="40dp"
             android:layout_marginRight="20dp"
+            android:elevation="10dp"
             android:background="@drawable/lokasi_icon" />
 
         <TextView

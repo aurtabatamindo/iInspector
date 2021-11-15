@@ -3,6 +3,8 @@ package com.example.iinspector;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
@@ -11,14 +13,21 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.ResultReceiver;
+import android.provider.SyncStateContract;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -30,12 +39,20 @@ import com.example.iinspector.SendNotificationPack.Data;
 import com.example.iinspector.SendNotificationPack.MyResponse;
 import com.example.iinspector.SendNotificationPack.NotificationSender;
 import com.example.iinspector.ui.gallery.GalleryFragment;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,8 +62,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class InspeksiAwal extends AppCompatActivity {
 
-    Button kemali,lanjutkan;
-    TextView tambah1,tambah2,tambah3, foto1, foto2, foto3,atindakan1,atindakan2,atindakan3;
+    Button kemali, lanjutkan;
+    TextView tambah1, tambah2, tambah3, foto1, foto2, foto3, atindakan1, atindakan2, atindakan3, tglview, lokasi;
+
+    //getlocation plus adress
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
 
     //camera
     private static final int CAMERA_REQUEST = 1888;
@@ -74,11 +94,38 @@ public class InspeksiAwal extends AppCompatActivity {
     public static String lon = "104.02529037437219";
     public static String metric = "metric";
     private TextView weatherData;
+    private ResultReceiver resultReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
+
+        //tgl & jam
+        String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
+
+        //filterTeam
+        Spinner spinner = (Spinner) findViewById(R.id.filterteam);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.filterteam, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        //getlocation plus adress
+        findViewById(R.id.btnlokasi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(InspeksiAwal.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_CODE_LOCATION_PERMISSION);
+                } else {
+                    getlokasi();
+                }
+            }
+        });
 
         //notifservice
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
@@ -87,11 +134,13 @@ public class InspeksiAwal extends AppCompatActivity {
         tambah1 = findViewById(R.id.tambah1);
         tambah2 = findViewById(R.id.tambah2);
         tambah3 = findViewById(R.id.tambah3);
-
         foto3 = findViewById(R.id.afoto3);
-
         atindakan3 = findViewById(R.id.atindakan3);
+        tglview = findViewById(R.id.tglView);
+        lokasi = findViewById(R.id.hasilLokasi);
 
+        //settgl & setjam
+        tglview.setText(tgl);
 
         //cuaca
         weatherData = findViewById(R.id.cuaca);
@@ -100,7 +149,6 @@ public class InspeksiAwal extends AppCompatActivity {
         FontUtils fontUtils = new FontUtils();
         fontUtils.applyFontToView(weatherData, typeface);
         getCurrentData();
-
 
 
         lanjutkan.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +183,73 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
     }
+
+
+    private void getlokasi() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(InspeksiAwal.this)
+                .requestLocationUpdates(locationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(InspeksiAwal.this)
+                                .removeLocationUpdates(this);
+                        if (locationResult != null && locationResult.getLocations().size() > 0){
+                            int latesLocationIndex = locationResult.getLocations().size() - 1;
+                            double latitude = locationResult.getLocations().get(latesLocationIndex).getLatitude();
+                            double longitude = locationResult.getLocations().get(latesLocationIndex).getLongitude();
+
+                            lokasi.setText(String.format(
+                                    "(%s,%s)",
+                                    latitude,
+                                    longitude
+                            ));
+                        Location location = new Location("providerNA");
+                        location.setLatitude(latitude);
+                        location.setLongitude(longitude);
+                        fetcAddressFromLatLong(location);
+                        }
+                    }
+                }, Looper.getMainLooper());
+
+
+    }
+    private void fetcAddressFromLatLong(Location location){
+        Intent intent = new Intent(this,AddressService.class);
+        intent.putExtra(Constants.RECEIVER,resultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA,location);
+        startService(intent);
+    }
+    private class AddressResultReceiver extends ResultReceiver{
+         AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if (resultCode == Constants.SUCCESS_RESULT){
+                lokasi.setText(resultData.getString(Constants.RESULT_DATA_KEY));
+            }else{
+                Toast.makeText(InspeksiAwal.this,resultData.getString(Constants.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     void tambahcatatan() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiAwal.this);
         alertDialog.setTitle("Tambah Catatan");
@@ -190,6 +305,14 @@ public class InspeksiAwal extends AppCompatActivity {
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             } else {
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0){
+            if(grantResults [0] == PackageManager.PERMISSION_GRANTED){
+                getlokasi();
+            }else{
+                Toast.makeText(this, "GPS permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }

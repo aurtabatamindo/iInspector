@@ -40,13 +40,7 @@ public class GalleryFragment extends Fragment {
 
     private View itemView;
 
-//    //hardCardview
-//    RecyclerView.Adapter recyclerViewAdapter;
-//    RecyclerView.LayoutManager recylerViewLayoutManager;
-//    String[] subjects = {
-//            "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
-//            "Inspeksi", "Inspeksi"
-//    };
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
