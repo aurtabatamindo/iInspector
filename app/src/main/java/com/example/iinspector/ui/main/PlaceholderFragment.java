@@ -1,26 +1,22 @@
 package com.example.iinspector.ui.main;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -34,15 +30,21 @@ public class PlaceholderFragment extends Fragment {
     //hardCardview
     Context context;
     RecyclerView recyclerView;
-
     RecyclerView.Adapter recyclerViewAdapter;
     RecyclerView.LayoutManager recylerViewLayoutManager;
+
+    //firebase
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference notebookRef = db.collection("templates");
+    private NoteAdapter adapter;
 
     String[] subjects = {
             "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
             "Inspeksi", "Inspeksi"
     };
 
+    public PlaceholderFragment() {
+    }
 
 
     public static PlaceholderFragment newInstance(int index) {
@@ -58,7 +60,6 @@ public class PlaceholderFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
-
     }
 
     View rootView;
@@ -68,16 +69,20 @@ public class PlaceholderFragment extends Fragment {
             Bundle savedInstanceState) {
 
 
+
         switch (getArguments().getInt(ARG_SECTION_NUMBER))
         {
             case 1: {
+//                rootView = inflater.inflate(R.layout.todo, container, false);
+//                context = getContext();
+//                recyclerView = rootView.findViewById(R.id.recycler_View);
+//                recylerViewLayoutManager = new LinearLayoutManager(context);
+//                recyclerView.setLayoutManager(recylerViewLayoutManager);
+//                recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
+//                recyclerView.setAdapter(recyclerViewAdapter);
+
                 rootView = inflater.inflate(R.layout.todo, container, false);
-                context = getContext();
-                recyclerView = rootView.findViewById(R.id.recycler_View);
-                recylerViewLayoutManager = new LinearLayoutManager(context);
-                recyclerView.setLayoutManager(recylerViewLayoutManager);
-                recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
-                recyclerView.setAdapter(recyclerViewAdapter);
+                setUpRecyclerView();
 
                 break;
             }
@@ -94,6 +99,21 @@ public class PlaceholderFragment extends Fragment {
 
         }
         return rootView;
+    }
+
+    private void setUpRecyclerView() {
+        Query query = notebookRef.orderBy("group", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<Note> options = new FirestoreRecyclerOptions.Builder<Note>()
+                .setQuery(query, Note.class)
+                .build();
+
+        adapter = new NoteAdapter(options);
+
+        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_ViewTodo);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
     }
 
 
