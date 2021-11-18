@@ -12,11 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iinspector.R;
-import com.example.iinspector.ui.gallery.GalleryHolder;
-import com.example.iinspector.ui.gallery.GetDataJadwal;
+
+
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -32,20 +36,15 @@ public class PlaceholderFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.Adapter recyclerViewAdapter;
     RecyclerView.LayoutManager recylerViewLayoutManager;
-    private FirestoreRecyclerAdapter<GetDataJadwal, GalleryHolder> adapter;
+    private View itemView;
+    FirestoreRecyclerAdapter<GetDataTodo, TodoHolder> adaptercard;
 
-    //firebase
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference notebookRef = db.collection("templates");
 
 
     String[] subjects = {
             "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
             "Inspeksi", "Inspeksi"
     };
-
-    public PlaceholderFragment() {
-    }
 
 
     public static PlaceholderFragment newInstance(int index) {
@@ -56,17 +55,10 @@ public class PlaceholderFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
 
     View rootView;
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
 
@@ -83,43 +75,38 @@ public class PlaceholderFragment extends Fragment {
 //                recyclerView.setAdapter(recyclerViewAdapter);
 
                 rootView = inflater.inflate(R.layout.todo, container, false);
+                recyclerView = rootView.findViewById(R.id.recycler_ViewTodo);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-//                recyclerView = rootView.findViewById(R.id.recycler_ViewTodo);
-//                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//                FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-//
-//                Query query = rootRef.collection("kegiatan")
-////                .orderBy("uid");
-//                        .whereEqualTo("uid",currentUser.getUid());
-//
-//                FirestoreRecyclerOptions<GetDataJadwal> options = new FirestoreRecyclerOptions.Builder<GetDataJadwal>()
-//                        .setQuery(query, GetDataJadwal.class)
-//                        .build();
-//
-//                adapter = new FirestoreRecyclerAdapter<GetDataJadwal, GalleryHolder>(options) {
-//                    @Override
-//                    protected void onBindViewHolder(@NonNull GalleryHolder holder, int position, @NonNull GetDataJadwal getDataJadwal) {
-//                        holder.setjudulKegiatan(getDataJadwal.getJudulKegiatan());
-//                        holder.setjenisTugas(getDataJadwal.getJenisTugas());
-//                        holder.setwaktuMasuk(getDataJadwal.getWaktuMulai());
-//                        holder.setstatus(getDataJadwal.getStatus());
-//
-//
-//                    }
-//
-//                    @NonNull
-//                    @Override
-//                    public GalleryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-//                        return new GalleryHolder(view);
-//                    }
-//                };
-//
-//
-//                recyclerView.setAdapter(adapter);
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+
+                Query query = rootRef.collection("templates")
+                        .whereEqualTo("uid",currentUser.getUid());
+
+                FirestoreRecyclerOptions<GetDataTodo> options = new FirestoreRecyclerOptions.Builder<GetDataTodo>()
+                        .setQuery(query, GetDataTodo.class)
+                        .build();
+
+                adaptercard = new FirestoreRecyclerAdapter<GetDataTodo, TodoHolder>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull TodoHolder holder, int position, @NonNull GetDataTodo getDataTodo) {
+                        holder.setTitle(getDataTodo.getTemplateTitle());
+                        holder.setTgroup(getDataTodo.getGroup());
+
+                    }
+
+                    @NonNull
+                    @Override
+                    public TodoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
+                        return new TodoHolder(view);
+                    }
+                };
+                adaptercard.startListening();
+                recyclerView.setAdapter(adaptercard);
+
                 break;
             }
             case 2: {
@@ -138,21 +125,14 @@ public class PlaceholderFragment extends Fragment {
     }
 
 
-
-
     @Override
-    public void onPause() {
-        super.onPause();
-        adapter.startListening();
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter != null) {
-
-            adapter.stopListening();
-        }
+    public void onStop() {
+        super.onStop();
 
     }
 }

@@ -1,4 +1,4 @@
-package com.example.iinspector.ui.gallery;
+package com.example.iinspector.ui.main;
 
 import android.view.View;
 import android.widget.TextView;
@@ -6,14 +6,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.iinspector.R;
+import com.example.iinspector.ui.gallery.GalleryHolder;
 
-
-public class GalleryHolder extends RecyclerView.ViewHolder  {
-
+public class TodoHolder extends RecyclerView.ViewHolder{
     private View view;
 
 
-    GalleryHolder(View itemView) {
+    TodoHolder(View itemView) {
         super(itemView);
 
         view = itemView;
@@ -36,14 +35,14 @@ public class GalleryHolder extends RecyclerView.ViewHolder  {
         textView.setText(group);
     }
 
-    private ClickListener mClickListener;
+    private GalleryHolder.ClickListener mClickListener;
 
     //Interface to send callbacks...
     public interface ClickListener{
         void onItemClick(View view, int position);
 
     }
-    public void setOnClickListener(ClickListener clickListener){
+    public void setOnClickListener(GalleryHolder.ClickListener clickListener){
         mClickListener = clickListener;
     }
 }

@@ -47,11 +47,12 @@
 
     <TextView
         android:id="@+id/Tgroup"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="22dp"
         android:layout_marginLeft="125dp"
         android:layout_marginTop="40dp"
-        android:text="   Group   "
+        android:textAlignment="center"
+        android:text="Group"
         android:textColor="@color/white"
         android:background="@drawable/labelhijau" />
 

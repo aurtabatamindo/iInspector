@@ -1,21 +1,11 @@
-package com.example.iinspector.ui.gallery;
+package com.example.iinspector.ui.main;
 
-
-
-
-import android.text.format.DateFormat;
-
-import com.google.firebase.Timestamp;
-
-import java.util.Date;
-
-public class GetDataJadwal {
-
+public class GetDataTodo {
     private String group;
     private String templateTitle;
 
 
-    public GetDataJadwal(String group , String templateTitle) {
+    public GetDataTodo(String group , String templateTitle) {
 
 
         this.group = group;
@@ -25,7 +15,7 @@ public class GetDataJadwal {
     }
 
     //Add this
-    public GetDataJadwal() {
+    public GetDataTodo() {
 
     }
 
