@@ -35,15 +35,6 @@
         android:text="Team ?"
         android:textColor="@color/text_dark" />
 
-    <TextView
-        android:id="@+id/no"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="40dp"
-        android:text="Team ?"
-        android:visibility="invisible"
-        android:textColor="@color/text_dark" />
 
     <TextView
         android:id="@+id/Tgroup"
@@ -80,7 +71,7 @@
         android:background="@drawable/tanggal_icon" />
 
     <TextView
-        android:id="@+id/tanggal"
+        android:id="@+id/date"
         android:layout_width="70dp"
         android:layout_height="40dp"
         android:layout_marginLeft="235dp"

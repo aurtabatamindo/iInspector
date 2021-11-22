@@ -1,6 +1,8 @@
 package com.example.iinspector.ui.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
 
 
+import com.example.iinspector.ui.gallery.GalleryHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -39,6 +44,8 @@ public class PlaceholderFragment extends Fragment {
     private View itemView;
     FirestoreRecyclerAdapter<GetDataTodo, TodoHolder> adaptercard;
 
+    int Position;
+    String documentId;
 
 
     String[] subjects = {
@@ -66,13 +73,6 @@ public class PlaceholderFragment extends Fragment {
         switch (getArguments().getInt(ARG_SECTION_NUMBER))
         {
             case 1: {
-//                rootView = inflater.inflate(R.layout.todo, container, false);
-//                context = getContext();
-//                recyclerView = rootView.findViewById(R.id.recycler_View);
-//                recylerViewLayoutManager = new LinearLayoutManager(context);
-//                recyclerView.setLayoutManager(recylerViewLayoutManager);
-//                recyclerViewAdapter = new AdapterRecyclerView(context, subjects);
-//                recyclerView.setAdapter(recyclerViewAdapter);
 
                 rootView = inflater.inflate(R.layout.todo, container, false);
                 recyclerView = rootView.findViewById(R.id.recycler_ViewTodo);
@@ -92,9 +92,22 @@ public class PlaceholderFragment extends Fragment {
                 adaptercard = new FirestoreRecyclerAdapter<GetDataTodo, TodoHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull TodoHolder holder, int position, @NonNull GetDataTodo getDataTodo) {
-                        holder.setTitle(getDataTodo.getTemplateTitle());
+                        holder.setDate((getDataTodo.getDate()));
                         holder.setTgroup(getDataTodo.getGroup());
+                        holder.setLocation(getDataTodo.getLocation());
+                        holder.setTeam(getDataTodo.getTeam());
+                        holder.setTitle(getDataTodo.getTemplateTitle());
 
+                        holder.setOnClickListener(new TodoHolder.ClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+
+                                documentId = getSnapshots().getSnapshot(position).getId();
+                                Position = position;
+                                peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
+
+                            }
+                        });
                     }
 
                     @NonNull
@@ -124,7 +137,28 @@ public class PlaceholderFragment extends Fragment {
         return rootView;
     }
 
+    public void peringatan (String message){
 
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(getActivity());
+            alertDialogBuilder.setTitle("Apakah pilihan inspeksi sudah benar ?");
+            alertDialogBuilder.setIcon(R.drawable.status_icon);
+            alertDialogBuilder.setMessage(message);
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    Intent intent = new Intent(getActivity(), InspeksiAwal.class);
+                    startActivity(intent);
+                }
+            });
+            alertDialogBuilder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alertDialogBuilder.show();
+        }
     @Override
     public void onStart() {
         super.onStart();
