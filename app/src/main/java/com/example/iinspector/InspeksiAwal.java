@@ -12,6 +12,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -97,6 +99,9 @@ public class InspeksiAwal extends AppCompatActivity {
     private TextView weatherData;
     private ResultReceiver resultReceiver;
 
+    //SpinerTeam
+    Spinner spinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,11 +114,12 @@ public class InspeksiAwal extends AppCompatActivity {
         String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
 
         //filterTeam
-        Spinner spinner = (Spinner) findViewById(R.id.filterteam);
+        spinner = (Spinner) findViewById(R.id.filterteam);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.filterteam, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+//        spinner.getBackground().setColorFilter(Color.parseColor("#C0C2D1"), PorterDuff.Mode.SRC_ATOP);
 
         //getlocation plus adress
         findViewById(R.id.btnlokasi).setOnClickListener(new View.OnClickListener() {
@@ -159,9 +165,25 @@ public class InspeksiAwal extends AppCompatActivity {
         lanjutkan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
-                startActivity(lanjut);
-                finish();
+                    String lok = lokasi.getText().toString().trim();
+                    String spinertim = spinner.getSelectedItem().toString().trim();
+                    String pilih = "Pilih Team";
+
+                    if (lok.isEmpty()&& spinertim.equals(pilih)){
+                        Snackbar.make(findViewById(R.id.inspeksiawal),"Lokasi & Team Tidak Boleh Kosong",Snackbar.LENGTH_LONG).show();
+                    }
+                    else if (lok.isEmpty()) {
+                              Snackbar.make(findViewById(R.id.inspeksiawal),"Lokasi Tidak Boleh Kosong",Snackbar.LENGTH_LONG).show();
+                    }
+                    else if (spinertim.equals(pilih)){
+                             Snackbar.make(findViewById(R.id.inspeksiawal),"Harap pilih team inspeksi",Snackbar.LENGTH_LONG).show();
+                    }
+                    else{
+                        Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
+                        startActivity(lanjut);
+                        finish();
+                    }
+
             }
         });
 
