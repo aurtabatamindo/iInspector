@@ -6,7 +6,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.Date;
 
-public class GetDataDone {
+public class GetDataTodo {
     private Timestamp date;
     private String group;
     private String location;
@@ -15,7 +15,7 @@ public class GetDataDone {
 
 
 
-    public GetDataDone(Timestamp date , String group , String location, String team , String templateTitle) {
+    public GetDataTodo(Timestamp date , String group ,String location, String team ,String templateTitle) {
 
         this.date = date;
         this.group = group;
@@ -26,7 +26,7 @@ public class GetDataDone {
     }
 
     //Add this
-    public GetDataDone() {
+    public GetDataTodo() {
 
     }
 
