@@ -143,8 +143,16 @@ public class PlaceholderFragment extends Fragment {
             }
             case 2: {
                 rootView = inflater.inflate(R.layout.done, container, false);
+
+                //spiner
+                spinner = (Spinner) rootView.findViewById(R.id.sfilter);
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                        R.array.filtergroup, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
                 context = getContext();
-                recyclerView = rootView.findViewById(R.id.recycler_Viewdone);
+                recyclerView = rootView.findViewById(R.id.recycler_ViewDone);
                 recylerViewLayoutManager = new LinearLayoutManager(context);
                 recyclerView.setLayoutManager(recylerViewLayoutManager);
                 recyclerViewAdapter = new AdapterRecyclerViewdone(context, subjects);

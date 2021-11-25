@@ -35,13 +35,13 @@ public class GalleryFragment extends Fragment {
     private View itemView;
     private FirestoreRecyclerAdapter<GetDataJadwal, GalleryHolder> adaptercard;
 
-
+    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         galleryViewModel =
                 new ViewModelProvider(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        root = inflater.inflate(R.layout.fragment_gallery, container, false);
 
         //tab
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getActivity(), getFragmentManager() );
@@ -93,6 +93,15 @@ public class GalleryFragment extends Fragment {
         return root;
     }
 
+    private void Tab() {
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getActivity(), getFragmentManager() );
+        ViewPager viewPager = root.findViewById(R.id.view_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = root.findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+    }
+
     @Override
     public void onStart() {
 //        adaptercard.startListening();
@@ -108,5 +117,9 @@ public class GalleryFragment extends Fragment {
         super.onStop();
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Tab();
+    }
 }
