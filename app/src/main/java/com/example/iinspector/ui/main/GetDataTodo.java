@@ -1,43 +1,35 @@
 package com.example.iinspector.ui.main;
 
-import android.text.format.DateFormat;
 
-import com.google.firebase.Timestamp;
-
-import java.util.Date;
-
-public class GetDataDone {
-    private Timestamp date;
+public class GetDataTodo {
+    private String authorTitle;
     private String group;
-    private String location;
-    private String team;
+    private String templateDesctiption;
     private String templateTitle;
 
 
 
-    public GetDataDone(Timestamp date , String group , String location, String team , String templateTitle) {
+    public GetDataTodo(String authorTitle , String group , String templateDesctiption, String templateTitle) {
 
-        this.date = date;
+        this.authorTitle = authorTitle;
         this.group = group;
-        this.team = team;
+        this.templateDesctiption = templateDesctiption;
         this.templateTitle = templateTitle;
 
 
     }
 
     //Add this
-    public GetDataDone() {
+    public GetDataTodo() {
 
     }
 
-    public String getDate() {
-        long miliseconds = date.toDate().getTime();
-        String dateString = DateFormat.format("d MMM, yyyy", new Date(miliseconds)).toString();
-        return dateString;
+    public String getAuthorTitle() {
+        return authorTitle;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setAuthorTitle(String authorTitle) {
+        this.authorTitle = authorTitle;
     }
 
     public String getGroup() {
@@ -48,20 +40,12 @@ public class GetDataDone {
         this.group = group;
     }
 
-    public String getLocation() {
-        return location;
+    public String getTemplateDesctiption() {
+        return templateDesctiption;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getTeam() {
-        return team;
-    }
-
-    public void setTeam(String team) {
-        this.team = team;
+    public void setTemplateDesctiption(String templateDesctiption) {
+        this.templateDesctiption = templateDesctiption;
     }
 
     public String getTemplateTitle() {

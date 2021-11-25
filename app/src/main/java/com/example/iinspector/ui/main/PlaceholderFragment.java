@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,15 +19,14 @@ import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
 
 
-import com.example.iinspector.ui.gallery.GalleryHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import javax.mail.Quota;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -46,7 +47,7 @@ public class PlaceholderFragment extends Fragment {
 
     int Position;
     String documentId;
-
+    Spinner spinner;
 
     String[] subjects = {
             "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
@@ -75,50 +76,68 @@ public class PlaceholderFragment extends Fragment {
             case 1: {
 
                 rootView = inflater.inflate(R.layout.todo, container, false);
+
+                //spiner
+                spinner = (Spinner) rootView.findViewById(R.id.sfilter);
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                        R.array.filtergroup, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
                 recyclerView = rootView.findViewById(R.id.recycler_ViewTodo);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+//                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//                FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
 
-                Query query = rootRef.collection("templates")
-                        .whereEqualTo("uid",currentUser.getUid());
+//                Query query = rootRef.collection("templates")
+//                        .whereEqualTo("uid",currentUser.getUid());
 
-                FirestoreRecyclerOptions<GetDataTodo> options = new FirestoreRecyclerOptions.Builder<GetDataTodo>()
-                        .setQuery(query, GetDataTodo.class)
-                        .build();
+                String fsd = "FSD";
+                String wsh = "WSH";
+                String semua = "Semua";
+                String spinergroup = spinner.getSelectedItem().toString().trim();
 
-                adaptercard = new FirestoreRecyclerAdapter<GetDataTodo, TodoHolder>(options) {
-                    @Override
-                    protected void onBindViewHolder(@NonNull TodoHolder holder, int position, @NonNull GetDataTodo getDataTodo) {
-                        holder.setDate((getDataTodo.getDate()));
-                        holder.setTgroup(getDataTodo.getGroup());
-                        holder.setLocation(getDataTodo.getLocation());
-                        holder.setTeam(getDataTodo.getTeam());
-                        holder.setTitle(getDataTodo.getTemplateTitle());
 
-                        holder.setOnClickListener(new TodoHolder.ClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
+                    Query query = FirebaseFirestore.getInstance()
+                            .collection("templates")
+                            .orderBy("group");
 
-                                documentId = getSnapshots().getSnapshot(position).getId();
-                                Position = position;
-                                peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
+                    FirestoreRecyclerOptions<GetDataTodo> options = new FirestoreRecyclerOptions.Builder<GetDataTodo>()
+                            .setQuery(query, GetDataTodo.class)
+                            .build();
 
-                            }
-                        });
-                    }
+                    adaptercard = new FirestoreRecyclerAdapter<GetDataTodo, TodoHolder>(options) {
+                        @Override
+                        protected void onBindViewHolder(@NonNull TodoHolder holder, int position, @NonNull GetDataTodo getDataTodo) {
+                            holder.setauthorTitle(("Author : "+getDataTodo.getAuthorTitle()));
+                            holder.setTgroup(getDataTodo.getGroup());
+                            holder.settemplateDesctiption("Desctiption : "+ getDataTodo.getTemplateDesctiption());
+                            holder.settemplateTitle(getDataTodo.getTemplateTitle());
 
-                    @NonNull
-                    @Override
-                    public TodoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
-                        return new TodoHolder(view);
-                    }
-                };
-                adaptercard.startListening();
-                recyclerView.setAdapter(adaptercard);
+                            holder.setOnClickListener(new TodoHolder.ClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+
+                                    documentId = getSnapshots().getSnapshot(position).getId();
+                                    Position = position;
+                                    peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
+
+                                }
+                            });
+                        }
+
+                        @NonNull
+                        @Override
+                        public TodoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
+                            return new TodoHolder(view);
+                        }
+                    };
+                    adaptercard.startListening();
+                    recyclerView.setAdapter(adaptercard);
+
 
                 break;
             }

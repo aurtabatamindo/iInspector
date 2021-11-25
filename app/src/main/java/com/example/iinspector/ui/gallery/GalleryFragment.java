@@ -50,12 +50,12 @@ public class GalleryFragment extends Fragment {
         TabLayout tabs = root.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        //spiner
-        Spinner spinner = (Spinner) root.findViewById(R.id.sfilter);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.filtergroup, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+//        //spiner
+//        Spinner spinner = (Spinner) root.findViewById(R.id.sfilter);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+//                R.array.filtergroup, android.R.layout.simple_spinner_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(adapter);
 
 
 //        recyclerView = root.findViewById(R.id.recycler_Viewgallery);

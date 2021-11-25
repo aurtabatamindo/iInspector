@@ -27,31 +27,34 @@ public class TodoHolder extends RecyclerView.ViewHolder{
         });
     }
 
-    void setDate(String date){
-        TextView textView = view.findViewById(R.id.date);
-        textView.setText(date);
+    void setauthorTitle(String authorTitle){
+        TextView textView = view.findViewById(R.id.Tauth);
+        textView.setText(authorTitle);
     }
 
     void setTgroup(String group) {
-        TextView textView = view.findViewById(R.id.Tgroup);
-        textView.setText(group);
+        TextView textView1 = view.findViewById(R.id.Tgroup1);
+        textView1.setText(group);
+
+        TextView textView2 = view.findViewById(R.id.Tgroup2);
+        textView1.setText(group);
+
+        if (group.equals("FSD")) {
+            textView1.setVisibility(View.INVISIBLE);
+        }else{
+            textView2.setVisibility(View.INVISIBLE);
+        }
     }
 
-    void setLocation(String location) {
-        TextView textView = view.findViewById(R.id.lokasi);
-        textView.setText(location);
+    void settemplateDesctiption(String templateDesctiption) {
+        TextView textView = view.findViewById(R.id.Tdescription);
+        textView.setText(templateDesctiption);
     }
 
-    void setTeam(String team) {
-        TextView textView = view.findViewById(R.id.team);
-        textView.setText(team);
-    }
-
-    void setTitle(String title) {
+    void settemplateTitle(String templateTitle) {
         TextView textView = view.findViewById(R.id.Ttitle);
-        textView.setText(title);
+        textView.setText(templateTitle);
     }
-
 
 
 

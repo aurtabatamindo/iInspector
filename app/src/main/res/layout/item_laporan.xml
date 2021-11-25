@@ -2,100 +2,76 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="320dp"
-    android:layout_height="120dp"
-    android:layout_marginLeft="22dp"
-    android:layout_marginTop="17dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
     android:elevation="5dp"
     android:background="@drawable/cardview">
 
     <TextView
         android:id="@+id/Ttitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="6dp"
         android:text="Judul Inspeksi"
-        android:textSize="20dp"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:singleLine="true"
         android:textColor="@color/text_dark" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/team_icon" />
-
-    <TextView
-        android:id="@+id/team"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="40dp"
-        android:text="Team ?"
-        android:textColor="@color/text_dark" />
+        android:id="@+id/Tdescription"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="35dp"
+        android:text="Deskripsi"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/text_dark"
+        android:textSize="9dp"
+        android:lines="2" />
 
 
     <TextView
-        android:id="@+id/Tgroup"
-        android:layout_width="60dp"
-        android:layout_height="22dp"
-        android:layout_marginLeft="125dp"
-        android:layout_marginTop="40dp"
-        android:textAlignment="center"
-        android:text="Group"
+        android:id="@+id/Tauth"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="65dp"
+        android:text="Auther"
+        android:textColor="@color/text_dark"
+        android:textSize="9dp"
+        />
+
+    <TextView
+        android:id="@+id/Tgroup1"
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="WSH"
         android:textColor="@color/white"
         android:background="@drawable/labelhijau" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="65dp"
-        android:background="@drawable/lokasi_icon" />
-
-    <TextView
-        android:id="@+id/lokasi"
-        android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="65dp"
-        android:text="Lokasi inspeksi detail"
-        android:textColor="@color/text_dark" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/tanggal_icon" />
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="235dp"
-        android:layout_marginTop="40dp"
-        android:text="DD/MM/YYYY "
-        android:textColor="@color/text_dark" />
-
-    <TextView
-        android:id="@+id/iconstatus"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="83dp"
-        android:background="@drawable/status_icon" />
-
-    <TextView
-        android:id="@+id/status"
-        android:visibility="invisible"
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="235dp"
-        android:layout_marginTop="85dp"
-        android:text="Status"
-        android:textColor="@color/text_dark" />
+        android:id="@+id/Tgroup2"
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="FSD"
+        android:textColor="@color/white"
+        android:background="@drawable/labelmerah" />
 
 </FrameLayout>
