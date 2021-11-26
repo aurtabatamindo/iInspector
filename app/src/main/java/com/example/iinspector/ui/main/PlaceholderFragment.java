@@ -21,6 +21,8 @@ import com.example.iinspector.R;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -48,6 +50,7 @@ public class PlaceholderFragment extends Fragment {
     int Position;
     String documentId;
     Spinner spinner;
+
 
     String[] subjects = {
             "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
@@ -94,15 +97,15 @@ public class PlaceholderFragment extends Fragment {
 //                Query query = rootRef.collection("templates")
 //                        .whereEqualTo("uid",currentUser.getUid());
 
-                String fsd = "FSD";
-                String wsh = "WSH";
-                String semua = "Semua";
-                String spinergroup = spinner.getSelectedItem().toString().trim();
+//                String fsd = "FSD";
+//                String wsh = "WSH";
+//                String semua = "Semua";
+//                String spinergroup = spinner.getSelectedItem().toString().trim();
 
 
                     Query query = FirebaseFirestore.getInstance()
                             .collection("templates")
-                            .orderBy("group");
+                            .orderBy("status");
 
                     FirestoreRecyclerOptions<GetDataTodo> options = new FirestoreRecyclerOptions.Builder<GetDataTodo>()
                             .setQuery(query, GetDataTodo.class)
@@ -115,6 +118,7 @@ public class PlaceholderFragment extends Fragment {
                             holder.setTgroup(getDataTodo.getGroup());
                             holder.settemplateDesctiption("Desctiption : "+ getDataTodo.getTemplateDesctiption());
                             holder.settemplateTitle(getDataTodo.getTemplateTitle());
+                            holder.setstatus("Status : "+getDataTodo.getStatus());
 
                             holder.setOnClickListener(new TodoHolder.ClickListener() {
                                 @Override
@@ -122,7 +126,12 @@ public class PlaceholderFragment extends Fragment {
 
                                     documentId = getSnapshots().getSnapshot(position).getId();
                                     Position = position;
-                                    peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
+                                    if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
+                                        Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
+                                    }else {
+                                        peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
+                                    }
+
 
                                 }
                             });
@@ -174,8 +183,25 @@ public class PlaceholderFragment extends Fragment {
             alertDialogBuilder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
-                    Intent intent = new Intent(getActivity(), InspeksiAwal.class);
-                    startActivity(intent);
+
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+
+                    rootRef.collection("templates").document(documentId)
+                            .update("status","Sedang Dikerjakan")
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                    Intent intent = new Intent(getActivity(), InspeksiAwal.class);
+                                    intent.putExtra("doc",documentId);
+                                    startActivity(intent);
+
+                                }
+                            });
+
+
                 }
             });
             alertDialogBuilder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
@@ -196,4 +222,5 @@ public class PlaceholderFragment extends Fragment {
         super.onStop();
 
     }
+
 }

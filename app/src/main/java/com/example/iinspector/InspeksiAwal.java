@@ -46,12 +46,18 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -102,10 +108,18 @@ public class InspeksiAwal extends AppCompatActivity {
     //SpinerTeam
     Spinner spinner;
 
+
+
+    //cloudfirebase
+    FirebaseFirestore dbs;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
+        //putextra
+        String documentId = getIntent().getStringExtra("doc");
 
         //gps
         resultReceiver = new AddressResultReceiver(new Handler());
@@ -168,6 +182,8 @@ public class InspeksiAwal extends AppCompatActivity {
                     String lok = lokasi.getText().toString().trim();
                     String spinertim = spinner.getSelectedItem().toString().trim();
                     String pilih = "Pilih Team";
+                    String suhu = weatherData.getText().toString();
+                    String itgl = tgl;
 
                     if (lok.isEmpty()&& spinertim.equals(pilih)){
                         Snackbar.make(findViewById(R.id.inspeksiawal),"Lokasi & Team Tidak Boleh Kosong",Snackbar.LENGTH_LONG).show();
@@ -179,9 +195,30 @@ public class InspeksiAwal extends AppCompatActivity {
                              Snackbar.make(findViewById(R.id.inspeksiawal),"Harap pilih team inspeksi",Snackbar.LENGTH_LONG).show();
                     }
                     else{
-                        Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
-                        startActivity(lanjut);
-                        finish();
+                        SendDataInspesiAwal sendDataInspesiAwal = new SendDataInspesiAwal(
+                                lok,
+                                spinertim,
+                                suhu,
+                                itgl
+
+                        );
+                        dbs = FirebaseFirestore.getInstance();
+                        dbs.collection("templates").document(documentId).set(sendDataInspesiAwal)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
+//                                            lanjut.putExtra("doc",documentId);
+                                            startActivity(lanjut);
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
+
+
                     }
 
             }

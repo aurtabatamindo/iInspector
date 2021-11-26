@@ -56,6 +56,10 @@ public class TodoHolder extends RecyclerView.ViewHolder{
         textView.setText(templateTitle);
     }
 
+    void setstatus(String status){
+        TextView textView = view.findViewById(R.id.Tstatus);
+        textView.setText(status);
+    }
 
 
     private TodoHolder.ClickListener mClickListener;

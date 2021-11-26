@@ -6,16 +6,16 @@ public class GetDataTodo {
     private String group;
     private String templateDesctiption;
     private String templateTitle;
+    private String status;
 
 
-
-    public GetDataTodo(String authorTitle , String group , String templateDesctiption, String templateTitle) {
+    public GetDataTodo(String authorTitle , String group , String templateDesctiption, String templateTitle, String status) {
 
         this.authorTitle = authorTitle;
         this.group = group;
         this.templateDesctiption = templateDesctiption;
         this.templateTitle = templateTitle;
-
+        this.status = status;
 
     }
 
@@ -54,5 +54,13 @@ public class GetDataTodo {
 
     public void setTemplateTitle(String templateTitle) {
         this.templateTitle = templateTitle;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

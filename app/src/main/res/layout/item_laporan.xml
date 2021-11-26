@@ -40,12 +40,24 @@
 
     <TextView
         android:id="@+id/Tauth"
-        android:layout_width="match_parent"
+        android:layout_width="125dp"
         android:layout_height="15dp"
         android:layout_marginLeft="70dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="65dp"
         android:text="Auther"
+        android:textColor="@color/text_dark"
+        android:textSize="9dp"
+        />
+
+    <TextView
+        android:id="@+id/Tstatus"
+        android:layout_width="155dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="65dp"
+        android:text="Status"
         android:textColor="@color/text_dark"
         android:textSize="9dp"
         />
