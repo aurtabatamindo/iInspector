@@ -114,9 +114,9 @@ public class PlaceholderFragment extends Fragment {
                     adaptercard = new FirestoreRecyclerAdapter<GetDataTodo, TodoHolder>(options) {
                         @Override
                         protected void onBindViewHolder(@NonNull TodoHolder holder, int position, @NonNull GetDataTodo getDataTodo) {
-                            holder.setauthorTitle(("Author : "+getDataTodo.getAuthorTitle()));
-                            holder.setTgroup(getDataTodo.getGroup());
-                            holder.settemplateDesctiption("Desctiption : "+ getDataTodo.getTemplateDesctiption());
+                            holder.setauthorTitle(("Author : "+getDataTodo.getAuthor()));
+                            holder.setTgroup(getDataTodo.getTemplateGroup());
+                            holder.settemplateDesctiption("Desctiption : "+ getDataTodo.getTemplateDescription());
                             holder.settemplateTitle(getDataTodo.getTemplateTitle());
                             holder.setstatus("Status : "+getDataTodo.getStatus());
 

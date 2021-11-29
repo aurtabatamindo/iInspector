@@ -2,20 +2,21 @@ package com.example.iinspector.ui.main;
 
 
 public class GetDataTodo {
-    private String authorTitle;
-    private String group;
-    private String templateDesctiption;
-    private String templateTitle;
+    private String author;
     private String status;
+    private String templateDescription;
+    private String templateGroup;
+    private String templateTitle;
 
 
-    public GetDataTodo(String authorTitle , String group , String templateDesctiption, String templateTitle, String status) {
 
-        this.authorTitle = authorTitle;
-        this.group = group;
-        this.templateDesctiption = templateDesctiption;
-        this.templateTitle = templateTitle;
+    public GetDataTodo(String author, String status , String templateDescription, String templateGroup,String templateTitle ) {
+
+        this.author = author;
         this.status = status;
+        this.templateDescription = templateDescription;
+        this.templateGroup = templateGroup;
+        this.templateTitle = templateTitle;
 
     }
 
@@ -24,28 +25,37 @@ public class GetDataTodo {
 
     }
 
-    public String getAuthorTitle() {
-        return authorTitle;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthorTitle(String authorTitle) {
-        this.authorTitle = authorTitle;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public String getGroup() {
-        return group;
+
+    public String getStatus() {
+        return status;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getTemplateDesctiption() {
-        return templateDesctiption;
+    public String getTemplateDescription() {
+        return templateDescription;
     }
 
-    public void setTemplateDesctiption(String templateDesctiption) {
-        this.templateDesctiption = templateDesctiption;
+    public void setTemplateDescription(String templateDescription) {
+        this.templateDescription = templateDescription;
+    }
+
+    public String getTemplateGroup() {
+        return templateGroup;
+    }
+
+    public void setTemplateGroup(String templateGroup) {
+        this.templateGroup = templateGroup;
     }
 
     public String getTemplateTitle() {
@@ -54,13 +64,5 @@ public class GetDataTodo {
 
     public void setTemplateTitle(String templateTitle) {
         this.templateTitle = templateTitle;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

@@ -96,6 +96,7 @@ public class InspeksiAwal extends AppCompatActivity {
     LayoutInflater inflater;
     View dialogView;
 
+
     //Cuaca
     public static String BaseUrl = "https://api.openweathermap.org/";
     public static String AppId = "df844c5fe47723cce56c4601631f9b64";
@@ -113,6 +114,8 @@ public class InspeksiAwal extends AppCompatActivity {
     //cloudfirebase
     FirebaseFirestore dbs;
 
+    //String Alamat
+    String alm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +187,7 @@ public class InspeksiAwal extends AppCompatActivity {
                     String pilih = "Pilih Team";
                     String suhu = weatherData.getText().toString();
                     String itgl = tgl;
+                    String alamt = alamat.getText().toString();
 
                     if (lok.isEmpty()&& spinertim.equals(pilih)){
                         Snackbar.make(findViewById(R.id.inspeksiawal),"Lokasi & Team Tidak Boleh Kosong",Snackbar.LENGTH_LONG).show();
@@ -195,15 +199,21 @@ public class InspeksiAwal extends AppCompatActivity {
                              Snackbar.make(findViewById(R.id.inspeksiawal),"Harap pilih team inspeksi",Snackbar.LENGTH_LONG).show();
                     }
                     else{
-                        SendDataInspesiAwal sendDataInspesiAwal = new SendDataInspesiAwal(
-                                lok,
-                                spinertim,
-                                suhu,
-                                itgl
+//                        SendDataInspesiAwal sendDataInspesiAwal = new SendDataInspesiAwal(
+//                                lok,
+//                                spinertim,
+//                                suhu,
+//                                itgl
+//
+//                        );
 
-                        );
                         dbs = FirebaseFirestore.getInstance();
-                        dbs.collection("templates").document(documentId).set(sendDataInspesiAwal)
+                        dbs.collection("templates").document(documentId)
+                                .update("templateLocation",lok,
+                                        "templateTeam",spinertim,
+                                        "templateTemperature",suhu,
+                                        "templateDate",itgl,
+                                        "templateAddress",alamt)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -308,6 +318,7 @@ public class InspeksiAwal extends AppCompatActivity {
             super.onReceiveResult(resultCode, resultData);
             if (resultCode == Constants.SUCCESS_RESULT){
                 alamat.setText(resultData.getString(Constants.RESULT_DATA_KEY));
+
             }else{
                 Toast.makeText(InspeksiAwal.this,resultData.getString(Constants.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
             }
