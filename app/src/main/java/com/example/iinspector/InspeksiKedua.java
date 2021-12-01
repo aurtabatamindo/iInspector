@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,6 +20,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,14 +31,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.iinspector.ui.main.GetDataTodo;
+import com.example.iinspector.ui.main.TodoHolder;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.kyanogen.signatureview.SignatureView;
 
 public class InspeksiKedua extends AppCompatActivity {
-    Button kemali, selesai;
-    CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
-    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5,tindakan1,tindakan2,tindakan3,tindakan4,tindakan5;
+
+    Button  selesai;
+//    CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
+//    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5,tindakan1,tindakan2,tindakan3,tindakan4,tindakan5;
+    CardView scard1,scard2;
+    TextView qTitle;
+
+    //Recyclerview
+    RecyclerView qrecyclerview;
+    RecyclerView.Adapter qrecyclerViewAdapter;
+    RecyclerView.LayoutManager qrecylerViewLayoutManager;
+    FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder> qadaptercard;
 
     //camera
     private static final int CAMERA_REQUEST = 1888;
@@ -48,47 +68,109 @@ public class InspeksiKedua extends AppCompatActivity {
     AlertDialog.Builder dialog;
     LayoutInflater inflater;
     View dialogView;
+
+    //firestore
+    Task<QuerySnapshot> firestore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_kedua);
 
-//        kemali = findViewById(R.id.btnback);
+        String documentId = getIntent().getStringExtra("doc");
+
         selesai = findViewById(R.id.btnnext);
         scard1 = findViewById(R.id.scard1);
-        cardview1 = findViewById(R.id.cardView1);
-        cardView2 = findViewById(R.id.cardView2);
         scard2 = findViewById(R.id.scard2);
-        cardView4 = findViewById(R.id.cardView4);
-        cardView5 = findViewById(R.id.cardView5);
-        cardView6 = findViewById(R.id.cardView6);
-//        cardView7 = findViewById(R.id.cardView7);
-//        cardView8 = findViewById(R.id.cardView8);
-        rya = findViewById(R.id.rya);
-        rno = findViewById(R.id.rno);
-        ya = findViewById(R.id.ya);
-        no = findViewById(R.id.no);
-        rya2 = findViewById(R.id.rya2);
-        rno2 = findViewById(R.id.rno2);
-        ya2 = findViewById(R.id.ya2);
-        no2 = findViewById(R.id.no2);
-        pass = findViewById(R.id.pass);
-        fail = findViewById(R.id.fail);
-        tpass = findViewById(R.id.tpass);
-        tfail = findViewById(R.id.tfail);
-        tambah1 = findViewById(R.id.tambah1);
-        tambah2 = findViewById(R.id.tambah2);
-        tambah3 = findViewById(R.id.tambah3);
-//        tambah4 = findViewById(R.id.tambah4);
-//        tambah5 = findViewById(R.id.tambah5);
-        foto1 = findViewById(R.id.foto1);
-        foto2 = findViewById(R.id.foto2);
-        foto3 = findViewById(R.id.foto3);
-//        foto4 = findViewById(R.id.foto4);
-//        foto5 = findViewById(R.id.foto5);
-        tindakan1 = findViewById(R.id.tindakan1);
-        tindakan2 = findViewById(R.id.tindakan2);
-        tindakan3 = findViewById(R.id.tindakan3);
+//        qTitle = findViewById(R.id.qTitle);
+
+        qrecyclerview = findViewById(R.id.qrecyclerView);
+        qrecyclerview.setLayoutManager(new LinearLayoutManager(this));
+
+        Query query = FirebaseFirestore.getInstance()
+                .collection("templates")
+                .document(documentId)
+                .collection("pages")
+                .orderBy("contents");
+
+//        firestore = FirebaseFirestore.getInstance()
+//                    .collection("templates")
+//                    .document(documentId)
+//                    .collection("pages")
+//                    .orderBy("pageTitle")
+//                    .get();
+
+//        qTitle.setText(firestore.toString());
+
+        FirestoreRecyclerOptions<GetDataQuestion> options = new FirestoreRecyclerOptions.Builder<GetDataQuestion>()
+                .setQuery(query, GetDataQuestion.class)
+                .build();
+
+        qadaptercard = new FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull QuestionHolder holder, int position, @NonNull GetDataQuestion getDataQuestion) {
+                holder.setdescription((getDataQuestion.getDescription()));
+
+
+                holder.setOnClickListener(new QuestionHolder.ClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+//                        documentId = getSnapshots().getSnapshot(position).getId();
+//                        Position = position;
+//                        if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
+//                            Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
+//                        }else {
+//                            peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
+//                        }
+
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_question, parent, false);
+                return new QuestionHolder(view);
+            }
+        };
+        qadaptercard.startListening();
+        qrecyclerview.setAdapter(qadaptercard);
+
+        //cardview1 = findViewById(R.id.cardView1);
+//        cardView2 = findViewById(R.id.cardView2);
+//        cardView4 = findViewById(R.id.cardView4);
+//        cardView5 = findViewById(R.id.cardView5);
+//        cardView6 = findViewById(R.id.cardView6);
+////        cardView7 = findViewById(R.id.cardView7);
+////        cardView8 = findViewById(R.id.cardView8);
+//        rya = findViewById(R.id.rya);
+//        rno = findViewById(R.id.rno);
+//        ya = findViewById(R.id.ya);
+//        no = findViewById(R.id.no);
+//        rya2 = findViewById(R.id.rya2);
+//        rno2 = findViewById(R.id.rno2);
+//        ya2 = findViewById(R.id.ya2);
+//        no2 = findViewById(R.id.no2);
+//        pass = findViewById(R.id.pass);
+//        fail = findViewById(R.id.fail);
+//        tpass = findViewById(R.id.tpass);
+//        tfail = findViewById(R.id.tfail);
+//        tambah1 = findViewById(R.id.tambah1);
+//        tambah2 = findViewById(R.id.tambah2);
+//        tambah3 = findViewById(R.id.tambah3);
+////        tambah4 = findViewById(R.id.tambah4);
+////        tambah5 = findViewById(R.id.tambah5);
+//        foto1 = findViewById(R.id.foto1);
+//        foto2 = findViewById(R.id.foto2);
+//        foto3 = findViewById(R.id.foto3);
+////        foto4 = findViewById(R.id.foto4);
+////        foto5 = findViewById(R.id.foto5);
+//        tindakan1 = findViewById(R.id.tindakan1);
+//        tindakan2 = findViewById(R.id.tindakan2);
+//        tindakan3 = findViewById(R.id.tindakan3);
 //        tindakan4 = findViewById(R.id.tindakan4);
 //        tindakan5 = findViewById(R.id.tindakan5);
 
@@ -103,147 +185,152 @@ public class InspeksiKedua extends AppCompatActivity {
 //        });
 
 
+
         scard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (cardview1.getVisibility() == View.VISIBLE) {
-                    cardview1.setVisibility(View.GONE);
-                    cardView2.setVisibility(View.GONE);
-                } else {
-                    cardview1.setVisibility(View.VISIBLE);
-                    cardView2.setVisibility(View.VISIBLE);
+                if (qrecyclerview.getVisibility() == View.VISIBLE){
+                    qrecyclerview.setVisibility(View.GONE);
+                }else{
+                    qrecyclerview.setVisibility(View.VISIBLE);
                 }
+//                if (cardview1.getVisibility() == View.VISIBLE) {
+//                    cardview1.setVisibility(View.GONE);
+//                    cardView2.setVisibility(View.GONE);
+//                } else {
+//                    cardview1.setVisibility(View.VISIBLE);
+//                    cardView2.setVisibility(View.VISIBLE);
+//                }
             }
         });
 
         scard2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cardView4.getVisibility() == View.VISIBLE) {
-                    cardView4.setVisibility(View.GONE);
-                    cardView5.setVisibility(View.GONE);
-                    cardView6.setVisibility(View.GONE);
-//                    cardView7.setVisibility(View.GONE);
-//                    cardView8.setVisibility(View.GONE);
-                } else {
-                    cardView4.setVisibility(View.VISIBLE);
-                    cardView5.setVisibility(View.VISIBLE);
-                    cardView6.setVisibility(View.VISIBLE);
-//                    cardView7.setVisibility(View.VISIBLE);
-//                    cardView8.setVisibility(View.VISIBLE);
-                }
+//                if (cardView4.getVisibility() == View.VISIBLE) {
+//                    cardView4.setVisibility(View.GONE);
+//                    cardView5.setVisibility(View.GONE);
+//                    cardView6.setVisibility(View.GONE);
+////                    cardView7.setVisibility(View.GONE);
+////                    cardView8.setVisibility(View.GONE);
+//                } else {
+//                    cardView4.setVisibility(View.VISIBLE);
+//                    cardView5.setVisibility(View.VISIBLE);
+//                    cardView6.setVisibility(View.VISIBLE);
+////                    cardView7.setVisibility(View.VISIBLE);
+////                    cardView8.setVisibility(View.VISIBLE);
+//                }
             }
         });
-
-        rya.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int abucard = getResources().getColor(R.color.abucard);
-                if (rya.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rya.setCardBackgroundColor(Color.GREEN);
-                    ya.setTextColor(Color.WHITE);
-                } else {
-                    rya.setCardBackgroundColor(Color.WHITE);
-                    ya.setTextColor(abucard);
-                }
-
-            }
-        });
-
-        rno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int abucard = getResources().getColor(R.color.abucard);
-                if (rno.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rno.setCardBackgroundColor(Color.RED);
-                    no.setTextColor(Color.WHITE);
-                } else {
-                    rno.setCardBackgroundColor(Color.WHITE);
-                    no.setTextColor(abucard);
-                }
-
-            }
-        });
-
-        rya2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int abucard = getResources().getColor(R.color.abucard);
-                if (rya2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rya2.setCardBackgroundColor(Color.GREEN);
-                    ya2.setTextColor(Color.WHITE);
-                } else {
-                    rya2.setCardBackgroundColor(Color.WHITE);
-                    ya2.setTextColor(abucard);
-                }
-
-            }
-        });
-
-        rno2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int abucard = getResources().getColor(R.color.abucard);
-                if (rno2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    rno2.setCardBackgroundColor(Color.RED);
-                    no2.setTextColor(Color.WHITE);
-                } else {
-                    rno2.setCardBackgroundColor(Color.WHITE);
-                    no2.setTextColor(abucard);
-                }
-
-            }
-        });
-
-        pass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int abucard = getResources().getColor(R.color.abucard);
-                if (pass.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    pass.setCardBackgroundColor(Color.GREEN);
-                    tpass.setTextColor(Color.WHITE);
-                } else {
-                    pass.setCardBackgroundColor(Color.WHITE);
-                    tpass.setTextColor(abucard);
-                }
-
-            }
-        });
-
-        fail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int abucard = getResources().getColor(R.color.abucard);
-                if (fail.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-                    fail.setCardBackgroundColor(Color.RED);
-                    tfail.setTextColor(Color.WHITE);
-                } else {
-                    fail.setCardBackgroundColor(Color.WHITE);
-                    tfail.setTextColor(abucard);
-                }
-
-            }
-        });
-
-        tambah1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
-        tambah2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
-        tambah3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
+//
+//        rya.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int abucard = getResources().getColor(R.color.abucard);
+//                if (rya.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
+//                    rya.setCardBackgroundColor(Color.GREEN);
+//                    ya.setTextColor(Color.WHITE);
+//                } else {
+//                    rya.setCardBackgroundColor(Color.WHITE);
+//                    ya.setTextColor(abucard);
+//                }
+//
+//            }
+//        });
+//
+//        rno.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int abucard = getResources().getColor(R.color.abucard);
+//                if (rno.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
+//                    rno.setCardBackgroundColor(Color.RED);
+//                    no.setTextColor(Color.WHITE);
+//                } else {
+//                    rno.setCardBackgroundColor(Color.WHITE);
+//                    no.setTextColor(abucard);
+//                }
+//
+//            }
+//        });
+//
+//        rya2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int abucard = getResources().getColor(R.color.abucard);
+//                if (rya2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
+//                    rya2.setCardBackgroundColor(Color.GREEN);
+//                    ya2.setTextColor(Color.WHITE);
+//                } else {
+//                    rya2.setCardBackgroundColor(Color.WHITE);
+//                    ya2.setTextColor(abucard);
+//                }
+//
+//            }
+//        });
+//
+//        rno2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int abucard = getResources().getColor(R.color.abucard);
+//                if (rno2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
+//                    rno2.setCardBackgroundColor(Color.RED);
+//                    no2.setTextColor(Color.WHITE);
+//                } else {
+//                    rno2.setCardBackgroundColor(Color.WHITE);
+//                    no2.setTextColor(abucard);
+//                }
+//
+//            }
+//        });
+//
+//        pass.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int abucard = getResources().getColor(R.color.abucard);
+//                if (pass.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
+//                    pass.setCardBackgroundColor(Color.GREEN);
+//                    tpass.setTextColor(Color.WHITE);
+//                } else {
+//                    pass.setCardBackgroundColor(Color.WHITE);
+//                    tpass.setTextColor(abucard);
+//                }
+//
+//            }
+//        });
+//
+//        fail.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int abucard = getResources().getColor(R.color.abucard);
+//                if (fail.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
+//                    fail.setCardBackgroundColor(Color.RED);
+//                    tfail.setTextColor(Color.WHITE);
+//                } else {
+//                    fail.setCardBackgroundColor(Color.WHITE);
+//                    tfail.setTextColor(abucard);
+//                }
+//
+//            }
+//        });
+//
+//        tambah1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
+//        tambah2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
+//        tambah3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
 //        tambah4.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -264,25 +351,25 @@ public class InspeksiKedua extends AppCompatActivity {
             }
         });
 
-        foto1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
-
-        foto2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
-        foto3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
+//        foto1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
+//
+//        foto2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
+//        foto3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
 //        foto4.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -295,25 +382,25 @@ public class InspeksiKedua extends AppCompatActivity {
 //                ambilfoto();
 //            }
 //        });
-
-        tindakan1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
-        tindakan2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
-        tindakan3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
+//
+//        tindakan1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
+//        tindakan2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
+//        tindakan3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
 //        tindakan4.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

@@ -219,7 +219,7 @@ public class InspeksiAwal extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
-//                                            lanjut.putExtra("doc",documentId);
+                                            lanjut.putExtra("doc",documentId);
                                             startActivity(lanjut);
                                         } else {
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
