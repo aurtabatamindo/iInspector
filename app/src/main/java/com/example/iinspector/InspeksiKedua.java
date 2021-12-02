@@ -35,13 +35,23 @@ import com.example.iinspector.ui.main.GetDataTodo;
 import com.example.iinspector.ui.main.TodoHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.kyanogen.signatureview.SignatureView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class InspeksiKedua extends AppCompatActivity {
 
@@ -70,7 +80,11 @@ public class InspeksiKedua extends AppCompatActivity {
     View dialogView;
 
     //firestore
-    Task<QuerySnapshot> firestore;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    //collection
+    CollectionReference pages = db.collection("templates");
+    DocumentSnapshot documentSnapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +96,38 @@ public class InspeksiKedua extends AppCompatActivity {
         selesai = findViewById(R.id.btnnext);
         scard1 = findViewById(R.id.scard1);
         scard2 = findViewById(R.id.scard2);
-//        qTitle = findViewById(R.id.qTitle);
+        qTitle = findViewById(R.id.qTitile);
+
+//        DocumentReference docRef = db
+//                .collectionGroup("templates")
+//                .getFirestore().document(documentId)
+//                .collection("pages")
+//                .document();
+
+//        DocumentReference docRef = db
+//                .collection("templates")
+//                .document(documentId);
+
+          pages.document(documentId)
+                  .collection("pages").get()
+                  .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                  for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                      String title = (String) documentSnapshot.get("pageTitle");
+                      qTitle.setText(title);
+
+                  }
+
+              }
+          });
+
 
         qrecyclerview = findViewById(R.id.qrecyclerView);
         qrecyclerview.setLayoutManager(new LinearLayoutManager(this));
+
+
 
         Query query = FirebaseFirestore.getInstance()
                 .collection("templates")
@@ -109,7 +151,7 @@ public class InspeksiKedua extends AppCompatActivity {
         qadaptercard = new FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull QuestionHolder holder, int position, @NonNull GetDataQuestion getDataQuestion) {
-                holder.setdescription((getDataQuestion.getDescription()));
+                holder.setpageTitle((getDataQuestion.getPageTitle()));
 
 
                 holder.setOnClickListener(new QuestionHolder.ClickListener() {

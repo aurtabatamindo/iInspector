@@ -1,21 +1,16 @@
 package com.example.iinspector;
 
-
-public class GetDataQuestion {
+public class GetTitle {
     private String pageTitle;
 
 
-
-
-    public GetDataQuestion(String pageTitle ) {
-
-        this.pageTitle = pageTitle;
-
+    public GetTitle(){
 
     }
 
-    //Add this
-    public GetDataQuestion() {
+    public GetTitle(String pageTitle){
+        this.pageTitle = pageTitle;
+
 
     }
 
