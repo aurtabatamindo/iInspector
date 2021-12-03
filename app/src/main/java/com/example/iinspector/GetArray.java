@@ -1,14 +1,14 @@
 package com.example.iinspector;
 
-public class GetTitle {
+public class GetArray {
     private String pageTitle;
 
 
-    public GetTitle(){
+    public GetArray(){
 
     }
 
-    public GetTitle(String pageTitle){
+    public GetArray(String pageTitle){
         this.pageTitle = pageTitle;
 
 

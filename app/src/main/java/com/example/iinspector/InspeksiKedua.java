@@ -1,11 +1,9 @@
 package com.example.iinspector;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -13,44 +11,33 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
-import com.example.iinspector.ui.main.GetDataTodo;
-import com.example.iinspector.ui.main.TodoHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.kyanogen.signatureview.SignatureView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class InspeksiKedua extends AppCompatActivity {
@@ -58,7 +45,7 @@ public class InspeksiKedua extends AppCompatActivity {
     Button  selesai;
 //    CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
 //    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5,tindakan1,tindakan2,tindakan3,tindakan4,tindakan5;
-    CardView scard1,scard2;
+    CardView scard1,scard2 ,cardview1, cardView2;
     TextView qTitle;
 
     //Recyclerview
@@ -123,66 +110,82 @@ public class InspeksiKedua extends AppCompatActivity {
               }
           });
 
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        CollectionReference applicationsRef = rootRef.collection("pages");
+        DocumentReference applicationIdRef = applicationsRef.document(documentId);
+        applicationIdRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
 
-        qrecyclerview = findViewById(R.id.qrecyclerView);
-        qrecyclerview.setLayoutManager(new LinearLayoutManager(this));
-
-
-
-        Query query = FirebaseFirestore.getInstance()
-                .collection("templates")
-                .document(documentId)
-                .collection("pages")
-                .orderBy("contents");
-
-//        firestore = FirebaseFirestore.getInstance()
-//                    .collection("templates")
-//                    .document(documentId)
-//                    .collection("pages")
-//                    .orderBy("pageTitle")
-//                    .get();
-
-//        qTitle.setText(firestore.toString());
-
-        FirestoreRecyclerOptions<GetDataQuestion> options = new FirestoreRecyclerOptions.Builder<GetDataQuestion>()
-                .setQuery(query, GetDataQuestion.class)
-                .build();
-
-        qadaptercard = new FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull QuestionHolder holder, int position, @NonNull GetDataQuestion getDataQuestion) {
-                holder.setpageTitle((getDataQuestion.getPageTitle()));
-
-
-                holder.setOnClickListener(new QuestionHolder.ClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-
-//                        documentId = getSnapshots().getSnapshot(position).getId();
-//                        Position = position;
-//                        if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
-//                            Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
-//                        }else {
-//                            peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
-//                        }
-
-
-                    }
-                });
+                }
             }
+        });
 
-            @NonNull
-            @Override
-            public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_question, parent, false);
-                return new QuestionHolder(view);
-            }
-        };
-        qadaptercard.startListening();
-        qrecyclerview.setAdapter(qadaptercard);
+        List<Map<String, Object>> groups = (List<Map<String, Object>>) document.get("fleets");
+        ArrayList<String> names = new ArrayList<>();
+        for (Map<String, Object> group : groups) {
+            String name = group.get("name");
+            names.add(name);
+        }
 
-        //cardview1 = findViewById(R.id.cardView1);
-//        cardView2 = findViewById(R.id.cardView2);
+//        qrecyclerview = findViewById(R.id.qrecyclerView);
+//        qrecyclerview.setLayoutManager(new LinearLayoutManager(this));
+//
+//
+//
+//        Query query = pages.document(documentId)
+//                .collection("pages")
+//                .orderBy("contents");
+//
+////        firestore = FirebaseFirestore.getInstance()
+////                    .collection("templates")
+////                    .document(documentId)
+////                    .collection("pages")
+////                    .orderBy("pageTitle")
+////                    .get();
+//
+////        qTitle.setText(firestore.toString());
+//
+//        FirestoreRecyclerOptions<GetDataQuestion> options = new FirestoreRecyclerOptions.Builder<GetDataQuestion>()
+//                .setQuery(query, GetDataQuestion.class)
+//                .build();
+//
+//        qadaptercard = new FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder>(options) {
+//            @Override
+//            protected void onBindViewHolder(@NonNull QuestionHolder holder, int position, @NonNull GetDataQuestion getDataQuestion) {
+//                holder.setdescription((getDataQuestion.getDescription()));
+//
+//
+//                holder.setOnClickListener(new QuestionHolder.ClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//
+////                        documentId = getSnapshots().getSnapshot(position).getId();
+////                        Position = position;
+////                        if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
+////                            Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
+////                        }else {
+////                            peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
+////                        }
+//
+//
+//                    }
+//                });
+//            }
+//
+//            @NonNull
+//            @Override
+//            public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_question, parent, false);
+//                return new QuestionHolder(view);
+//            }
+//        };
+//        qadaptercard.startListening();
+//        qrecyclerview.setAdapter(qadaptercard);
+
+        cardview1 = findViewById(R.id.cardView1);
+        cardView2 = findViewById(R.id.cardView2);
 //        cardView4 = findViewById(R.id.cardView4);
 //        cardView5 = findViewById(R.id.cardView5);
 //        cardView6 = findViewById(R.id.cardView6);
@@ -231,18 +234,18 @@ public class InspeksiKedua extends AppCompatActivity {
         scard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (qrecyclerview.getVisibility() == View.VISIBLE){
-                    qrecyclerview.setVisibility(View.GONE);
-                }else{
-                    qrecyclerview.setVisibility(View.VISIBLE);
-                }
-//                if (cardview1.getVisibility() == View.VISIBLE) {
-//                    cardview1.setVisibility(View.GONE);
-//                    cardView2.setVisibility(View.GONE);
-//                } else {
-//                    cardview1.setVisibility(View.VISIBLE);
-//                    cardView2.setVisibility(View.VISIBLE);
+//                if (qrecyclerview.getVisibility() == View.VISIBLE){
+//                    qrecyclerview.setVisibility(View.GONE);
+//                }else{
+//                    qrecyclerview.setVisibility(View.VISIBLE);
 //                }
+                if (cardview1.getVisibility() == View.VISIBLE) {
+                    cardview1.setVisibility(View.GONE);
+                    cardView2.setVisibility(View.GONE);
+                } else {
+                    cardview1.setVisibility(View.VISIBLE);
+                    cardView2.setVisibility(View.VISIBLE);
+                }
             }
         });
 

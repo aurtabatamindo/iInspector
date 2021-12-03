@@ -1,15 +1,17 @@
 package com.example.iinspector;
 
 
+import java.util.Map;
+
 public class GetDataQuestion {
-    private String pageTitle;
+
+    private String description;
 
 
 
+    public GetDataQuestion(String description ) {
 
-    public GetDataQuestion(String pageTitle ) {
-
-        this.pageTitle = pageTitle;
+        this.description = description;
 
 
     }
@@ -19,11 +21,11 @@ public class GetDataQuestion {
 
     }
 
-    public String getPageTitle() {
-        return pageTitle;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPageTitle(String pageTitle) {
-        this.pageTitle = pageTitle;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

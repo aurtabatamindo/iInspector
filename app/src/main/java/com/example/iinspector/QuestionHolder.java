@@ -23,9 +23,9 @@ public class QuestionHolder extends RecyclerView.ViewHolder{
         });
     }
 
-    void setpageTitle(String pageTitle){
+    void setdescription(String description){
         TextView textView = view.findViewById(R.id.qIsiPertanyaan);
-        textView.setText(pageTitle);
+        textView.setText(description);
 
 //        setOnClickListener(new ClickListener() {
 //            @Override
