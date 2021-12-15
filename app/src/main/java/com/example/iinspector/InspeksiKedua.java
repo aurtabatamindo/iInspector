@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -13,9 +14,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,18 +28,23 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.kyanogen.signatureview.SignatureView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +54,7 @@ public class InspeksiKedua extends AppCompatActivity {
 //    CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
 //    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5,tindakan1,tindakan2,tindakan3,tindakan4,tindakan5;
     CardView scard1,scard2 ,cardview1, cardView2;
-    TextView qTitle;
+    TextView qTitle,qDes;
 
     //Recyclerview
     RecyclerView qrecyclerview;
@@ -84,6 +92,7 @@ public class InspeksiKedua extends AppCompatActivity {
         scard1 = findViewById(R.id.scard1);
         scard2 = findViewById(R.id.scard2);
         qTitle = findViewById(R.id.qTitile);
+        qDes = findViewById(R.id.qDescr);
 
 //        DocumentReference docRef = db
 //                .collectionGroup("templates")
@@ -110,42 +119,61 @@ public class InspeksiKedua extends AppCompatActivity {
               }
           });
 
-        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-        CollectionReference applicationsRef = rootRef.collection("pages");
-        DocumentReference applicationIdRef = applicationsRef.document(documentId);
-        applicationIdRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
+//        pages.document(documentId)
+//                .collection("pages")
+//                .document("f8Z3BLy68wjDtGjWVeLp")
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        DocumentSnapshot document = task.getResult();
+//                        if (document.exists()) {
+////
+//                            List<Map<String, Object>> contents = (List<Map<String, Object>>) document.get("contents");
+//
+//                            qDes.setText(contents.toString());
+//                        }
+//                    }
+//                });
 
+
+        pages.document(documentId)
+                .collection("pages")
+                .document("f8Z3BLy68wjDtGjWVeLp")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        Map<String, Object> map = document.getData();
+                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+                            if (entry.getKey().equals("contents")) {
+//                                Log.d("TAG", entry.getValue().toString());
+                                qDes.setText(entry.getValue().toString());
+
+                            }
+                        }
+                    }
                 }
             }
         });
 
-        List<Map<String, Object>> groups = (List<Map<String, Object>>) document.get("fleets");
-        ArrayList<String> names = new ArrayList<>();
-        for (Map<String, Object> group : groups) {
-            String name = group.get("name");
-            names.add(name);
-        }
 
 //        qrecyclerview = findViewById(R.id.qrecyclerView);
 //        qrecyclerview.setLayoutManager(new LinearLayoutManager(this));
 //
-//
+////        Query query = FirebaseFirestore.getInstance()
+////                .collection("templates")
+////                .orderBy("status");
 //
 //        Query query = pages.document(documentId)
 //                .collection("pages")
-//                .orderBy("contents");
+//                .document("f8Z3BLy68wjDtGjWVeLp")
+//                .getParent()
+//                .whereArrayContainsAny();
 //
-////        firestore = FirebaseFirestore.getInstance()
-////                    .collection("templates")
-////                    .document(documentId)
-////                    .collection("pages")
-////                    .orderBy("pageTitle")
-////                    .get();
 //
-////        qTitle.setText(firestore.toString());
 //
 //        FirestoreRecyclerOptions<GetDataQuestion> options = new FirestoreRecyclerOptions.Builder<GetDataQuestion>()
 //                .setQuery(query, GetDataQuestion.class)
@@ -231,42 +259,42 @@ public class InspeksiKedua extends AppCompatActivity {
 
 
 
-        scard1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                if (qrecyclerview.getVisibility() == View.VISIBLE){
-//                    qrecyclerview.setVisibility(View.GONE);
-//                }else{
-//                    qrecyclerview.setVisibility(View.VISIBLE);
-//                }
-                if (cardview1.getVisibility() == View.VISIBLE) {
-                    cardview1.setVisibility(View.GONE);
-                    cardView2.setVisibility(View.GONE);
-                } else {
-                    cardview1.setVisibility(View.VISIBLE);
-                    cardView2.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        scard2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                if (cardView4.getVisibility() == View.VISIBLE) {
-//                    cardView4.setVisibility(View.GONE);
-//                    cardView5.setVisibility(View.GONE);
-//                    cardView6.setVisibility(View.GONE);
-////                    cardView7.setVisibility(View.GONE);
-////                    cardView8.setVisibility(View.GONE);
+//        scard1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                if (qrecyclerview.getVisibility() == View.VISIBLE){
+////                    qrecyclerview.setVisibility(View.GONE);
+////                }else{
+////                    qrecyclerview.setVisibility(View.VISIBLE);
+////                }
+//                if (cardview1.getVisibility() == View.VISIBLE) {
+//                    cardview1.setVisibility(View.GONE);
+//                    cardView2.setVisibility(View.GONE);
 //                } else {
-//                    cardView4.setVisibility(View.VISIBLE);
-//                    cardView5.setVisibility(View.VISIBLE);
-//                    cardView6.setVisibility(View.VISIBLE);
-////                    cardView7.setVisibility(View.VISIBLE);
-////                    cardView8.setVisibility(View.VISIBLE);
+//                    cardview1.setVisibility(View.VISIBLE);
+//                    cardView2.setVisibility(View.VISIBLE);
 //                }
-            }
-        });
+//            }
+//        });
+//
+//        scard2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                if (cardView4.getVisibility() == View.VISIBLE) {
+////                    cardView4.setVisibility(View.GONE);
+////                    cardView5.setVisibility(View.GONE);
+////                    cardView6.setVisibility(View.GONE);
+//////                    cardView7.setVisibility(View.GONE);
+//////                    cardView8.setVisibility(View.GONE);
+////                } else {
+////                    cardView4.setVisibility(View.VISIBLE);
+////                    cardView5.setVisibility(View.VISIBLE);
+////                    cardView6.setVisibility(View.VISIBLE);
+//////                    cardView7.setVisibility(View.VISIBLE);
+//////                    cardView8.setVisibility(View.VISIBLE);
+////                }
+//            }
+//        });
 //
 //        rya.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -389,12 +417,12 @@ public class InspeksiKedua extends AppCompatActivity {
 //            }
 //        });
 
-        selesai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ttd();
-            }
-        });
+//        selesai.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ttd();
+//            }
+//        });
 
 //        foto1.setOnClickListener(new View.OnClickListener() {
 //            @Override

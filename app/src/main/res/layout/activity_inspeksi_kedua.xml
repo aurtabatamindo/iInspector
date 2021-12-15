@@ -116,7 +116,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView1"
                 android:layout_width="340dp"
-                android:layout_height="65dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 app:cardBackgroundColor="@color/cardAbu"
@@ -135,6 +135,7 @@
                     android:textStyle="italic" />
 
                 <TextView
+                    android:id="@+id/qDescr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"

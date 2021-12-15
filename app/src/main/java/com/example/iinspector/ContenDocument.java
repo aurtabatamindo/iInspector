@@ -1,2 +1,7 @@
-package com.example.iinspector;public class ContenDocument {
+package com.example.iinspector;
+
+import java.util.List;
+
+public class ContenDocument {
+    public List<GetArray> contents;
 }
