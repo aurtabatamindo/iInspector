@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -45,6 +46,7 @@ import com.kyanogen.signatureview.SignatureView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,14 +148,28 @@ public class InspeksiKedua extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
-                        Map<String, Object> map = document.getData();
-                        for (Map.Entry<String, Object> entry : map.entrySet()) {
-                            if (entry.getKey().equals("contents")) {
-//                                Log.d("TAG", entry.getValue().toString());
-                                qDes.setText(entry.getValue().toString());
-
-                            }
+                        ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
+//                        qDes.setText(list.);
+                        int ukuranArray = list.size();
+                        for(int i = 0; i<ukuranArray; i++){
+                            String deskripsi = list.get(i).get("description").toString();
+                            Log.d("ini des : ", deskripsi);
+                            qDes.setText(deskripsi);
                         }
+
+//                        Map<String, Object> map = document.getData();
+//                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+//                            if (entry.getKey().equals("contents")) {
+//
+////                                Map<String,String> gfg = new HashMap<String,String>(Integer.parseInt(entry.getKey()));
+////                                Log.d("TAG", entry.getValue().toString());
+////                                  qDes.setText(entry.getValue().toString());
+////                                  Object pertanyaan = entry.getKey();
+////                                for (i = 0; i < ar.length; i++) {
+////
+////                                }
+//                            }
+//                        }
                     }
                 }
             }
@@ -169,10 +185,8 @@ public class InspeksiKedua extends AppCompatActivity {
 //
 //        Query query = pages.document(documentId)
 //                .collection("pages")
-//                .document("f8Z3BLy68wjDtGjWVeLp")
-//                .getParent()
-//                .whereArrayContainsAny();
-//
+//                .whereEqualTo("contents", true);
+
 //
 //
 //        FirestoreRecyclerOptions<GetDataQuestion> options = new FirestoreRecyclerOptions.Builder<GetDataQuestion>()
