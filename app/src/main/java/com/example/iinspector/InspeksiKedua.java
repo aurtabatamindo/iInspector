@@ -3,6 +3,7 @@ package com.example.iinspector;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,11 +59,12 @@ public class InspeksiKedua extends AppCompatActivity {
     CardView scard1,scard2 ,cardview1, cardView2;
     TextView qTitle,qDes;
 
-    //Recyclerview
-    RecyclerView qrecyclerview;
-    RecyclerView.Adapter qrecyclerViewAdapter;
-    RecyclerView.LayoutManager qrecylerViewLayoutManager;
-    FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder> qadaptercard;
+//    //Recyclerview
+//    RecyclerView qrecyclerview;
+//    RecyclerView.Adapter qrecyclerViewAdapter;
+//    RecyclerView.LayoutManager qrecylerViewLayoutManager;
+//    FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder> qadaptercard;
+
 
     //camera
     private static final int CAMERA_REQUEST = 1888;
@@ -83,6 +85,14 @@ public class InspeksiKedua extends AppCompatActivity {
     CollectionReference pages = db.collection("templates");
     DocumentSnapshot documentSnapshot;
 
+    //recyclerview
+    private RecyclerView recyclerView;
+    private QuestionAdapter adapter;
+    private ArrayList<GetDataQuestion> questionArrayList;
+
+    //linear
+    LinearLayoutCompat myLinearLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,16 +105,6 @@ public class InspeksiKedua extends AppCompatActivity {
         scard2 = findViewById(R.id.scard2);
         qTitle = findViewById(R.id.qTitile);
         qDes = findViewById(R.id.qDescr);
-
-//        DocumentReference docRef = db
-//                .collectionGroup("templates")
-//                .getFirestore().document(documentId)
-//                .collection("pages")
-//                .document();
-
-//        DocumentReference docRef = db
-//                .collection("templates")
-//                .document(documentId);
 
           pages.document(documentId)
                   .collection("pages").get()
@@ -121,6 +121,8 @@ public class InspeksiKedua extends AppCompatActivity {
               }
           });
 
+
+
 //        pages.document(documentId)
 //                .collection("pages")
 //                .document("f8Z3BLy68wjDtGjWVeLp")
@@ -131,8 +133,6 @@ public class InspeksiKedua extends AppCompatActivity {
 //                        if (document.exists()) {
 ////
 //                            List<Map<String, Object>> contents = (List<Map<String, Object>>) document.get("contents");
-//
-//                            qDes.setText(contents.toString());
 //                        }
 //                    }
 //                });
@@ -148,33 +148,44 @@ public class InspeksiKedua extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
+
                         ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
-//                        qDes.setText(list.);
                         int ukuranArray = list.size();
                         for(int i = 0; i<ukuranArray; i++){
+
                             String deskripsi = list.get(i).get("description").toString();
                             Log.d("ini des : ", deskripsi);
-                            qDes.setText(deskripsi);
+
+                            myLinearLayout = findViewById(R.id.lPertanyaan);
+
+                            final TextView rowTextView = new TextView(InspeksiKedua.this);
+
+                            final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
+                            // set some properties of rowTextView or something
+                            rowTextView.setText(deskripsi);
+
+                            // add the textview to the linearlayout
+                            myLinearLayout.addView(rowTextView);
+
+                            // save a reference to the textview for later
+                            myTextViews[i] = rowTextView;
+
                         }
 
-//                        Map<String, Object> map = document.getData();
-//                        for (Map.Entry<String, Object> entry : map.entrySet()) {
-//                            if (entry.getKey().equals("contents")) {
-//
-////                                Map<String,String> gfg = new HashMap<String,String>(Integer.parseInt(entry.getKey()));
-////                                Log.d("TAG", entry.getValue().toString());
-////                                  qDes.setText(entry.getValue().toString());
-////                                  Object pertanyaan = entry.getKey();
-////                                for (i = 0; i < ar.length; i++) {
-////
-////                                }
-//                            }
-//                        }
                     }
                 }
             }
         });
 
+//        recyclerView = (RecyclerView) findViewById(R.id.qrecyclerView);
+//
+//        adapter = new QuestionAdapter(questionArrayList);
+//
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(InspeksiKedua.this);
+//
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        recyclerView.setAdapter(adapter);
 
 //        qrecyclerview = findViewById(R.id.qrecyclerView);
 //        qrecyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -186,7 +197,7 @@ public class InspeksiKedua extends AppCompatActivity {
 //        Query query = pages.document(documentId)
 //                .collection("pages")
 //                .whereEqualTo("contents", true);
-
+//
 //
 //
 //        FirestoreRecyclerOptions<GetDataQuestion> options = new FirestoreRecyclerOptions.Builder<GetDataQuestion>()
@@ -197,7 +208,6 @@ public class InspeksiKedua extends AppCompatActivity {
 //            @Override
 //            protected void onBindViewHolder(@NonNull QuestionHolder holder, int position, @NonNull GetDataQuestion getDataQuestion) {
 //                holder.setdescription((getDataQuestion.getDescription()));
-//
 //
 //                holder.setOnClickListener(new QuestionHolder.ClickListener() {
 //                    @Override
