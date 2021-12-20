@@ -15,6 +15,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -90,8 +92,8 @@ public class InspeksiKedua extends AppCompatActivity {
     private QuestionAdapter adapter;
     private ArrayList<GetDataQuestion> questionArrayList;
 
-    //linear
-    LinearLayoutCompat myLinearLayout;
+//    //linear
+//    LinearLayoutCompat myLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +106,7 @@ public class InspeksiKedua extends AppCompatActivity {
         scard1 = findViewById(R.id.scard1);
         scard2 = findViewById(R.id.scard2);
         qTitle = findViewById(R.id.qTitile);
-        qDes = findViewById(R.id.qDescr);
+//        qDes = findViewById(R.id.qDescr);
 
           pages.document(documentId)
                   .collection("pages").get()
@@ -156,13 +158,24 @@ public class InspeksiKedua extends AppCompatActivity {
                             String deskripsi = list.get(i).get("description").toString();
                             Log.d("ini des : ", deskripsi);
 
-                            myLinearLayout = findViewById(R.id.lPertanyaan);
+                            LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
+                            LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                            params.setMargins(10,20,10,10);
+
 
                             final TextView rowTextView = new TextView(InspeksiKedua.this);
+                            rowTextView.setBackgroundResource(R.drawable.cardpertanyaan);
+                            rowTextView.setTextSize(11);
+                            rowTextView.setPaddingRelative(50,25,10,25);
+                            rowTextView.setTypeface(null, Typeface.ITALIC);
+                            rowTextView.setTextColor(Color.parseColor("#767676"));
+                            rowTextView.setLayoutParams(params);
+
 
                             final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
+
                             // set some properties of rowTextView or something
-                            rowTextView.setText(deskripsi);
+                            rowTextView.setText("Pertanyaan :" +"\n" +deskripsi);
 
                             // add the textview to the linearlayout
                             myLinearLayout.addView(rowTextView);
