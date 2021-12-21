@@ -160,7 +160,7 @@ public class InspeksiKedua extends AppCompatActivity {
 
                             LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
                             LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params.setMargins(10,20,10,10);
+                            params.setMargins(30,20,30,10);
 
 
                             final TextView rowTextView = new TextView(InspeksiKedua.this);
@@ -171,14 +171,23 @@ public class InspeksiKedua extends AppCompatActivity {
                             rowTextView.setTextColor(Color.parseColor("#767676"));
                             rowTextView.setLayoutParams(params);
 
+                            final EditText rowEditText = new EditText(InspeksiKedua.this);
+                            rowEditText.setLayoutParams(params);
+                            rowEditText.setTextSize(11);
+
+
+                            final EditText[] myEditText = new EditText[ukuranArray];
 
                             final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
+
+                            rowEditText.setHint("Jawab disini");
 
                             // set some properties of rowTextView or something
                             rowTextView.setText("Pertanyaan :" +"\n" +deskripsi);
 
                             // add the textview to the linearlayout
                             myLinearLayout.addView(rowTextView);
+                            myLinearLayout.addView(rowEditText);
 
                             // save a reference to the textview for later
                             myTextViews[i] = rowTextView;
