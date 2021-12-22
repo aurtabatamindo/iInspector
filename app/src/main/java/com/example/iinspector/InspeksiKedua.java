@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -171,23 +172,47 @@ public class InspeksiKedua extends AppCompatActivity {
                             rowTextView.setTextColor(Color.parseColor("#767676"));
                             rowTextView.setLayoutParams(params);
 
+                            // Type = Text
                             final EditText rowEditText = new EditText(InspeksiKedua.this);
                             rowEditText.setLayoutParams(params);
                             rowEditText.setTextSize(11);
+                            rowEditText.setHint("Jawab disini");
+
+                            //Type = Person
+                            final EditText rowEditTextP = new EditText(InspeksiKedua.this);
+                            rowEditTextP.setLayoutParams(params);
+                            rowEditTextP.setTextSize(11);
+                            rowEditTextP.setHint("Jawab disini");
+                            rowEditTextP.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+                            //Type = Map
+                            final EditText rowEditTextM = new EditText(InspeksiKedua.this);
+                            rowEditTextM.setLayoutParams(params);
+                            rowEditTextM.setTextSize(11);
+                            rowEditTextM.setHint("Jawab disini");
+                            rowEditTextM.setInputType(InputType.TYPE_CLASS_NUMBER);
 
 
-                            final EditText[] myEditText = new EditText[ukuranArray];
 
                             final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
 
-                            rowEditText.setHint("Jawab disini");
 
                             // set some properties of rowTextView or something
                             rowTextView.setText("Pertanyaan :" +"\n" +deskripsi);
 
                             // add the textview to the linearlayout
                             myLinearLayout.addView(rowTextView);
-                            myLinearLayout.addView(rowEditText);
+
+                            String respon = list.get(i).get("typeOfResponse").toString();
+                            Log.d("ini typeOfResponse : ", respon);
+                            if (respon.equals("{type=text, option=null}")){
+                                myLinearLayout.addView(rowEditText);
+                            }else if (respon.equals("{type=person, option=null}")){
+                                myLinearLayout.addView(rowEditTextP);
+                            }else if (respon.equals("{type=map, option=null}")){
+                                myLinearLayout.addView(rowEditTextM);
+                            }
+
+
 
                             // save a reference to the textview for later
                             myTextViews[i] = rowTextView;
