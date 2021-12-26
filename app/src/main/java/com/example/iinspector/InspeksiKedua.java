@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -86,7 +87,7 @@ public class InspeksiKedua extends AppCompatActivity {
 
     //collection
     CollectionReference pages = db.collection("templates");
-    DocumentSnapshot documentSnapshot;
+
 
     //recyclerview
     private RecyclerView recyclerView;
@@ -143,13 +144,14 @@ public class InspeksiKedua extends AppCompatActivity {
 
         pages.document(documentId)
                 .collection("pages")
-                .document("f8Z3BLy68wjDtGjWVeLp")
+                .document("OJwTZnHufPTXWKomQdBb")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+
                     if (document != null && document.exists()) {
 
                         ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
@@ -162,6 +164,9 @@ public class InspeksiKedua extends AppCompatActivity {
                             LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
                             LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                             params.setMargins(30,20,30,10);
+
+                            LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                            params2.setMargins(50,10,50,5);
 
 
                             final TextView rowTextView = new TextView(InspeksiKedua.this);
@@ -191,7 +196,18 @@ public class InspeksiKedua extends AppCompatActivity {
                             rowEditTextM.setHint("Jawab disini");
                             rowEditTextM.setInputType(InputType.TYPE_CLASS_NUMBER);
 
+                            //type multiple-choices
+                            final Button rowButton1 = new Button(InspeksiKedua.this);
+                            rowButton1.setLayoutParams(params2);
+                            rowButton1.setText("Ya");
+                            rowButton1.setTextColor(Color.parseColor("#767676"));
+                            
 
+
+                            final Button rowButton2 = new Button(InspeksiKedua.this);
+                            rowButton2.setLayoutParams(params2 );
+                            rowButton2.setText("Tidak");
+                            rowButton2.setTextColor(Color.parseColor("#767676"));
 
                             final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
 
@@ -204,12 +220,16 @@ public class InspeksiKedua extends AppCompatActivity {
 
                             String respon = list.get(i).get("typeOfResponse").toString();
                             Log.d("ini typeOfResponse : ", respon);
+
                             if (respon.equals("{type=text, option=null}")){
                                 myLinearLayout.addView(rowEditText);
                             }else if (respon.equals("{type=person, option=null}")){
                                 myLinearLayout.addView(rowEditTextP);
                             }else if (respon.equals("{type=map, option=null}")){
                                 myLinearLayout.addView(rowEditTextM);
+                            }else {
+                                myLinearLayout.addView(rowButton1);
+                                myLinearLayout.addView(rowButton2);
                             }
 
 
@@ -223,6 +243,7 @@ public class InspeksiKedua extends AppCompatActivity {
                 }
             }
         });
+
 
 //        recyclerView = (RecyclerView) findViewById(R.id.qrecyclerView);
 //
