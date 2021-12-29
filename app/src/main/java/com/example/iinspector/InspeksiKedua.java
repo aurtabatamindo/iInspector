@@ -18,17 +18,22 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -110,6 +115,7 @@ public class InspeksiKedua extends AppCompatActivity {
         qTitle = findViewById(R.id.qTitile);
 //        qDes = findViewById(R.id.qDescr);
 
+
           pages.document(documentId)
                   .collection("pages").get()
                   .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -161,12 +167,17 @@ public class InspeksiKedua extends AppCompatActivity {
                             String deskripsi = list.get(i).get("description").toString();
                             Log.d("ini des : ", deskripsi);
 
+
                             LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
+
+
                             LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                             params.setMargins(30,20,30,10);
 
                             LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                             params2.setMargins(50,10,50,5);
+
+
 
 
                             final TextView rowTextView = new TextView(InspeksiKedua.this);
@@ -176,6 +187,54 @@ public class InspeksiKedua extends AppCompatActivity {
                             rowTextView.setTypeface(null, Typeface.ITALIC);
                             rowTextView.setTextColor(Color.parseColor("#767676"));
                             rowTextView.setLayoutParams(params);
+                            Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+                            rowTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+
+                            //popup menu
+                            final PopupMenu popupMenu = new PopupMenu(InspeksiKedua.this, rowTextView);
+                            //add menu items in popup menu
+                            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+                            popupMenu.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+                            popupMenu.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+
+                            //handle menu item clicks
+                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    //get id of the clicked item
+                                    int id = menuItem.getItemId();
+                                    //handle clicks
+                                    if (id==0){
+                                        //Copy clicked
+                                        //set text
+//                                        selectedTv.setText("Copy clicked");
+                                    }
+                                    else if (id==1){
+                                        //Share clicked
+                                        //set text
+//                                        selectedTv.setText("Share clicked");
+                                    }
+                                    else if (id==2){
+                                        //Save clicked
+                                        //set text
+//                                        selectedTv.setText("Save clicked");
+                                    }
+                                    else if (id==3){
+                                        //Delete clicked
+                                        //set text
+//                                        selectedTv.setText("Delete clicked");
+                                    }
+                                    return false;
+                                }
+                            });
+
+                            //handle button click, show popup menu
+                            rowTextView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    popupMenu.show();
+                                }
+                            });
 
                             // Type = Text
                             final EditText rowEditText = new EditText(InspeksiKedua.this);
@@ -189,6 +248,7 @@ public class InspeksiKedua extends AppCompatActivity {
                             rowEditTextP.setTextSize(11);
                             rowEditTextP.setHint("Jawab disini");
                             rowEditTextP.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+
                             //Type = Map
                             final EditText rowEditTextM = new EditText(InspeksiKedua.this);
                             rowEditTextM.setLayoutParams(params);
@@ -201,13 +261,13 @@ public class InspeksiKedua extends AppCompatActivity {
                             rowButton1.setLayoutParams(params2);
                             rowButton1.setText("Ya");
                             rowButton1.setTextColor(Color.parseColor("#767676"));
-                            
-
 
                             final Button rowButton2 = new Button(InspeksiKedua.this);
-                            rowButton2.setLayoutParams(params2 );
+                            rowButton2.setLayoutParams(params2);
                             rowButton2.setText("Tidak");
                             rowButton2.setTextColor(Color.parseColor("#767676"));
+
+
 
                             final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
 
@@ -223,14 +283,23 @@ public class InspeksiKedua extends AppCompatActivity {
 
                             if (respon.equals("{type=text, option=null}")){
                                 myLinearLayout.addView(rowEditText);
+
+
                             }else if (respon.equals("{type=person, option=null}")){
                                 myLinearLayout.addView(rowEditTextP);
+
+
                             }else if (respon.equals("{type=map, option=null}")){
                                 myLinearLayout.addView(rowEditTextM);
+
+
                             }else {
                                 myLinearLayout.addView(rowButton1);
                                 myLinearLayout.addView(rowButton2);
+
                             }
+
+
 
 
 
