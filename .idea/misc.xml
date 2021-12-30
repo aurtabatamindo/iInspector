@@ -24,6 +24,7 @@
         <entry key="..\:/iInspector/app/src/main/res/drawable/batang_icon.xml" value="0.403125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/bg_btn.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/bintang_icon.xml" value="0.403125" />
+        <entry key="..\:/iInspector/app/src/main/res/drawable/btn_jawab.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/btnlanjut.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/cardQuestion.xml" value="0.22135416666666666" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/cardpertanyaan.xml" value="0.22135416666666666" />
@@ -79,9 +80,6 @@
         <entry key="..\:/imalam/iInspector/app/src/main/res/layout/item_laporan2.xml" value="0.38697916666666665" />
       </map>
     </option>
-  </component>
-  <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

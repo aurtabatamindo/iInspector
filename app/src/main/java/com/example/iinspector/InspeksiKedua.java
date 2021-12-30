@@ -5,6 +5,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +20,9 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -27,6 +31,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -172,12 +177,10 @@ public class InspeksiKedua extends AppCompatActivity {
 
 
                             LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params.setMargins(30,20,30,10);
+                            params.setMargins(30,20,30,20);
 
-                            LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params2.setMargins(50,10,50,5);
-
-
+                            LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
+                            params2.setMargins(50,5,50,5);
 
 
                             final TextView rowTextView = new TextView(InspeksiKedua.this);
@@ -205,25 +208,24 @@ public class InspeksiKedua extends AppCompatActivity {
                                     int id = menuItem.getItemId();
                                     //handle clicks
                                     if (id==0){
+                                        tambahcatatan();
                                         //Copy clicked
                                         //set text
 //                                        selectedTv.setText("Copy clicked");
                                     }
                                     else if (id==1){
+                                        ambilfoto();
                                         //Share clicked
                                         //set text
 //                                        selectedTv.setText("Share clicked");
                                     }
                                     else if (id==2){
+                                        tindakan();
                                         //Save clicked
                                         //set text
 //                                        selectedTv.setText("Save clicked");
                                     }
-                                    else if (id==3){
-                                        //Delete clicked
-                                        //set text
-//                                        selectedTv.setText("Delete clicked");
-                                    }
+
                                     return false;
                                 }
                             });
@@ -258,15 +260,54 @@ public class InspeksiKedua extends AppCompatActivity {
 
                             //type multiple-choices
                             final Button rowButton1 = new Button(InspeksiKedua.this);
+                            final Button rowButton2 = new Button(InspeksiKedua.this);
+
                             rowButton1.setLayoutParams(params2);
                             rowButton1.setText("Ya");
                             rowButton1.setTextColor(Color.parseColor("#767676"));
+                            rowButton1.setBackgroundResource(R.drawable.btn_jawab);
 
-                            final Button rowButton2 = new Button(InspeksiKedua.this);
+
+                            rowButton1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    GradientDrawable drawable = (GradientDrawable) v.getBackground();
+
+                                    if (rowButton2.getVisibility() == View.VISIBLE) {
+                                        drawable.setColor(Color.GREEN);
+                                        rowButton1.setTextColor(Color.WHITE);
+                                        rowButton2.setVisibility(View.GONE);
+
+                                    } else {
+                                        drawable.setColor(Color.LTGRAY);
+                                        rowButton1.setTextColor(Color.GRAY);
+                                        rowButton2.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
+
                             rowButton2.setLayoutParams(params2);
                             rowButton2.setText("Tidak");
                             rowButton2.setTextColor(Color.parseColor("#767676"));
+                            rowButton2.setBackgroundResource(R.drawable.btn_jawab);
 
+                            rowButton2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    GradientDrawable drawable = (GradientDrawable) v.getBackground();
+
+                                    if (rowButton1.getVisibility() == View.VISIBLE) {
+                                        drawable.setColor(Color.RED);
+                                        rowButton2.setTextColor(Color.WHITE);
+                                        rowButton1.setVisibility(View.GONE);
+
+                                    } else {
+                                        drawable.setColor(Color.LTGRAY);
+                                        rowButton2.setTextColor(Color.GRAY);
+                                        rowButton1.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
 
 
                             final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
