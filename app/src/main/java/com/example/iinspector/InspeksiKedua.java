@@ -125,7 +125,7 @@ public class InspeksiKedua extends AppCompatActivity {
 
           pages.document(documentId)
                   .collection("pages")
-                  .limit(1)
+                  .limit(2)
                   .get()
                   .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
               @Override
@@ -144,7 +144,7 @@ public class InspeksiKedua extends AppCompatActivity {
         pages.document(documentId)
                 .collection("pages")
 //                .document("OJwTZnHufPTXWKomQdBb")
-                .limit(1)
+                .limit(2)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -330,25 +330,37 @@ public class InspeksiKedua extends AppCompatActivity {
                                     // save a reference to the textview for later
                                     myTextViews[i] = rowTextView;
 
+                                    final Button selesai = new Button(InspeksiKedua.this);
+                                    selesai.setLayoutParams(params);
+                                    selesai.setText("Lanjut");
+                                    selesai.setTextColor(Color.parseColor("#4CAF50"));
+                                    selesai.setBackgroundResource(R.drawable.btnlanjut);
 
                                 }
                             }
-
-
                             }
+                            LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
+                            LinearLayoutCompat.LayoutParams paramselesai = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                            paramselesai.setMargins(30, 20, 30, 20);
+                            final Button selesai = new Button(InspeksiKedua.this);
+                            selesai.setLayoutParams(paramselesai);
+                            selesai.setText("Lanjut");
+                            selesai.setTextColor(Color.parseColor("#4CAF50"));
+                            selesai.setBackgroundResource(R.drawable.btnlanjut);
+                            myLinearLayout.addView(selesai);
                         }
                     }
                 });
 
-        LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
-        LinearLayoutCompat.LayoutParams paramselesai = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        paramselesai.setMargins(30, 20, 30, 20);
-        final Button selesai = new Button(InspeksiKedua.this);
-        selesai.setLayoutParams(paramselesai);
-        selesai.setText("Lanjut");
-        selesai.setTextColor(Color.parseColor("#4CAF50"));
-        selesai.setBackgroundResource(R.drawable.btnlanjut);
-        myLinearLayout.addView(selesai);
+//        LinearLayoutCompat myLinearLayout = findViewById(R.id.lnext);
+//        LinearLayoutCompat.LayoutParams paramselesai = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+//        paramselesai.setMargins(30, 20, 30, 20);
+//        final Button selesai = new Button(InspeksiKedua.this);
+//        selesai.setLayoutParams(paramselesai);
+//        selesai.setText("Lanjut");
+//        selesai.setTextColor(Color.parseColor("#4CAF50"));
+//        selesai.setBackgroundResource(R.drawable.btnlanjut);
+//        myLinearLayout.addView(selesai);
 
         cardview1 = findViewById(R.id.cardView1);
         cardView2 = findViewById(R.id.cardView2);
