@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -114,15 +115,18 @@ public class InspeksiKedua extends AppCompatActivity {
 
         String documentId = getIntent().getStringExtra("doc");
 
-        selesai = findViewById(R.id.btnnext);
+
         scard1 = findViewById(R.id.scard1);
         scard2 = findViewById(R.id.scard2);
         qTitle = findViewById(R.id.qTitile);
+
 //        qDes = findViewById(R.id.qDescr);
 
 
           pages.document(documentId)
-                  .collection("pages").get()
+                  .collection("pages")
+                  .limit(1)
+                  .get()
                   .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
               @Override
               public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -137,557 +141,218 @@ public class InspeksiKedua extends AppCompatActivity {
           });
 
 
-
-//        pages.document(documentId)
-//                .collection("pages")
-//                .document("f8Z3BLy68wjDtGjWVeLp")
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        DocumentSnapshot document = task.getResult();
-//                        if (document.exists()) {
-////
-//                            List<Map<String, Object>> contents = (List<Map<String, Object>>) document.get("contents");
-//                        }
-//                    }
-//                });
-
-
         pages.document(documentId)
                 .collection("pages")
-                .document("OJwTZnHufPTXWKomQdBb")
+//                .document("OJwTZnHufPTXWKomQdBb")
+                .limit(1)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
 
-                    if (document != null && document.exists()) {
+                            if (document != null && document.exists()) {
 
-                        ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
-                        int ukuranArray = list.size();
-                        for(int i = 0; i<ukuranArray; i++){
+                                ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
+                                int ukuranArray = list.size();
+                                for (int i = 0; i < ukuranArray; i++) {
 
-                            String deskripsi = list.get(i).get("description").toString();
-                            Log.d("ini des : ", deskripsi);
-
-
-                            LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
+                                    String deskripsi = list.get(i).get("description").toString();
+                                    Log.d("ini des : ", deskripsi);
 
 
-                            LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params.setMargins(30,20,30,20);
-
-                            LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
-                            params2.setMargins(50,5,50,5);
+                                    LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
 
 
-                            final TextView rowTextView = new TextView(InspeksiKedua.this);
-                            rowTextView.setBackgroundResource(R.drawable.cardpertanyaan);
-                            rowTextView.setTextSize(11);
-                            rowTextView.setPaddingRelative(50,25,10,25);
-                            rowTextView.setTypeface(null, Typeface.ITALIC);
-                            rowTextView.setTextColor(Color.parseColor("#767676"));
-                            rowTextView.setLayoutParams(params);
-                            Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
-                            rowTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+                                    LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                                    params.setMargins(30, 20, 30, 20);
 
-                            //popup menu
-                            final PopupMenu popupMenu = new PopupMenu(InspeksiKedua.this, rowTextView);
-                            //add menu items in popup menu
-                            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
-                            popupMenu.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
-                            popupMenu.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+                                    LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
+                                    params2.setMargins(50, 5, 50, 5);
 
-                            //handle menu item clicks
-                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    //get id of the clicked item
-                                    int id = menuItem.getItemId();
-                                    //handle clicks
-                                    if (id==0){
-                                        tambahcatatan();
-                                        //Copy clicked
-                                        //set text
+
+                                    final TextView rowTextView = new TextView(InspeksiKedua.this);
+                                    rowTextView.setBackgroundResource(R.drawable.cardpertanyaan);
+                                    rowTextView.setTextSize(11);
+                                    rowTextView.setPaddingRelative(50, 25, 10, 25);
+                                    rowTextView.setTypeface(null, Typeface.ITALIC);
+                                    rowTextView.setTextColor(Color.parseColor("#767676"));
+                                    rowTextView.setLayoutParams(params);
+                                    Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+                                    rowTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+
+                                    //popup menu
+                                    final PopupMenu popupMenu = new PopupMenu(InspeksiKedua.this, rowTextView);
+                                    //add menu items in popup menu
+                                    popupMenu.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+                                    popupMenu.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+                                    popupMenu.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+
+                                    //handle menu item clicks
+                                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem menuItem) {
+                                            //get id of the clicked item
+                                            int id = menuItem.getItemId();
+                                            //handle clicks
+                                            if (id == 0) {
+                                                tambahcatatan();
+                                                //Copy clicked
+                                                //set text
 //                                        selectedTv.setText("Copy clicked");
-                                    }
-                                    else if (id==1){
-                                        ambilfoto();
-                                        //Share clicked
-                                        //set text
+                                            } else if (id == 1) {
+                                                ambilfoto();
+                                                //Share clicked
+                                                //set text
 //                                        selectedTv.setText("Share clicked");
-                                    }
-                                    else if (id==2){
-                                        tindakan();
-                                        //Save clicked
-                                        //set text
+                                            } else if (id == 2) {
+                                                tindakan();
+                                                //Save clicked
+                                                //set text
 //                                        selectedTv.setText("Save clicked");
-                                    }
+                                            }
 
-                                    return false;
-                                }
-                            });
+                                            return false;
+                                        }
+                                    });
 
-                            //handle button click, show popup menu
-                            rowTextView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    popupMenu.show();
-                                }
-                            });
+                                    //handle button click, show popup menu
+                                    rowTextView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            popupMenu.show();
+                                        }
+                                    });
 
-                            // Type = Text
-                            final EditText rowEditText = new EditText(InspeksiKedua.this);
-                            rowEditText.setLayoutParams(params);
-                            rowEditText.setTextSize(11);
-                            rowEditText.setHint("Jawab disini");
+                                    // Type = Text
+                                    final EditText rowEditText = new EditText(InspeksiKedua.this);
+                                    rowEditText.setLayoutParams(params);
+                                    rowEditText.setTextSize(11);
+                                    rowEditText.setHint("Jawab disini");
 
-                            //Type = Person
-                            final EditText rowEditTextP = new EditText(InspeksiKedua.this);
-                            rowEditTextP.setLayoutParams(params);
-                            rowEditTextP.setTextSize(11);
-                            rowEditTextP.setHint("Jawab disini");
-                            rowEditTextP.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+                                    //Type = Person
+                                    final EditText rowEditTextP = new EditText(InspeksiKedua.this);
+                                    rowEditTextP.setLayoutParams(params);
+                                    rowEditTextP.setTextSize(11);
+                                    rowEditTextP.setHint("Jawab disini");
+                                    rowEditTextP.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 
-                            //Type = Map
-                            final EditText rowEditTextM = new EditText(InspeksiKedua.this);
-                            rowEditTextM.setLayoutParams(params);
-                            rowEditTextM.setTextSize(11);
-                            rowEditTextM.setHint("Jawab disini");
-                            rowEditTextM.setInputType(InputType.TYPE_CLASS_NUMBER);
+                                    //Type = Map
+                                    final EditText rowEditTextM = new EditText(InspeksiKedua.this);
+                                    rowEditTextM.setLayoutParams(params);
+                                    rowEditTextM.setTextSize(11);
+                                    rowEditTextM.setHint("Jawab disini");
+                                    rowEditTextM.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                            //type multiple-choices
-                            final Button rowButton1 = new Button(InspeksiKedua.this);
-                            final Button rowButton2 = new Button(InspeksiKedua.this);
+                                    //type multiple-choices
+                                    final Button rowButton1 = new Button(InspeksiKedua.this);
+                                    final Button rowButton2 = new Button(InspeksiKedua.this);
 
-                            rowButton1.setLayoutParams(params2);
-                            rowButton1.setText("Ya");
-                            rowButton1.setTextColor(Color.parseColor("#767676"));
-                            rowButton1.setBackgroundResource(R.drawable.btn_jawab);
+                                    rowButton1.setLayoutParams(params2);
+                                    rowButton1.setText("Ya");
+                                    rowButton1.setTextColor(Color.parseColor("#767676"));
+                                    rowButton1.setBackgroundResource(R.drawable.btn_jawab);
 
 
-                            rowButton1.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    GradientDrawable drawable = (GradientDrawable) v.getBackground();
+                                    rowButton1.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            GradientDrawable drawable = (GradientDrawable) v.getBackground();
 
-                                    if (rowButton2.getVisibility() == View.VISIBLE) {
-                                        drawable.setColor(Color.GREEN);
-                                        rowButton1.setTextColor(Color.WHITE);
-                                        rowButton2.setVisibility(View.GONE);
+                                            if (rowButton2.getVisibility() == View.VISIBLE) {
+                                                drawable.setColor(Color.GREEN);
+                                                rowButton1.setTextColor(Color.WHITE);
+                                                rowButton2.setVisibility(View.GONE);
+
+                                            } else {
+                                                drawable.setColor(Color.LTGRAY);
+                                                rowButton1.setTextColor(Color.GRAY);
+                                                rowButton2.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    });
+
+                                    rowButton2.setLayoutParams(params2);
+                                    rowButton2.setText("Tidak");
+                                    rowButton2.setTextColor(Color.parseColor("#767676"));
+                                    rowButton2.setBackgroundResource(R.drawable.btn_jawab);
+
+                                    rowButton2.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            GradientDrawable drawable = (GradientDrawable) v.getBackground();
+
+                                            if (rowButton1.getVisibility() == View.VISIBLE) {
+                                                drawable.setColor(Color.RED);
+                                                rowButton2.setTextColor(Color.WHITE);
+                                                rowButton1.setVisibility(View.GONE);
+
+                                            } else {
+                                                drawable.setColor(Color.LTGRAY);
+                                                rowButton2.setTextColor(Color.GRAY);
+                                                rowButton1.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    });
+
+
+                                    final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
+
+
+                                    // set some properties of rowTextView or something
+                                    rowTextView.setText("Pertanyaan :" + "\n" + deskripsi);
+
+                                    // add the textview to the linearlayout
+                                    myLinearLayout.addView(rowTextView);
+
+                                    String respon = list.get(i).get("typeOfResponse").toString();
+                                    Log.d("ini typeOfResponse : ", respon);
+
+                                    if (respon.equals("{type=text, option=null}")) {
+                                        myLinearLayout.addView(rowEditText);
+
+
+                                    } else if (respon.equals("{type=person, option=null}")) {
+                                        myLinearLayout.addView(rowEditTextP);
+
+
+                                    } else if (respon.equals("{type=map, option=null}")) {
+                                        myLinearLayout.addView(rowEditTextM);
+
 
                                     } else {
-                                        drawable.setColor(Color.LTGRAY);
-                                        rowButton1.setTextColor(Color.GRAY);
-                                        rowButton2.setVisibility(View.VISIBLE);
+                                        myLinearLayout.addView(rowButton1);
+                                        myLinearLayout.addView(rowButton2);
+
                                     }
+
+                                    // save a reference to the textview for later
+                                    myTextViews[i] = rowTextView;
+
+
                                 }
-                            });
-
-                            rowButton2.setLayoutParams(params2);
-                            rowButton2.setText("Tidak");
-                            rowButton2.setTextColor(Color.parseColor("#767676"));
-                            rowButton2.setBackgroundResource(R.drawable.btn_jawab);
-
-                            rowButton2.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    GradientDrawable drawable = (GradientDrawable) v.getBackground();
-
-                                    if (rowButton1.getVisibility() == View.VISIBLE) {
-                                        drawable.setColor(Color.RED);
-                                        rowButton2.setTextColor(Color.WHITE);
-                                        rowButton1.setVisibility(View.GONE);
-
-                                    } else {
-                                        drawable.setColor(Color.LTGRAY);
-                                        rowButton2.setTextColor(Color.GRAY);
-                                        rowButton1.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            });
-
-
-                            final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
-
-
-                            // set some properties of rowTextView or something
-                            rowTextView.setText("Pertanyaan :" +"\n" +deskripsi);
-
-                            // add the textview to the linearlayout
-                            myLinearLayout.addView(rowTextView);
-
-                            String respon = list.get(i).get("typeOfResponse").toString();
-                            Log.d("ini typeOfResponse : ", respon);
-
-                            if (respon.equals("{type=text, option=null}")){
-                                myLinearLayout.addView(rowEditText);
-
-
-                            }else if (respon.equals("{type=person, option=null}")){
-                                myLinearLayout.addView(rowEditTextP);
-
-
-                            }else if (respon.equals("{type=map, option=null}")){
-                                myLinearLayout.addView(rowEditTextM);
-
-
-                            }else {
-                                myLinearLayout.addView(rowButton1);
-                                myLinearLayout.addView(rowButton2);
-
                             }
 
 
-
-
-
-                            // save a reference to the textview for later
-                            myTextViews[i] = rowTextView;
-
+                            }
                         }
-
                     }
-                }
-            }
-        });
+                });
 
-
-//        recyclerView = (RecyclerView) findViewById(R.id.qrecyclerView);
-//
-//        adapter = new QuestionAdapter(questionArrayList);
-//
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(InspeksiKedua.this);
-//
-//        recyclerView.setLayoutManager(layoutManager);
-//
-//        recyclerView.setAdapter(adapter);
-
-//        qrecyclerview = findViewById(R.id.qrecyclerView);
-//        qrecyclerview.setLayoutManager(new LinearLayoutManager(this));
-//
-////        Query query = FirebaseFirestore.getInstance()
-////                .collection("templates")
-////                .orderBy("status");
-//
-//        Query query = pages.document(documentId)
-//                .collection("pages")
-//                .whereEqualTo("contents", true);
-//
-//
-//
-//        FirestoreRecyclerOptions<GetDataQuestion> options = new FirestoreRecyclerOptions.Builder<GetDataQuestion>()
-//                .setQuery(query, GetDataQuestion.class)
-//                .build();
-//
-//        qadaptercard = new FirestoreRecyclerAdapter<GetDataQuestion, QuestionHolder>(options) {
-//            @Override
-//            protected void onBindViewHolder(@NonNull QuestionHolder holder, int position, @NonNull GetDataQuestion getDataQuestion) {
-//                holder.setdescription((getDataQuestion.getDescription()));
-//
-//                holder.setOnClickListener(new QuestionHolder.ClickListener() {
-//                    @Override
-//                    public void onItemClick(View view, int position) {
-//
-////                        documentId = getSnapshots().getSnapshot(position).getId();
-////                        Position = position;
-////                        if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
-////                            Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
-////                        }else {
-////                            peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
-////                        }
-//
-//
-//                    }
-//                });
-//            }
-//
-//            @NonNull
-//            @Override
-//            public QuestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_question, parent, false);
-//                return new QuestionHolder(view);
-//            }
-//        };
-//        qadaptercard.startListening();
-//        qrecyclerview.setAdapter(qadaptercard);
+        LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
+        LinearLayoutCompat.LayoutParams paramselesai = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+        paramselesai.setMargins(30, 20, 30, 20);
+        final Button selesai = new Button(InspeksiKedua.this);
+        selesai.setLayoutParams(paramselesai);
+        selesai.setText("Lanjut");
+        selesai.setTextColor(Color.parseColor("#4CAF50"));
+        selesai.setBackgroundResource(R.drawable.btnlanjut);
+        myLinearLayout.addView(selesai);
 
         cardview1 = findViewById(R.id.cardView1);
         cardView2 = findViewById(R.id.cardView2);
-//        cardView4 = findViewById(R.id.cardView4);
-//        cardView5 = findViewById(R.id.cardView5);
-//        cardView6 = findViewById(R.id.cardView6);
-////        cardView7 = findViewById(R.id.cardView7);
-////        cardView8 = findViewById(R.id.cardView8);
-//        rya = findViewById(R.id.rya);
-//        rno = findViewById(R.id.rno);
-//        ya = findViewById(R.id.ya);
-//        no = findViewById(R.id.no);
-//        rya2 = findViewById(R.id.rya2);
-//        rno2 = findViewById(R.id.rno2);
-//        ya2 = findViewById(R.id.ya2);
-//        no2 = findViewById(R.id.no2);
-//        pass = findViewById(R.id.pass);
-//        fail = findViewById(R.id.fail);
-//        tpass = findViewById(R.id.tpass);
-//        tfail = findViewById(R.id.tfail);
-//        tambah1 = findViewById(R.id.tambah1);
-//        tambah2 = findViewById(R.id.tambah2);
-//        tambah3 = findViewById(R.id.tambah3);
-////        tambah4 = findViewById(R.id.tambah4);
-////        tambah5 = findViewById(R.id.tambah5);
-//        foto1 = findViewById(R.id.foto1);
-//        foto2 = findViewById(R.id.foto2);
-//        foto3 = findViewById(R.id.foto3);
-////        foto4 = findViewById(R.id.foto4);
-////        foto5 = findViewById(R.id.foto5);
-//        tindakan1 = findViewById(R.id.tindakan1);
-//        tindakan2 = findViewById(R.id.tindakan2);
-//        tindakan3 = findViewById(R.id.tindakan3);
-//        tindakan4 = findViewById(R.id.tindakan4);
-//        tindakan5 = findViewById(R.id.tindakan5);
 
-//        kemali.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent kembali = new Intent(InspeksiKedua.this, InspeksiAwal.class);
-//                startActivity(kembali);
-//                onBackPressed();
-//                finish();
-//            }
-//        });
-
-
-
-//        scard1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                if (qrecyclerview.getVisibility() == View.VISIBLE){
-////                    qrecyclerview.setVisibility(View.GONE);
-////                }else{
-////                    qrecyclerview.setVisibility(View.VISIBLE);
-////                }
-//                if (cardview1.getVisibility() == View.VISIBLE) {
-//                    cardview1.setVisibility(View.GONE);
-//                    cardView2.setVisibility(View.GONE);
-//                } else {
-//                    cardview1.setVisibility(View.VISIBLE);
-//                    cardView2.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-//
-//        scard2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                if (cardView4.getVisibility() == View.VISIBLE) {
-////                    cardView4.setVisibility(View.GONE);
-////                    cardView5.setVisibility(View.GONE);
-////                    cardView6.setVisibility(View.GONE);
-//////                    cardView7.setVisibility(View.GONE);
-//////                    cardView8.setVisibility(View.GONE);
-////                } else {
-////                    cardView4.setVisibility(View.VISIBLE);
-////                    cardView5.setVisibility(View.VISIBLE);
-////                    cardView6.setVisibility(View.VISIBLE);
-//////                    cardView7.setVisibility(View.VISIBLE);
-//////                    cardView8.setVisibility(View.VISIBLE);
-////                }
-//            }
-//        });
-//
-//        rya.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int abucard = getResources().getColor(R.color.abucard);
-//                if (rya.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-//                    rya.setCardBackgroundColor(Color.GREEN);
-//                    ya.setTextColor(Color.WHITE);
-//                } else {
-//                    rya.setCardBackgroundColor(Color.WHITE);
-//                    ya.setTextColor(abucard);
-//                }
-//
-//            }
-//        });
-//
-//        rno.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int abucard = getResources().getColor(R.color.abucard);
-//                if (rno.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-//                    rno.setCardBackgroundColor(Color.RED);
-//                    no.setTextColor(Color.WHITE);
-//                } else {
-//                    rno.setCardBackgroundColor(Color.WHITE);
-//                    no.setTextColor(abucard);
-//                }
-//
-//            }
-//        });
-//
-//        rya2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int abucard = getResources().getColor(R.color.abucard);
-//                if (rya2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-//                    rya2.setCardBackgroundColor(Color.GREEN);
-//                    ya2.setTextColor(Color.WHITE);
-//                } else {
-//                    rya2.setCardBackgroundColor(Color.WHITE);
-//                    ya2.setTextColor(abucard);
-//                }
-//
-//            }
-//        });
-//
-//        rno2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int abucard = getResources().getColor(R.color.abucard);
-//                if (rno2.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-//                    rno2.setCardBackgroundColor(Color.RED);
-//                    no2.setTextColor(Color.WHITE);
-//                } else {
-//                    rno2.setCardBackgroundColor(Color.WHITE);
-//                    no2.setTextColor(abucard);
-//                }
-//
-//            }
-//        });
-//
-//        pass.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int abucard = getResources().getColor(R.color.abucard);
-//                if (pass.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-//                    pass.setCardBackgroundColor(Color.GREEN);
-//                    tpass.setTextColor(Color.WHITE);
-//                } else {
-//                    pass.setCardBackgroundColor(Color.WHITE);
-//                    tpass.setTextColor(abucard);
-//                }
-//
-//            }
-//        });
-//
-//        fail.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int abucard = getResources().getColor(R.color.abucard);
-//                if (fail.getCardBackgroundColor() == ColorStateList.valueOf(Color.WHITE)) {
-//                    fail.setCardBackgroundColor(Color.RED);
-//                    tfail.setTextColor(Color.WHITE);
-//                } else {
-//                    fail.setCardBackgroundColor(Color.WHITE);
-//                    tfail.setTextColor(abucard);
-//                }
-//
-//            }
-//        });
-//
-//        tambah1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
-//        tambah2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
-//        tambah3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
-//        tambah4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
-//        tambah5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
-
-//        selesai.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ttd();
-//            }
-//        });
-
-//        foto1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
-//
-//        foto2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
-//        foto3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
-//        foto4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
-//        foto5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
-//
-//        tindakan1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
-//        tindakan2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
-//        tindakan3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
-//        tindakan4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
-//        tindakan5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
     }
 
     private void tindakan() {
