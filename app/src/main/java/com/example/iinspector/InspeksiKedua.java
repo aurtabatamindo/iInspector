@@ -360,6 +360,7 @@ public class InspeksiKedua extends AppCompatActivity {
                           int jpage = Integer.parseInt(nPage.getText().toString());
                           if (jpage > jsize){
                               ttd();
+                              nPage.setText(String.valueOf(sizeawal));
                           }else {
 
                               myLinearLayout.removeAllViews();
