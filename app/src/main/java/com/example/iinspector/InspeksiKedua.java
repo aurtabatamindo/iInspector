@@ -72,7 +72,7 @@ public class InspeksiKedua extends AppCompatActivity {
 //    CardView scard1, cardview1, cardView2, cardView6, cardView7, cardView8, scard2, cardView4, cardView5, rya, rno, rya2, rno2, pass, fail;
 //    TextView ya, no, ya2, no2, tpass, tfail, tambah1, tambah2, tambah3, tambah4, tambah5, foto1, foto2, foto3, foto4, foto5,tindakan1,tindakan2,tindakan3,tindakan4,tindakan5;
     CardView scard1,scard2 ,cardview1, cardView2;
-    TextView qTitle,qDes,berikutnya,qpageid;
+    TextView qTitle,qDes,berikutnya,jPage,nPage;
     DocumentSnapshot lastvisible;
 //    //Recyclerview
 //    RecyclerView qrecyclerview;
@@ -107,6 +107,8 @@ public class InspeksiKedua extends AppCompatActivity {
 //    //linear
 //    LinearLayoutCompat myLinearLayout;
 
+    int sizeawal;
+    int sizeakhir;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,8 +121,24 @@ public class InspeksiKedua extends AppCompatActivity {
         scard2 = findViewById(R.id.scard2);
         qTitle = findViewById(R.id.qTitile);
         berikutnya = findViewById(R.id.berikutnya);
-        qpageid = findViewById(R.id.qpageid);
+        jPage = findViewById(R.id.jPage);
+        nPage = findViewById(R.id.nPage);
+
 //        qDes = findViewById(R.id.qDescr);
+
+
+        //getjumlahpage
+         pages.document(documentId).collection("pages").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        sizeawal = task.getResult().size();
+                        Log.d("sizeawal : ", String.valueOf(sizeawal));
+                        jPage.setText(String.valueOf(sizeawal));
+                    }
+                });
+
+
 
 
           pages.document(documentId)
@@ -133,11 +151,10 @@ public class InspeksiKedua extends AppCompatActivity {
 
                   for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                       String title = (String) documentSnapshot.get("pageTitle");
-                      String id = (String) documentSnapshot.get("pageUUID");
                       qTitle.setText(title);
-                      qpageid.setText(id);
-
                   }
+
+
 
                   if (task.isSuccessful()) {
                       for (QueryDocumentSnapshot document : task.getResult()) {
@@ -329,28 +346,37 @@ public class InspeksiKedua extends AppCompatActivity {
 
                   // Get the last visible document
                   lastvisible = task.getResult().getDocuments().get(task.getResult().size() -1);
-
                   LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
 
                   berikutnya.setOnClickListener(new View.OnClickListener() {
                       @Override
                       public void onClick(View v) {
-                          myLinearLayout.removeAllViews();
-                          pages.document(documentId)
-                                  .collection("pages")
-                                  .startAfter(lastvisible)
-                                  .limit(1)
-                                  .get()
-                                  .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                      @Override
-                                      public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                          int angkaawal = Integer.parseInt(nPage.getText().toString());
+                          int tambah = 1;
+                          int hasil = angkaawal + tambah;
+                          nPage.setText(String.valueOf(hasil));
 
-                                          for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                              String title = (String) documentSnapshot.get("pageTitle");
-                                              String id = (String) documentSnapshot.get("pageUUID");
-                                              qTitle.setText(title);
-                                              qpageid.setText(id);
-                                          }
+                          int jsize = Integer.parseInt(jPage.getText().toString());
+                          int jpage = Integer.parseInt(nPage.getText().toString());
+                          if (jpage > jsize){
+                              ttd();
+                          }else {
+
+                              myLinearLayout.removeAllViews();
+                              pages.document(documentId)
+                                      .collection("pages")
+                                      .startAfter(lastvisible)
+                                      .limit(1)
+                                      .get()
+                                      .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                          @Override
+                                          public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                              for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                  String title = (String) documentSnapshot.get("pageTitle");
+                                                  qTitle.setText(title);
+
+                                              }
                                           if (task.isSuccessful()) {
 
                                               for (QueryDocumentSnapshot document : task.getResult()) {
@@ -542,12 +568,13 @@ public class InspeksiKedua extends AppCompatActivity {
                                               }
                                           }
 
-                                          lastvisible = task.getResult().getDocuments().get(task.getResult().size() -1);
-                                          if (task.getResult().size() < 0){
-                                              ttd();
+                                              lastvisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                                              Log.d("LAST : ", lastvisible.toString());
+
                                           }
-                                      }
-                                  });
+
+                                      });
+                          }
                       }
                   });
 
