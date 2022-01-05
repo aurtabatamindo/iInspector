@@ -60,6 +60,7 @@
         android:text="Status"
         android:textColor="@color/text_dark"
         android:textSize="9dp"
+        android:visibility="invisible"
         />
 
     <TextView

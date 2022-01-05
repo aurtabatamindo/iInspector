@@ -105,7 +105,7 @@ public class PlaceholderFragment extends Fragment {
 
                     Query query = FirebaseFirestore.getInstance()
                             .collection("templates")
-                            .orderBy("status");
+                            .orderBy("templateTitle");
 
                     FirestoreRecyclerOptions<GetDataTodo> options = new FirestoreRecyclerOptions.Builder<GetDataTodo>()
                             .setQuery(query, GetDataTodo.class)
@@ -126,11 +126,11 @@ public class PlaceholderFragment extends Fragment {
 
                                     documentId = getSnapshots().getSnapshot(position).getId();
                                     Position = position;
-                                    if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
-                                        Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
-                                    }else {
+//                                    if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
+//                                        Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
+//                                    }else {
                                         peringatan("Jika form inspeksi telah tampil anda tidak bisa kembali.");
-                                    }
+//                                    }
 
 
                                 }
@@ -184,22 +184,22 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
 
-                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-
-                    rootRef.collection("templates").document(documentId)
-                            .update("status","Sedang Dikerjakan")
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+//                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//                    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+//
+//                    rootRef.collection("templates").document(documentId)
+//                            .update("status","Sedang Dikerjakan")
+//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
 
                                     Intent intent = new Intent(getActivity(), InspeksiAwal.class);
                                     intent.putExtra("doc",documentId);
                                     startActivity(intent);
 
-                                }
-                            });
+//                                }
+//                            });
 
 
                 }
