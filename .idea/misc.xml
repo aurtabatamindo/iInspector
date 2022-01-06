@@ -5,7 +5,9 @@
       <map>
         <entry key="..\:/Users/ssd-dev1/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_dropdown_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/ssd-dev1/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_item.xml" value="0.20520833333333333" />
+        <entry key="..\:/iInspector/app/src/main/res/drawable-v24/cardsection.xml" value="0.20625" />
         <entry key="..\:/iInspector/app/src/main/res/drawable-v24/labelhijau.xml" value="0.3828125" />
+        <entry key="..\:/iInspector/app/src/main/res/drawable/action_icon.xml" value="0.20625" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/aksi_icon.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/avatar_1.xml" value="0.22135416666666666" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/avatar_10.xml" value="0.22135416666666666" />
@@ -29,6 +31,7 @@
         <entry key="..\:/iInspector/app/src/main/res/drawable/btnlanjut.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/cardQuestion.xml" value="0.22135416666666666" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/cardpertanyaan.xml" value="0.22135416666666666" />
+        <entry key="..\:/iInspector/app/src/main/res/drawable/cardsection.xml" value="0.20625" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/cardview.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/labelmerah.xml" value="0.3828125" />
@@ -49,7 +52,7 @@
         <entry key="..\:/iInspector/app/src/main/res/layout-land/todo.xml" value="0.4854732895970009" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_inspeksi_awal.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_inspeksi_hasil.xml" value="0.33" />
-        <entry key="..\:/iInspector/app/src/main/res/layout/activity_inspeksi_kedua.xml" value="0.5" />
+        <entry key="..\:/iInspector/app/src/main/res/layout/activity_inspeksi_kedua.xml" value="0.33" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_inspeksi_selesai.xml" value="0.36666666666666664" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_login.xml" value="0.35260416666666666" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_test.xml" value="0.36666666666666664" />
