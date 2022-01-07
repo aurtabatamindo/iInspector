@@ -162,12 +162,16 @@ public class InspeksiKedua extends AppCompatActivity {
                           if (document != null && document.exists()) {
 
                               ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
+                              Log.d("inicontent", list.toString());
+
                               int ukuranArray = list.size();
                               for (int i = 0; i < ukuranArray; i++) {
 
                                   String deskripsi = list.get(i).get("description").toString();
                                   Log.d("ini des : ", deskripsi);
 
+//                                  String qtype = list.get(i).get("questionType").toString();
+//                                  Log.d("iniqtype", qtype.toString());
 
                                   LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
 
@@ -319,11 +323,17 @@ public class InspeksiKedua extends AppCompatActivity {
 
                                   final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
 
-                                  String respon = list.get(i).get("typeOfResponse").toString();
                                   String type = list.get(i).get("type").toString();
-                                  Log.d("ini typeOfResponse : ", respon);
                                   Log.d("initype : ", type);
 
+                                  //get objek respon
+                                  Map respon = (Map) list.get(i).get("typeOfResponse");
+                                  //get tipe reson
+                                  String tipeRespon = String.valueOf(respon.get("type"));
+                                  Log.d("tiperes : ", tipeRespon);
+
+//                                  int ukuranArray = list.size();
+//                                  for (int i = 0; i < ukuranArray; i++) {
                                   // set some properties of rowTextView or something
                                   rowTextView.setText("Pertanyaan :" + "\n" + deskripsi);
                                   rowTextviewS.setText(deskripsi);
@@ -335,30 +345,50 @@ public class InspeksiKedua extends AppCompatActivity {
                                       myLinearLayout.addView(rowTextView);
                                   }
 
-                                  if (respon.equals("{type=text, option=null}")) {
+                                  if (tipeRespon.equals("text")) {
                                       myLinearLayout.addView(rowEditText);
 
 
-                                  } else if (respon.equals("{type=person, option=null}")) {
+                                  } else if (tipeRespon.equals("person")) {
                                       myLinearLayout.addView(rowEditTextP);
 
 
-                                  } else if (respon.equals("{type=map, option=null}")) {
+                                  } else if (tipeRespon.equals("map")) {
                                       myLinearLayout.addView(rowEditTextM);
 
 
-                                  } else if (type.equals("section")) {
-                                      myLinearLayout.addView(rowTextviewS);
+                                  } else if (tipeRespon.equals("multiple-choices")){
 
+                                      ArrayList opsi = (ArrayList) respon.get("option");
+                                      Log.d("iniopsi", opsi.toString());
+                                      for (int a = 0; a < opsi.size(); a++){
+                                          //type multiple-choices
 
-                                  }else {
-                                      myLinearLayout.addView(rowButton1);
-                                      myLinearLayout.addView(rowButton2);
+                                          final Button rowButton3 = new Button(InspeksiKedua.this);
+                                          rowButton3.setLayoutParams(params);
+                                          rowButton3.setText(opsi.get(a).toString());
+                                          rowButton3.setTextColor(Color.parseColor("#767676"));
+                                          rowButton3.setBackgroundResource(R.drawable.btn_jawab);
+
+                                          rowButton3.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  GradientDrawable drawable = (GradientDrawable) v.getBackground();
+                                                  drawable.setColor(Color.GREEN);
+                                                  
+                                              }
+                                          });
+                                          myLinearLayout.addView(rowButton3);
+                                      }
+//                                      myLinearLayout.addView(rowButton1);
+//                                      myLinearLayout.addView(rowButton2);
 
                                   }
 
                                   // save a reference to the textview for later
                                   myTextViews[i] = rowTextView;
+
+
 
 
                               }
@@ -737,7 +767,7 @@ public class InspeksiKedua extends AppCompatActivity {
                                                                         myLinearLayout.addView(rowEditTextMSe);
 
 
-                                                                    }  else {
+                                                                    }  else if (type.equals("multiple-choices")){
                                                                         myLinearLayout.addView(rowButton1Se);
                                                                         myLinearLayout.addView(rowButton2Se);
 
@@ -785,10 +815,8 @@ public class InspeksiKedua extends AppCompatActivity {
                                                               myLinearLayout.addView(rowEditTextM);
 
 
-                                                          } else if (type.equals("section")) {
-
-
                                                           } else {
+
                                                               myLinearLayout.addView(rowButton1);
                                                               myLinearLayout.addView(rowButton2);
 
