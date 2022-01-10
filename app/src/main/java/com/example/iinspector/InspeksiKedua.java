@@ -162,16 +162,11 @@ public class InspeksiKedua extends AppCompatActivity {
                           if (document != null && document.exists()) {
 
                               ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
-                              Log.d("inicontent", list.toString());
 
                               int ukuranArray = list.size();
                               for (int i = 0; i < ukuranArray; i++) {
 
                                   String deskripsi = list.get(i).get("description").toString();
-                                  Log.d("ini des : ", deskripsi);
-
-//                                  String qtype = list.get(i).get("questionType").toString();
-//                                  Log.d("iniqtype", qtype.toString());
 
                                   LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
 
@@ -338,8 +333,200 @@ public class InspeksiKedua extends AppCompatActivity {
                                   rowTextView.setText("Pertanyaan :" + "\n" + deskripsi);
                                   rowTextviewS.setText(deskripsi);
 
+                                  //sectionpagepertama
                                   if (type.equals("section")) {
                                       myLinearLayout.addView(rowTextviewS);
+
+                                      ArrayList<Map> content = (ArrayList<Map>) list.get(i).get("contents");
+                                      Log.d("inicontent : ", content.toString());
+                                      int jsize = content.size();
+
+                                      for (int a = 0; a < jsize; a++) {
+                                          String isi = content.get(a).get(("description")).toString();
+                                          Log.d("inides : ", isi);
+
+                                          //get objek respon
+                                          Map responS = (Map) content.get(a).get("typeOfResponse");
+                                          //get tipe reson
+                                          String tipeResponSe = String.valueOf(responS.get("type"));
+                                          Log.d("tiperese : ", tipeResponSe);
+
+                                          //type = section
+                                          final TextView rowTextviewSe = new TextView(InspeksiKedua.this);
+                                          rowTextviewSe.setLayoutParams(params3);
+                                          rowTextviewSe.setBackgroundResource(R.drawable.cardpertanyaan);
+                                          rowTextviewSe.setTextSize(11);
+                                          rowTextviewSe.setPaddingRelative(50, 25, 10, 25);
+                                          rowTextviewSe.setTypeface(null, Typeface.ITALIC);
+                                          rowTextviewSe.setTextColor(Color.parseColor("#767676"));
+                                          rowTextviewSe.setLayoutParams(params);
+                                          Drawable img2 = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+                                          rowTextviewSe.setCompoundDrawablesWithIntrinsicBounds(null, null, img2, null);
+
+                                          // Type = Text
+                                          final EditText rowEditTextSe = new EditText(InspeksiKedua.this);
+                                          rowEditTextSe.setLayoutParams(params);
+                                          rowEditTextSe.setTextSize(11);
+                                          rowEditTextSe.setHint("Jawab disini");
+
+                                          //Type = Person
+                                          final EditText rowEditTextPSe = new EditText(InspeksiKedua.this);
+                                          rowEditTextPSe.setLayoutParams(params);
+                                          rowEditTextPSe.setTextSize(11);
+                                          rowEditTextPSe.setHint("Jawab disini");
+                                          rowEditTextPSe.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+
+                                          //Type = Map
+                                          final EditText rowEditTextMSe = new EditText(InspeksiKedua.this);
+                                          rowEditTextMSe.setLayoutParams(params);
+                                          rowEditTextMSe.setTextSize(11);
+                                          rowEditTextMSe.setHint("Jawab disini");
+                                          rowEditTextMSe.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+                                          //type multiple-choices
+                                          final Button rowButton1Se = new Button(InspeksiKedua.this);
+                                          final Button rowButton2Se = new Button(InspeksiKedua.this);
+
+                                          rowButton1Se.setLayoutParams(params2);
+                                          rowButton1Se.setText("Ya");
+                                          rowButton1Se.setTextColor(Color.parseColor("#767676"));
+                                          rowButton1Se.setBackgroundResource(R.drawable.btn_jawab);
+
+
+                                          rowButton1Se.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  GradientDrawable drawable = (GradientDrawable) v.getBackground();
+
+                                                  if (rowButton2Se.getVisibility() == View.VISIBLE) {
+                                                      drawable.setColor(Color.GREEN);
+                                                      rowButton1Se.setTextColor(Color.WHITE);
+                                                      rowButton2Se.setVisibility(View.GONE);
+
+                                                  } else {
+                                                      drawable.setColor(Color.LTGRAY);
+                                                      rowButton1Se.setTextColor(Color.GRAY);
+                                                      rowButton2Se.setVisibility(View.VISIBLE);
+                                                  }
+                                              }
+                                          });
+
+                                          rowButton2Se.setLayoutParams(params2);
+                                          rowButton2Se.setText("Tidak");
+                                          rowButton2Se.setTextColor(Color.parseColor("#767676"));
+                                          rowButton2Se.setBackgroundResource(R.drawable.btn_jawab);
+
+                                          rowButton2Se.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  GradientDrawable drawable = (GradientDrawable) v.getBackground();
+
+                                                  if (rowButton1Se.getVisibility() == View.VISIBLE) {
+                                                      drawable.setColor(Color.RED);
+                                                      rowButton2Se.setTextColor(Color.WHITE);
+                                                      rowButton1Se.setVisibility(View.GONE);
+
+                                                  } else {
+                                                      drawable.setColor(Color.LTGRAY);
+                                                      rowButton2Se.setTextColor(Color.GRAY);
+                                                      rowButton1Se.setVisibility(View.VISIBLE);
+                                                  }
+                                              }
+                                          });
+
+                                          //popup menu
+                                          final PopupMenu popupMenu2 = new PopupMenu(InspeksiKedua.this, rowTextviewSe);
+                                          //add menu items in popup menu
+                                          popupMenu2.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+                                          popupMenu2.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+                                          popupMenu2.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+
+                                          //handle menu item clicks
+                                          popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                              @Override
+                                              public boolean onMenuItemClick(MenuItem menuItem) {
+                                                  //get id of the clicked item
+                                                  int id = menuItem.getItemId();
+                                                  //handle clicks
+                                                  if (id == 0) {
+                                                      tambahcatatan();
+                                                      //Copy clicked
+                                                      //set text
+                                                      //selectedTv.setText("Copy clicked");
+                                                  } else if (id == 1) {
+                                                      ambilfoto();
+                                                      //Share clicked
+                                                      //set text
+                                                      // selectedTv.setText("Share clicked");
+                                                  } else if (id == 2) {
+                                                      tindakan();
+                                                      //Save clicked
+                                                      //set text
+                                                      //selectedTv.setText("Save clicked");
+                                                  }
+
+                                                  return false;
+                                              }
+                                          });
+                                          //handle button click, show popup menu
+                                          rowTextviewSe.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View view) {
+                                                  popupMenu2.show();
+                                              }
+                                          });
+
+                                          rowTextviewSe.setText("Pertanyaan :" + "\n" + isi);
+                                          Log.d("pertanyaannya : ", String.valueOf(isi));
+                                          myLinearLayout.addView(rowTextviewSe);
+
+                                          if (tipeResponSe.equals("text")) {
+                                              myLinearLayout.addView(rowEditTextSe);
+
+
+                                          } else if (tipeResponSe.equals("respon")) {
+                                              myLinearLayout.addView(rowEditTextPSe);
+
+
+                                          } else if (tipeResponSe.equals("map")) {
+                                              myLinearLayout.addView(rowEditTextMSe);
+
+
+                                          }  else if (tipeResponSe.equals("multiple-choices")){
+
+                                              ArrayList opsi1 = (ArrayList) responS.get("option");
+                                              Log.d("iniopsiSection", opsi1.toString());
+
+                                              for (int b = 0; b < opsi1.size(); b++){
+                                                  //type multiple-choices
+
+                                                  final Button rowButton6 = new Button(InspeksiKedua.this);
+                                                  rowButton6.setLayoutParams(params);
+                                                  rowButton6.setText(opsi1.get(b).toString());
+                                                  rowButton6.setTextColor(Color.parseColor("#767676"));
+                                                  rowButton6.setBackgroundResource(R.drawable.btn_jawab);
+                                                  GradientDrawable drawable = (GradientDrawable) rowButton6.getBackground();
+                                                  drawable.setColor(Color.LTGRAY);
+
+
+                                                  rowButton6.setOnClickListener(new View.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(View v) {
+                                                          GradientDrawable drawable = (GradientDrawable) v.getBackground();
+                                                          if (drawable.getColor() == ColorStateList.valueOf(Color.LTGRAY)){
+                                                              drawable.setColor(Color.GREEN);
+                                                          }else {
+                                                              drawable.setColor(Color.LTGRAY);
+                                                          }
+                                                      }
+                                                  });
+                                                  myLinearLayout.addView(rowButton6);
+                                              }
+
+                                          }
+
+                                      }
+
                                   }else {
                                       // add the textview to the linearlayout
                                       myLinearLayout.addView(rowTextView);
@@ -369,13 +556,19 @@ public class InspeksiKedua extends AppCompatActivity {
                                           rowButton3.setText(opsi.get(a).toString());
                                           rowButton3.setTextColor(Color.parseColor("#767676"));
                                           rowButton3.setBackgroundResource(R.drawable.btn_jawab);
+                                          GradientDrawable drawable = (GradientDrawable) rowButton3.getBackground();
+                                          drawable.setColor(Color.LTGRAY);
+
 
                                           rowButton3.setOnClickListener(new View.OnClickListener() {
                                               @Override
                                               public void onClick(View v) {
                                                   GradientDrawable drawable = (GradientDrawable) v.getBackground();
-                                                  drawable.setColor(Color.GREEN);
-                                                  
+                                                  if (drawable.getColor() == ColorStateList.valueOf(Color.LTGRAY)){
+                                                      drawable.setColor(Color.GREEN);
+                                                  }else {
+                                                      drawable.setColor(Color.LTGRAY);
+                                                  }
                                               }
                                           });
                                           myLinearLayout.addView(rowButton3);
@@ -444,8 +637,6 @@ public class InspeksiKedua extends AppCompatActivity {
                                                       for (int i = 0; i < ukuranArray; i++) {
 
                                                           String deskripsi = list.get(i).get("description").toString();
-                                                          Log.d("ini des : ", deskripsi);
-
 
                                                           LinearLayoutCompat myLinearLayout = findViewById(R.id.lPertanyaan);
 
@@ -597,34 +788,37 @@ public class InspeksiKedua extends AppCompatActivity {
 
                                                           final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
 
-                                                          String respon = list.get(i).get("typeOfResponse").toString();
-                                                          String type = list.get(i).get("type").toString();
-                                                          Log.d("ini typeOfResponse : ", respon);
-                                                          Log.d("initype : ", type);
-
                                                           // set some properties of rowTextView or something
                                                           rowTextView.setText("Pertanyaan :" + "\n" + deskripsi);
                                                           rowTextviewS.setText(deskripsi);
 
+                                                          String type = list.get(i).get("type").toString();
+                                                          Log.d("initype : ", type);
+
+                                                          //get objek respon
+                                                          Map respon = (Map) list.get(i).get("typeOfResponse");
+                                                          //get tipe reson
+                                                          String tipeRespon = String.valueOf(respon.get("type"));
+                                                          Log.d("tiperes : ", tipeRespon);
 
 
-//                                                          ArrayList contents = (ArrayList) list.get(i).get("contents");
-
-//                                                          Log.d("inicontents : ", contents.toString());
+                                                            //sectionnext
                                                             if (type.equals("section")) {
                                                                 myLinearLayout.addView(rowTextviewS);
 
-
-                                                                //pagesection
-//                                                                ArrayList contents = (ArrayList) list.get(i).get("contents");
                                                                 ArrayList<Map> content = (ArrayList<Map>) list.get(i).get("contents");
                                                                 Log.d("inicontent : ", content.toString());
                                                                 int jsize = content.size();
 
                                                                 for (int a = 0; a < jsize; a++) {
                                                                     String isi = content.get(a).get(("description")).toString();
-                                                                    Log.d("ini des : ", isi);
-                                                                    String responS = content.get(a).get("typeOfResponse").toString();
+                                                                    Log.d("inides : ", isi);
+
+                                                                    //get objek respon
+                                                                    Map responS = (Map) content.get(a).get("typeOfResponse");
+                                                                    //get tipe reson
+                                                                    String tipeResponSe = String.valueOf(responS.get("type"));
+                                                                    Log.d("tiperese : ", tipeResponSe);
 
                                                                     //type = section
                                                                     final TextView rowTextviewSe = new TextView(InspeksiKedua.this);
@@ -755,45 +949,50 @@ public class InspeksiKedua extends AppCompatActivity {
                                                                     Log.d("pertanyaannya : ", String.valueOf(isi));
                                                                     myLinearLayout.addView(rowTextviewSe);
 
-                                                                    if (responS.equals("{type=text, option=null}")) {
+                                                                    if (tipeResponSe.equals("text")) {
                                                                         myLinearLayout.addView(rowEditTextSe);
 
 
-                                                                    } else if (responS.equals("{type=person, option=null}")) {
+                                                                    } else if (tipeResponSe.equals("respon")) {
                                                                         myLinearLayout.addView(rowEditTextPSe);
 
 
-                                                                    } else if (responS.equals("{type=map, option=null}")) {
+                                                                    } else if (tipeResponSe.equals("map")) {
                                                                         myLinearLayout.addView(rowEditTextMSe);
 
 
-                                                                    }  else if (type.equals("multiple-choices")){
-                                                                        myLinearLayout.addView(rowButton1Se);
-                                                                        myLinearLayout.addView(rowButton2Se);
+                                                                    }  else if (tipeResponSe.equals("multiple-choices")) {
 
+                                                                        ArrayList opsi1 = (ArrayList) responS.get("option");
+                                                                        Log.d("iniopsiSection", opsi1.toString());
+
+                                                                        for (int b = 0; b < opsi1.size(); b++) {
+                                                                            //type multiple-choices
+
+                                                                            final Button rowButton4 = new Button(InspeksiKedua.this);
+                                                                            rowButton4.setLayoutParams(params);
+                                                                            rowButton4.setText(opsi1.get(b).toString());
+                                                                            rowButton4.setTextColor(Color.parseColor("#767676"));
+                                                                            rowButton4.setBackgroundResource(R.drawable.btn_jawab);
+                                                                            GradientDrawable drawable = (GradientDrawable) rowButton4.getBackground();
+                                                                            drawable.setColor(Color.LTGRAY);
+
+
+                                                                            rowButton4.setOnClickListener(new View.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(View v) {
+                                                                                    GradientDrawable drawable = (GradientDrawable) v.getBackground();
+                                                                                    if (drawable.getColor() == ColorStateList.valueOf(Color.LTGRAY)) {
+                                                                                        drawable.setColor(Color.GREEN);
+                                                                                    } else {
+                                                                                        drawable.setColor(Color.LTGRAY);
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                            myLinearLayout.addView(rowButton4);
+
+                                                                        }
                                                                     }
-
-//                                                                    rowTextviewS.setOnClickListener(new View.OnClickListener() {
-//                                                                        @Override
-//                                                                        public void onClick(View v) {
-//                                                                            if (img2.isVisible()){
-//
-//                                                                                rowButton1Se.setVisibility(View.GONE);
-//                                                                                rowButton2Se.setVisibility(View.GONE);
-//                                                                                rowTextviewSe.setVisibility(View.GONE);
-//                                                                                rowEditTextSe.setVisibility(View.GONE);
-//                                                                                rowEditTextPSe.setVisibility(View.GONE);
-//                                                                                rowEditTextMSe.setVisibility(View.GONE);
-//                                                                            }else {
-//                                                                                rowButton1Se.setVisibility(View.VISIBLE);
-//                                                                                rowButton2Se.setVisibility(View.VISIBLE);
-//                                                                                rowTextviewSe.setVisibility(View.VISIBLE);
-//                                                                                rowEditTextSe.setVisibility(View.VISIBLE);
-//                                                                                rowEditTextPSe.setVisibility(View.VISIBLE);
-//                                                                                rowEditTextMSe.setVisibility(View.VISIBLE);
-//                                                                            }
-//                                                                        }
-//                                                                    });
 
                                                                 }
 
@@ -802,23 +1001,47 @@ public class InspeksiKedua extends AppCompatActivity {
                                                                 myLinearLayout.addView(rowTextView);
                                                             }
 
-
-                                                          if (respon.equals("{type=text, option=null}")) {
+                                                          if (tipeRespon.equals("text")) {
                                                               myLinearLayout.addView(rowEditText);
 
 
-                                                          } else if (respon.equals("{type=person, option=null}")) {
+                                                          } else if (tipeRespon.equals("person")) {
                                                               myLinearLayout.addView(rowEditTextP);
 
 
-                                                          } else if (respon.equals("{type=map, option=null}")) {
+                                                          } else if (tipeRespon.equals("map")) {
                                                               myLinearLayout.addView(rowEditTextM);
 
 
-                                                          } else {
+                                                          } else if (tipeRespon.equals("multiple-choices")){
+                                                              ArrayList opsi = (ArrayList) respon.get("option");
+                                                              Log.d("iniopsi", opsi.toString());
 
-                                                              myLinearLayout.addView(rowButton1);
-                                                              myLinearLayout.addView(rowButton2);
+                                                              for (int c = 0; c < opsi.size(); c++){
+                                                                  //type multiple-choices
+
+                                                                  final Button rowButton5 = new Button(InspeksiKedua.this);
+                                                                  rowButton5.setLayoutParams(params);
+                                                                  rowButton5.setText(opsi.get(c).toString());
+                                                                  rowButton5.setTextColor(Color.parseColor("#767676"));
+                                                                  rowButton5.setBackgroundResource(R.drawable.btn_jawab);
+                                                                  GradientDrawable drawable = (GradientDrawable) rowButton5.getBackground();
+                                                                  drawable.setColor(Color.LTGRAY);
+
+
+                                                                  rowButton5.setOnClickListener(new View.OnClickListener() {
+                                                                      @Override
+                                                                      public void onClick(View v) {
+                                                                          GradientDrawable drawable = (GradientDrawable) v.getBackground();
+                                                                          if (drawable.getColor() == ColorStateList.valueOf(Color.LTGRAY)){
+                                                                              drawable.setColor(Color.GREEN);
+                                                                          }else {
+                                                                              drawable.setColor(Color.LTGRAY);
+                                                                          }
+                                                                      }
+                                                                  });
+                                                                  myLinearLayout.addView(rowButton5);
+                                                              }
 
                                                           }
 
