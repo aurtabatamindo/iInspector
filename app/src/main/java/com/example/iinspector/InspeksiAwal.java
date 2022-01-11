@@ -12,15 +12,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
-import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +38,6 @@ import com.example.iinspector.SendNotificationPack.Client;
 import com.example.iinspector.SendNotificationPack.Data;
 import com.example.iinspector.SendNotificationPack.MyResponse;
 import com.example.iinspector.SendNotificationPack.NotificationSender;
-import com.example.iinspector.ui.gallery.GalleryFragment;
 
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -51,12 +48,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -114,9 +111,9 @@ public class InspeksiAwal extends AppCompatActivity {
     //cloudfirebase
     FirebaseFirestore dbs;
 
-    //String Alamat
+    //String
     String alm;
-
+    String idtemplate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,9 +215,29 @@ public class InspeksiAwal extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
-                                            lanjut.putExtra("doc",documentId);
-                                            startActivity(lanjut);
+
+                                            //pushtotemplates
+                                            dbs.collection("templates").document(documentId).get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    if (documentSnapshot.exists()){
+                                                        DocumentReference ref = dbs.collection("hasiltemplatestes").document();
+                                                        idtemplate = ref.getId();
+                                                        dbs.collection("hasiltemplatestes").document(idtemplate).set(documentSnapshot);
+                                                        Log.d("idtemplate",idtemplate);
+
+                                                        Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
+                                                        lanjut.putExtra("doc",documentId);
+                                                        lanjut.putExtra("idtem",idtemplate);
+                                                        startActivity(lanjut);
+                                                    }
+
+                                                }
+                                            });
+
+
+
                                         } else {
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         }

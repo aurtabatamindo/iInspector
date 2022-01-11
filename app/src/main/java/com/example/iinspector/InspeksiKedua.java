@@ -54,6 +54,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -115,7 +116,7 @@ public class InspeksiKedua extends AppCompatActivity {
         setContentView(R.layout.activity_inspeksi_kedua);
 
         String documentId = getIntent().getStringExtra("doc");
-
+        String idtemplate = getIntent().getStringExtra("idtem");
 
         scard1 = findViewById(R.id.scard1);
         scard2 = findViewById(R.id.scard2);
@@ -162,6 +163,13 @@ public class InspeksiKedua extends AppCompatActivity {
                           if (document != null && document.exists()) {
 
                               ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
+                              Log.d("liatlistcontents", list.toString());
+
+                              //cobapush
+                              Map<String, Object> map = new HashMap<>();
+                              map.put("contents", list);
+                              db.collection("hasiltemplatestes").document(idtemplate)
+                                      .collection("pages").document().set(map);
 
                               int ukuranArray = list.size();
                               for (int i = 0; i < ukuranArray; i++) {
@@ -598,6 +606,7 @@ public class InspeksiKedua extends AppCompatActivity {
                   berikutnya.setOnClickListener(new View.OnClickListener() {
                       @Override
                       public void onClick(View v) {
+
                           int angkaawal = Integer.parseInt(nPage.getText().toString());
                           int tambah = 1;
                           int hasil = angkaawal + tambah;
@@ -633,6 +642,13 @@ public class InspeksiKedua extends AppCompatActivity {
 
 
                                                       ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
+                                                      //cobapush
+                                                      Map<String, Object> map = new HashMap<>();
+                                                      map.put("contents", list);
+                                                      db.collection("hasiltemplatestes").document(idtemplate)
+                                                              .collection("pages").document().set(map);
+                                                      
+
                                                       int ukuranArray = list.size();
                                                       for (int i = 0; i < ukuranArray; i++) {
 
