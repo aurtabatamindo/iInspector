@@ -57,8 +57,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,7 +83,7 @@ public class InspeksiAwal extends AppCompatActivity {
 
     //notif
     private APIService apiService;
-    final private String admin1 = "wtBD3Nb2S6UO1O5tx1RQLYV7lcn1";
+    final private String admin1 = "4kCznhvJW5aZfz4hkBGme3ZvV1r2";
     final private String title = "!TEMUAN!";
     final private String pesan = "!RESIKO HIGHT!";
 
@@ -204,6 +206,7 @@ public class InspeksiAwal extends AppCompatActivity {
 //
 //                        );
 
+
                         dbs = FirebaseFirestore.getInstance();
                         dbs.collection("templates").document(documentId)
                                 .update("templateLocation",lok,
@@ -218,24 +221,19 @@ public class InspeksiAwal extends AppCompatActivity {
 
                                             //pushtotemplates
                                             dbs.collection("templates").document(documentId).get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                 @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    if (documentSnapshot.exists()){
-                                                        DocumentReference ref = dbs.collection("hasiltemplatestes").document();
-                                                        idtemplate = ref.getId();
-                                                        dbs.collection("hasiltemplatestes").document(idtemplate).set(documentSnapshot);
-                                                        Log.d("idtemplate",idtemplate);
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()){
+                                                        DocumentSnapshot document = task.getResult();
+                                                        if (document.exists()) {
+                                                            Log.d("cekdata", document.toString());
 
-                                                        Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
-                                                        lanjut.putExtra("doc",documentId);
-                                                        lanjut.putExtra("idtem",idtemplate);
-                                                        startActivity(lanjut);
+                                                        }
                                                     }
 
                                                 }
                                             });
-
 
 
                                         } else {
@@ -245,6 +243,25 @@ public class InspeksiAwal extends AppCompatActivity {
                                 });
 
 
+                        dbs.collection("templates").document(documentId)
+                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                Log.d("datasitempate", documentSnapshot.toString());
+                                ArrayList<Map> list = (ArrayList<Map>) documentSnapshot.get("data");
+
+                                DocumentReference ref = dbs.collection("hasiltemplatestes").document();
+                                idtemplate = ref.getId();
+                                dbs.collection("hasiltemplatestes").document(idtemplate).set(documentSnapshot);
+                                Log.d("idtemplate", idtemplate);
+
+                                Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
+                                lanjut.putExtra("doc", documentId);
+                                lanjut.putExtra("idtem", idtemplate);
+                                startActivity(lanjut);
+                                finish();
+                            }
+                        });
 
                     }
 
@@ -458,6 +475,7 @@ public class InspeksiAwal extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String usertoken = dataSnapshot.getValue(String.class);
+                                Log.d("usertoken",usertoken);
                                 kirimnotif(usertoken, title.toString().trim(), pesan.toString().trim());
                             }
 
