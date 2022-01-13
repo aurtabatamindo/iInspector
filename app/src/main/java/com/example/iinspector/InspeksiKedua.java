@@ -110,6 +110,11 @@ public class InspeksiKedua extends AppCompatActivity {
 
     int sizeawal;
     int sizeakhir;
+
+    //list
+    List<EditText> allEds = new ArrayList<EditText>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -244,7 +249,7 @@ public class InspeksiKedua extends AppCompatActivity {
                                   final TextView rowTextviewS = new TextView(InspeksiKedua.this);
                                   rowTextviewS.setLayoutParams(params3);
                                   rowTextviewS.setBackgroundResource(R.drawable.cardsection);
-                                  rowTextviewS.setTextSize(11);
+                                  rowTextviewS.setTextSize(12);
                                   rowTextviewS.setPaddingRelative(50, 25, 10, 25);
                                   rowTextviewS.setTypeface(null, Typeface.ITALIC);
                                   rowTextviewS.setTextColor(Color.parseColor("#767676"));
@@ -257,6 +262,8 @@ public class InspeksiKedua extends AppCompatActivity {
                                   rowEditText.setLayoutParams(params);
                                   rowEditText.setTextSize(11);
                                   rowEditText.setHint("Jawab disini");
+
+
 
                                   //Type = Person
                                   final EditText rowEditTextP = new EditText(InspeksiKedua.this);
@@ -325,6 +332,7 @@ public class InspeksiKedua extends AppCompatActivity {
 
 
                                   final TextView[] myTextViews = new TextView[ukuranArray]; // create an empty array;
+                                  final EditText[] myEditTextViews = new EditText[ukuranArray]; // create an empty array;
 
                                   String type = list.get(i).get("type").toString();
                                   Log.d("initype : ", type);
@@ -490,7 +498,7 @@ public class InspeksiKedua extends AppCompatActivity {
 
                                           if (tipeResponSe.equals("text")) {
                                               myLinearLayout.addView(rowEditTextSe);
-
+                                              allEds.add(rowEditTextSe);
 
                                           } else if (tipeResponSe.equals("respon")) {
                                               myLinearLayout.addView(rowEditTextPSe);
@@ -542,7 +550,7 @@ public class InspeksiKedua extends AppCompatActivity {
 
                                   if (tipeRespon.equals("text")) {
                                       myLinearLayout.addView(rowEditText);
-
+                                      allEds.add(rowEditText);
 
                                   } else if (tipeRespon.equals("person")) {
                                       myLinearLayout.addView(rowEditTextP);
@@ -587,8 +595,9 @@ public class InspeksiKedua extends AppCompatActivity {
                                   }
 
                                   // save a reference to the textview for later
-                                  myTextViews[i] = rowTextView;
-
+//                                  myTextViews[i] = rowTextView;
+//                                  myEditTextViews[i] = rowEditText;
+//                                  Log.d("rowtext",myEditTextViews[i].toString());
 
 
 
@@ -618,6 +627,21 @@ public class InspeksiKedua extends AppCompatActivity {
                               ttd();
                               nPage.setText(String.valueOf(sizeawal));
                           }else {
+                              //getvalue
+//                              String[] array = new String[myLinearLayout.getChildCount()];
+//
+//                              for (int i=0; i < myLinearLayout.getChildCount(); i++){
+//                                  TextView editText = (TextView) myLinearLayout.getChildAt(i);
+//                                  array[i] = editText.getText().toString();
+//                                  Log.d("hasilget",array[i]);
+//                              }
+                              String[] strings = new String[allEds.size()];
+                              for(int i=0; i < allEds.size(); i++){
+                                  strings[i] = allEds.get(i).getText().toString();
+                                  Log.d("please",strings[i].toString());
+                                  
+
+                              }
 
                               myLinearLayout.removeAllViews();
                               pages.document(documentId)
