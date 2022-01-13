@@ -114,7 +114,8 @@ public class InspeksiKedua extends AppCompatActivity {
     //list
     List<EditText> allEds = new ArrayList<EditText>();
 
-
+    //string
+    String idDocUpdate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,10 +172,15 @@ public class InspeksiKedua extends AppCompatActivity {
                               Log.d("liatlistcontents", list.toString());
 
                               //cobapush
+                              DocumentReference ref = db.collection("hasiltemplatestes").document(idtemplate)
+                                      .collection("pages")
+                                      .document();
+                              idDocUpdate = ref.getId();
+                              Log.d("iddocupdate",idDocUpdate);
                               Map<String, Object> map = new HashMap<>();
                               map.put("contents", list);
                               db.collection("hasiltemplatestes").document(idtemplate)
-                                      .collection("pages").document().set(map);
+                                      .collection("pages").document(idDocUpdate).set(map);
 
                               int ukuranArray = list.size();
                               for (int i = 0; i < ukuranArray; i++) {
@@ -628,19 +634,15 @@ public class InspeksiKedua extends AppCompatActivity {
                               nPage.setText(String.valueOf(sizeawal));
                           }else {
                               //getvalue
-//                              String[] array = new String[myLinearLayout.getChildCount()];
-//
-//                              for (int i=0; i < myLinearLayout.getChildCount(); i++){
-//                                  TextView editText = (TextView) myLinearLayout.getChildAt(i);
-//                                  array[i] = editText.getText().toString();
-//                                  Log.d("hasilget",array[i]);
-//                              }
                               String[] strings = new String[allEds.size()];
                               for(int i=0; i < allEds.size(); i++){
                                   strings[i] = allEds.get(i).getText().toString();
                                   Log.d("please",strings[i].toString());
-                                  
 
+                                  db.collection("hasiltemplatestes").document(idtemplate)
+                                          .collection("pages").document(idDocUpdate)
+                                          .update("answer.isFailed", null,
+                                                  "answer.text", FieldValue.arrayUnion(strings[i]));
                               }
 
                               myLinearLayout.removeAllViews();
@@ -667,6 +669,7 @@ public class InspeksiKedua extends AppCompatActivity {
 
                                                       ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
                                                       //cobapush
+
                                                       Map<String, Object> map = new HashMap<>();
                                                       map.put("contents", list);
                                                       db.collection("hasiltemplatestes").document(idtemplate)
