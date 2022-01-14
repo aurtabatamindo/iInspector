@@ -183,7 +183,10 @@ public class InspeksiKedua extends AppCompatActivity {
                                       .collection("pages").document(idDocUpdate).set(map);
 
                               int ukuranArray = list.size();
+
                               for (int i = 0; i < ukuranArray; i++) {
+
+
 
                                   String deskripsi = list.get(i).get("description").toString();
 
@@ -557,6 +560,12 @@ public class InspeksiKedua extends AppCompatActivity {
                                   if (tipeRespon.equals("text")) {
                                       myLinearLayout.addView(rowEditText);
                                       allEds.add(rowEditText);
+                                      
+                                      db.collection("hasiltemplatestes").document(idtemplate)
+                                              .collection("pages").document(idDocUpdate)
+                                              .update(
+                                                      "answer.isFailed", null,
+                                                      "answer.text", null);
 
                                   } else if (tipeRespon.equals("person")) {
                                       myLinearLayout.addView(rowEditTextP);
@@ -633,17 +642,17 @@ public class InspeksiKedua extends AppCompatActivity {
                               ttd();
                               nPage.setText(String.valueOf(sizeawal));
                           }else {
-                              //getvalue
-                              String[] strings = new String[allEds.size()];
-                              for(int i=0; i < allEds.size(); i++){
-                                  strings[i] = allEds.get(i).getText().toString();
-                                  Log.d("please",strings[i].toString());
-
-                                  db.collection("hasiltemplatestes").document(idtemplate)
-                                          .collection("pages").document(idDocUpdate)
-                                          .update("answer.isFailed", null,
-                                                  "answer.text", FieldValue.arrayUnion(strings[i]));
-                              }
+//                              //getvalue
+//                              String[] strings = new String[allEds.size()];
+//                              for(int i=0; i < allEds.size(); i++){
+//                                  strings[i] = allEds.get(i).getText().toString();
+//                                  Log.d("please",strings[i].toString());
+//
+//                                  db.collection("hasiltemplatestes").document(idtemplate)
+//                                          .collection("pages").document(idDocUpdate)
+//                                          .update("answer.isFailed", null,
+//                                                  "answer.text", FieldValue.arrayUnion(strings[i]));
+//                              }
 
                               myLinearLayout.removeAllViews();
                               pages.document(documentId)
