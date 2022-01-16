@@ -175,17 +175,36 @@ public class InspeksiKedua extends AppCompatActivity {
                               DocumentReference ref = db.collection("hasiltemplatestes").document(idtemplate)
                                       .collection("pages")
                                       .document();
+
                               idDocUpdate = ref.getId();
                               Log.d("iddocupdate",idDocUpdate);
                               Map<String, Object> map = new HashMap<>();
+                              Log.d("liat",map.toString());
                               map.put("contents", list);
                               db.collection("hasiltemplatestes").document(idtemplate)
                                       .collection("pages").document(idDocUpdate).set(map);
-
                               int ukuranArray = list.size();
+
+
+
+
 
                               for (int i = 0; i < ukuranArray; i++) {
 
+//                                  db.collection("hasiltemplatestes").document(idtemplate)
+//                                          .collection("pages").document(idDocUpdate)
+//                                          .update(
+//                                                  "answer.isFailed", null,
+//                                                  "answer.text", null);
+
+                                  final Map<String, Object> answer = new HashMap<>();
+                                  answer.put("answer.isFailed", null);
+                                  answer.put("answer.text", null);
+
+                                  
+                                  db.collection("hasiltemplatestes").document(idtemplate)
+                                          .collection("pages").document(idDocUpdate)
+                                          .update(answer);
 
 
                                   String deskripsi = list.get(i).get("description").toString();
@@ -561,11 +580,7 @@ public class InspeksiKedua extends AppCompatActivity {
                                       myLinearLayout.addView(rowEditText);
                                       allEds.add(rowEditText);
                                       
-                                      db.collection("hasiltemplatestes").document(idtemplate)
-                                              .collection("pages").document(idDocUpdate)
-                                              .update(
-                                                      "answer.isFailed", null,
-                                                      "answer.text", null);
+
 
                                   } else if (tipeRespon.equals("person")) {
                                       myLinearLayout.addView(rowEditTextP);
