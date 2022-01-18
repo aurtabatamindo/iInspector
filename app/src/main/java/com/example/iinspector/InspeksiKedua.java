@@ -51,6 +51,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -93,12 +99,15 @@ public class InspeksiKedua extends AppCompatActivity {
     AlertDialog.Builder dialog;
     LayoutInflater inflater;
     View dialogView;
+
     //firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    //collection
+    //collection templates
     CollectionReference pages = db.collection("templates");
 
+    //Collection hasiltemplates
+    CollectionReference df = db.collection("hasiltemplatestes");
 
     //recyclerview
     private RecyclerView recyclerView;
@@ -116,6 +125,13 @@ public class InspeksiKedua extends AppCompatActivity {
 
     //string
     String idDocUpdate;
+
+    //realtime
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reff = database.getReference();
+    DatabaseReference dref = database.getReference().child("template");
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,53 +175,97 @@ public class InspeksiKedua extends AppCompatActivity {
                   for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                       String title = (String) documentSnapshot.get("pageTitle");
                       qTitle.setText(title);
+                      Log.d("testgettask",task.toString());
                   }
 
 
 
                   if (task.isSuccessful()) {
+                      // looping templates
                       for (QueryDocumentSnapshot document : task.getResult()) {
 
                           if (document != null && document.exists()) {
 
+
                               ArrayList<Map> list = (ArrayList<Map>) document.get("contents");
-                              Log.d("liatlistcontents", list.toString());
 
                               //cobapush
-                              DocumentReference ref = db.collection("hasiltemplatestes").document(idtemplate)
+                              DocumentReference ref = db.collection("hasiltemplatestes")
+                                      .document(idtemplate)
                                       .collection("pages")
                                       .document();
 
                               idDocUpdate = ref.getId();
                               Log.d("iddocupdate",idDocUpdate);
+
                               Map<String, Object> map = new HashMap<>();
-                              Log.d("liat",map.toString());
                               map.put("contents", list);
+                              Log.d("hasilmap",map.toString());
+
+
+
                               db.collection("hasiltemplatestes").document(idtemplate)
-                                      .collection("pages").document(idDocUpdate).set(map);
+                                              .collection("pages")
+                                              .document(idDocUpdate)
+                                              .set(map);
+
+//                              //realtimefirebase
+//                              DatabaseReference dRef = reff.child("template");
+//                              dRef.setValue(map);
+
+                              //updaterealtime
+                              final Map<String, Object> answer = new HashMap<>();
+                              answer.put("isFailed", "null");
+                              answer.put("text", "null");
+
+//                              reff.child("template/contents/0/answer").updateChildren(answer);
+//                              dref.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                  @Override
+//                                  public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                      Log.d("getrealtime",snapshot.toString());
+//
+//                                      db.collection("hasiltemplatestes").document(idtemplate)
+//                                              .collection("pages")
+//                                              .document(idDocUpdate)
+//                                              .set(snapshot.getValue());
+//                                  }
+//
+//                                  @Override
+//                                  public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                  }
+//                              });
+
+
+//                              db.collection("hasiltemplatestes").document(idtemplate)
+//                                      .collection("pages").document(idDocUpdate)
+//                                      .update("contents",FieldValue.arrayUnion("isFailed"));
+
+//                              //gethasiltemplate
+//                              df.document(idtemplate)
+//                                       .collection("pages")
+//                                       .document(idDocUpdate)
+////                                       .whereArrayContains("contentId","45b83309-1acb-478e-ac59-6c5478e7323a")
+//                                       .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                  @Override
+//                                  public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                      if (task.isSuccessful()) {
+//
+//                                          DocumentSnapshot document = task.getResult();
+//                                          if (task != null && document.exists()) {
+//                                              ArrayList<Map> list2 = (ArrayList<Map>) document.get("contents");
+//                                              Map<String, Object> map2 = new HashMap<>();
+//                                              map2.put("contents", list2);
+//                                              Log.d("hasilmap2",map2.toString());
+//
+//
+//                                          }
+//                                      }
+//                                  }
+//                              });
+
                               int ukuranArray = list.size();
-
-
-
-
-
                               for (int i = 0; i < ukuranArray; i++) {
-
-//                                  db.collection("hasiltemplatestes").document(idtemplate)
-//                                          .collection("pages").document(idDocUpdate)
-//                                          .update(
-//                                                  "answer.isFailed", null,
-//                                                  "answer.text", null);
-
-                                  final Map<String, Object> answer = new HashMap<>();
-                                  answer.put("answer.isFailed", null);
-                                  answer.put("answer.text", null);
-
-                                  
-                                  db.collection("hasiltemplatestes").document(idtemplate)
-                                          .collection("pages").document(idDocUpdate)
-                                          .update(answer);
-
 
                                   String deskripsi = list.get(i).get("description").toString();
 
@@ -657,17 +717,59 @@ public class InspeksiKedua extends AppCompatActivity {
                               ttd();
                               nPage.setText(String.valueOf(sizeawal));
                           }else {
-//                              //getvalue
-//                              String[] strings = new String[allEds.size()];
-//                              for(int i=0; i < allEds.size(); i++){
-//                                  strings[i] = allEds.get(i).getText().toString();
-//                                  Log.d("please",strings[i].toString());
+                              //getvalue
+                              Map<String, Object> map2 = new HashMap<>();
+                              final ArrayList[] test1 = new ArrayList[1];
+                              ArrayList<Object> ob = new ArrayList<Object>();
+//                              List map2 = new A
+                              //gethasiltemplate
+                              df.document(idtemplate)
+                                       .collection("pages")
+                                       .document(idDocUpdate)
+//                                       .whereArrayContains("contentId","45b83309-1acb-478e-ac59-6c5478e7323a")
+                                       .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                  @Override
+                                  public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                      if (task.isSuccessful()) {
+
+                                          DocumentSnapshot document = task.getResult();
+                                          if (task != null && document.exists()) {
+                                              ArrayList list2 = (ArrayList) document.get("contents");
+
+                                              map2.put("contents", list2);
+                                              Log.d("hasilmap22",map2.toString());
+                                              Log.d("hasilmap22","" + map2.get("contents"));
+
+                                              list2.set(1, "newString");
+                                              for (int i = 0; i < list2.size(); i++) {
+                                                  Log.d("pertanyaan index ke " + i, "" + list2.get(i));
+                                              }
 //
-//                                  db.collection("hasiltemplatestes").document(idtemplate)
-//                                          .collection("pages").document(idDocUpdate)
-//                                          .update("answer.isFailed", null,
-//                                                  "answer.text", FieldValue.arrayUnion(strings[i]));
-//                              }
+                                          }
+                                      }
+                                  }
+                              });
+                              String[] strings = new String[allEds.size()];
+                              ArrayList contentMap = (ArrayList) map2.get("contents");
+                              for(int i=0; i < allEds.size(); i++){
+                                  strings[i] = allEds.get(i).getText().toString();
+                                  Log.d("please",strings[i].toString());
+                                  Log.d("mapsize", "" + map2);
+//                                  map2.get("contents")
+//                                  test1[0][0].add((Integer) test1[0][0].get(i), strings[i]);
+
+                                  db.collection("hasiltemplatestes").document(idtemplate)
+                                          .collection("pages").document(idDocUpdate)
+//                                          .update("contents", test1[0][0]);
+                                          .update("answer.isFailed", null,
+                                                  "answer.text", FieldValue.arrayUnion(strings[i]));
+                              }
+
+//                              db.collection("hasiltemplatestes").document(idtemplate)
+//                                      .collection("pages").document(idDocUpdate)
+//                                          .update("contents", map2);
+////                                      .update("answer.isFailed", null,
+////                                              "answer.text", FieldValue.arrayUnion(strings[i]));
 
                               myLinearLayout.removeAllViews();
                               pages.document(documentId)

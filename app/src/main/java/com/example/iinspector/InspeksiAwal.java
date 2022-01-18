@@ -248,6 +248,7 @@ public class InspeksiAwal extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 Log.d("datasitempate", documentSnapshot.toString());
+
                                 ArrayList<Map> list = (ArrayList<Map>) documentSnapshot.get("data");
 
                                 DocumentReference ref = dbs.collection("hasiltemplatestes").document();
@@ -255,7 +256,7 @@ public class InspeksiAwal extends AppCompatActivity {
                                 dbs.collection("hasiltemplatestes").document(idtemplate).set(documentSnapshot);
                                 Log.d("idtemplate", idtemplate);
 
-                                Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKedua.class);
+                                Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKetiga.class);
                                 lanjut.putExtra("doc", documentId);
                                 lanjut.putExtra("idtem", idtemplate);
                                 startActivity(lanjut);

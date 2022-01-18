@@ -18,15 +18,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IInspector">
         <activity
-            android:name=".test">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            android:name=".InspeksiKetiga"
+            android:exported="false" />
+        <activity android:name=".test">
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-
-
         <activity
             android:name=".Login"
             android:exported="false"
