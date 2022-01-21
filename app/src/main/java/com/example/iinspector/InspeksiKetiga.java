@@ -1,27 +1,44 @@
 package com.example.iinspector;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.iinspector.ui.main.GetDataTodo;
 import com.example.iinspector.ui.main.TodoHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,12 +47,25 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.kyanogen.signatureview.SignatureView;
 
 import java.util.ArrayList;
 import java.util.Formattable;
 import java.util.List;
 
 public class InspeksiKetiga extends AppCompatActivity {
+
+    //camera
+    private static final int CAMERA_REQUEST = 1888;
+    private ImageView imageView;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
+    //tindakan
+    FloatingActionButton fab;
+    Toolbar toolbar;
+    AlertDialog.Builder dialog;
+    LayoutInflater inflater;
+    View dialogView;
 
     //firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -45,7 +75,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     CollectionReference df = db.collection("hasiltemplatestes");
 
     //penamaan
-    TextView qtitle,berikutnya;
+    TextView qtitle,berikutnya,jPage,nPage;
 
     //getIntentString
     String documentId;
@@ -69,9 +99,17 @@ public class InspeksiKetiga extends AppCompatActivity {
     //linear
     LinearLayoutCompat myLinearLayout;
 
+    //String
     String desc;
     String idAn;
     String idAnSection;
+    String parentId;
+    Integer sizeawal;
+
+    //Textview
+    TextView Description;
+    TextView DescriptionSection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +125,11 @@ public class InspeksiKetiga extends AppCompatActivity {
         //button berikutnya
         berikutnya = findViewById(R.id.berikutnya);
 
+        //Halaman
+        jPage = findViewById(R.id.jPage);
+        nPage = findViewById(R.id.nPage);
+        halaman();
+
         //Page1
         showtitle();
 
@@ -95,6 +138,20 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
 
+    }
+
+    private void halaman() {
+        //getjumlahpage
+        pages.document(documentId)
+                .collection("pages")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        sizeawal = task.getResult().size();
+                        Log.d("sizeawal : ", String.valueOf(sizeawal));
+                        jPage.setText(String.valueOf(sizeawal));
+                    }
+                });
     }
 
     private void showtitle() {
@@ -114,7 +171,10 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                 }
                 showcontent();
+
             }
+
+
         });
     }
 
@@ -154,7 +214,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                             params3.setMargins(10, 20, 10, 20);
 
                             // Build Description
-                            final TextView Description = new TextView(InspeksiKetiga.this);
+                            Description = new TextView(InspeksiKetiga.this);
                             Description.setBackgroundResource(R.drawable.cardpertanyaan);
                             Description.setTextSize(11);
                             Description.setPaddingRelative(50, 25, 10, 25);
@@ -182,6 +242,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Answer.setLayoutParams(params);
                             Answer.setTextSize(11);
                             Answer.setHint("Jawab disini");
+
+                            //actionPopup
+                            actionPopup();
 
                             Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                 @Override
@@ -227,6 +290,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                 myLinearLayout.addView(Description);
                                 myLinearLayout.addView(Answer);
+                                
                                 Log.d("Ini","Question");
                             }
 
@@ -234,6 +298,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                     }
                 }
             }
+
+
 
         });
     }
@@ -270,7 +336,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                             params3.setMargins(10, 20, 10, 20);
 
                             // Build Description
-                            final TextView DescriptionSection = new TextView(InspeksiKetiga.this);
+                            DescriptionSection = new TextView(InspeksiKetiga.this);
                             DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
                             DescriptionSection.setTextSize(11);
                             DescriptionSection.setPaddingRelative(50, 25, 10, 25);
@@ -281,11 +347,17 @@ public class InspeksiKetiga extends AppCompatActivity {
                             DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                             DescriptionSection.setText("Pertanyaan :" + "\n" + descSection);
 
+
                             // Type = Text
                             final EditText AnswerSection = new EditText(InspeksiKetiga.this);
                             AnswerSection.setLayoutParams(params);
                             AnswerSection.setTextSize(11);
                             AnswerSection.setHint("Jawab disini");
+
+                            //actionPopup
+                            actionPopupSection();
+
+                            allAnswerSection.add(AnswerSection);
 
                             AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                 @Override
@@ -293,30 +365,30 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                     if (hasFocus) {
                                         idAnSection = document.getId();
-                                        String parentId = (String) document.get("parentId");
-                                        Log.d("fokus","ya");
-                                        Log.d("idaSection",idAnSection);
+                                        parentId = (String) document.get("parentId");
+
+                                        Log.d("fokus Ya "+"parentId",parentId+ "  idaSection : "+idAnSection);
+
 
                                     } else {
-//                                        Boolean hasparent = document.getBoolean("hasParent");
-//                                        Log.d("iniparent",hasparent.toString());
-                                        String idaAnswer = AnswerSection.getText().toString();
-                                        pages.document(documentId)
-                                                .collection("pages")
-                                                .document(idPages)
-                                                .collection("contents")
-                                                .document(idDocSection)
-                                                .collection("contents")
-                                                .document(idAnSection)
-                                                .update("Answer",idaAnswer);
+                                            String idaAnswer = AnswerSection.getText().toString();
+                                            pages.document(documentId)
+                                                    .collection("pages")
+                                                    .document(idPages)
+                                                    .collection("contents")
+//                                                    .document(idDocSection)
+                                                    .document(parentId)
+                                                    .collection("contents")
+                                                    .document(idAnSection)
+                                                    .update("answer", idaAnswer);
 
-                                        Log.d("fokus","tidak");
+                                            Log.d("fokus Tidak "+"parentId",parentId+ "  idaSection : "+idAnSection);
 
+                                            Log.d("answer",idaAnswer);
                                     }
                                 }
                             });
 
-                            allAnswerSection.add(AnswerSection);
 
                             myLinearLayout.addView(DescriptionSection);
                             myLinearLayout.addView(AnswerSection);
@@ -333,106 +405,278 @@ public class InspeksiKetiga extends AppCompatActivity {
         berikutnya.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getdata();
-//                getdataSection();
+                int angkaawal = Integer.parseInt(nPage.getText().toString());
+                int tambah = 1;
+                int hasil = angkaawal + tambah;
+                nPage.setText(String.valueOf(hasil));
+
+                int jsize = Integer.parseInt(jPage.getText().toString());
+                int jpage = Integer.parseInt(nPage.getText().toString());
+
+                if (allAnswer.isEmpty()){
+                    Snackbar.make(findViewById(R.id.inspeksikedua),"Pertanyaan Belum di isi semua bos !",Snackbar.LENGTH_INDEFINITE)
+                            .setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            }).show();
+                }else{
+                    if (jpage > jsize) {
+                        ttd();
+                        nPage.setText(String.valueOf(sizeawal));
+                    }
+                }
+
+
             }
-
-
-            // update question
-            private void getdata() {
-                pages.document(documentId)
-                        .collection("pages")
-                        .document(idPages)
-                        .collection("contents")
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<String> list = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                list.add(document.getId());
-                            }
-
-                            updateData(list);
-                            Log.d("testgetlist", list.toString());
-                        }
-                    }
-
-                    private void updateData(List<String> list) {
-
-                        //get answer
-                        String[] strings = new String[allAnswer.size()];
-                        for (int i = 0; i < allAnswer.size(); i++) {
-
-                            strings[i] = allAnswer.get(i).getText().toString();
-                            Log.d("getAnswer", strings[i]);
-
-                        }
-
-                        // Iterate through the list
-                        for (int k = 0; k < list.size(); k++) {
-
-                            pages.document(documentId)
-                                    .collection("pages")
-                                    .document(idPages)
-                                    .collection("contents")
-                                    .document(list.get(k))
-                                    .update("answer", strings[k]);
-
-                        }
-                    }
-                });
-            }
-
-            // update section
-            private void getdataSection() {
-                pages.document(documentId)
-                        .collection("pages")
-                        .document(idPages)
-                        .collection("contents")
-                        .document(idDocSection)
-                        .collection("contents")
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<String> list = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                list.add(document.getId());
-                            }
-//                            Log.d("testgetlist", list.toString());
-                            updateData(list);
-                        }
-                    }
-
-                    private void updateData(List<String> list) {
-
-                        //get answer
-                        String[] strings = new String[allAnswerSection.size()];
-                        for (int i = 0; i < allAnswerSection.size(); i++) {
-
-                            strings[i] = allAnswerSection.get(i).getText().toString();
-                            Log.d("getAnswer", strings[i]);
-
-                        }
-
-                        // Iterate through the list
-                        for (int k = 0; k < list.size(); k++) {
-
-                            pages.document(documentId)
-                                    .collection("pages")
-                                    .document(idPages)
-                                    .collection("contents")
-                                    .document(idDocSection)
-                                    .collection("contents")
-                                    .document(list.get(k))
-                                    .update("answer", strings[k]);
-
-                        }
-                    }
-                });
-            }
-
         });
+    }
+
+    private void actionPopup() {
+        //popup menu
+        final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, Description);
+        //add menu items in popup menu
+        popupMenu2.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+        popupMenu2.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+        popupMenu2.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+
+        //handle menu item clicks
+        popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                //get id of the clicked item
+                int id = menuItem.getItemId();
+                //handle clicks
+                if (id == 0) {
+                    tambahcatatan();
+                    //Copy clicked
+                    //set text
+                    //selectedTv.setText("Copy clicked");
+                } else if (id == 1) {
+                    ambilfoto();
+                    //Share clicked
+                    //set text
+                    // selectedTv.setText("Share clicked");
+                } else if (id == 2) {
+                    tindakan();
+                    //Save clicked
+                    //set text
+                    //selectedTv.setText("Save clicked");
+                }
+
+                return false;
+            }
+        });
+        //handle button click, show popup menu
+        Description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupMenu2.show();
+            }
+        });
+    }
+
+    private void actionPopupSection() {
+        //popup menu
+        final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, DescriptionSection);
+        //add menu items in popup menu
+        popupMenu2.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+        popupMenu2.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+        popupMenu2.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+
+        //handle menu item clicks
+        popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                //get id of the clicked item
+                int id = menuItem.getItemId();
+                //handle clicks
+                if (id == 0) {
+                    tambahcatatan();
+                    //Copy clicked
+                    //set text
+                    //selectedTv.setText("Copy clicked");
+                } else if (id == 1) {
+                    ambilfoto();
+                    //Share clicked
+                    //set text
+                    // selectedTv.setText("Share clicked");
+                } else if (id == 2) {
+                    tindakan();
+                    //Save clicked
+                    //set text
+                    //selectedTv.setText("Save clicked");
+                }
+
+                return false;
+            }
+        });
+        //handle button click, show popup menu
+        DescriptionSection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupMenu2.show();
+            }
+        });
+    }
+
+    private void tindakan() {
+        dialog = new AlertDialog.Builder(InspeksiKetiga.this);
+        inflater = getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.tindakan, null);
+        dialog.setView(dialogView);
+        dialog.setCancelable(true);
+        dialog.setTitle("Tambah Tindakan");
+
+        dialog.setPositiveButton("Tambah",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        dialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        dialog.show();
+    }
+
+    void tambahcatatan() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
+        alertDialog.setTitle("Tambah Catatan");
+
+        final EditText input = new EditText(InspeksiKetiga.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+        alertDialog.setPositiveButton("Tambah",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        alertDialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+    void ttd() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
+        alertDialog.setTitle("Tanda Tangan");
+
+        final SignatureView input = new SignatureView(InspeksiKetiga.this, null);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+        alertDialog.setPositiveButton("Selesai",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
+                        startActivity(selesai);
+                        finish();
+
+                    }
+                });
+
+        alertDialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+    void ambilfoto() {
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+        } else {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            // Show pop up window
+            LayoutInflater layoutInflater = LayoutInflater.from(InspeksiKetiga.this);
+            View promptView = layoutInflater.inflate(R.layout.hasilfoto, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspeksiKetiga.this);
+            alertDialogBuilder.setTitle("Tambah Foto");
+            alertDialogBuilder.setView(promptView);
+            imageView = (ImageView) promptView.findViewById(R.id.gambar1);
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photo);
+
+
+            alertDialogBuilder.setPositiveButton("Tambah",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+            alertDialogBuilder.setNegativeButton("Batal",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            alertDialogBuilder.show();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+            Snackbar.make(findViewById(R.id.inspeksikedua),"Inspeksi sedang berjalan anda tidak bisa kembali sesuka hati !",Snackbar.LENGTH_INDEFINITE)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }).show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

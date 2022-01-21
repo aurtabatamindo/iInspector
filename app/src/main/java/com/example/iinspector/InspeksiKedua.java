@@ -150,9 +150,9 @@ public class InspeksiKedua extends AppCompatActivity {
 //        qDes = findViewById(R.id.qDescr);
 
 
-        //getjumlahpage
-         pages.document(documentId).collection("pages").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                //getjumlahpage
+                pages.document(documentId).collection("pages").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         sizeawal = task.getResult().size();

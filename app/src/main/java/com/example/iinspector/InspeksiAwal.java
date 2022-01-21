@@ -55,6 +55,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class InspeksiAwal extends AppCompatActivity {
 
     Button kemali, lanjutkan;
-    TextView tambah1, tambah2, tambah3, foto1, foto2, foto3, atindakan1, atindakan2, atindakan3, tglview, lokasi ,alamat;
+    TextView tambah1, tambah2, tambah3, foto1, foto2, foto3, atindakan1, atindakan2, atindakan3, tglview, lokasi ,alamat,titleInspegsi;
 
     //getlocation plus adress
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -111,17 +112,18 @@ public class InspeksiAwal extends AppCompatActivity {
 
 
     //cloudfirebase
-    FirebaseFirestore dbs;
+    FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
     //String
     String alm;
     String idtemplate;
+    String documentId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
         //putextra
-        String documentId = getIntent().getStringExtra("doc");
+        documentId = getIntent().getStringExtra("doc");
 
         //gps
         resultReceiver = new AddressResultReceiver(new Handler());
@@ -165,6 +167,7 @@ public class InspeksiAwal extends AppCompatActivity {
         tglview = findViewById(R.id.tglView);
         lokasi = findViewById(R.id.hasilLokasi);
         alamat = findViewById(R.id.alamat);
+        titleInspegsi = findViewById(R.id.titleInspeksi);
 
         //settgl & setjam
         tglview.setText(tgl);
@@ -177,6 +180,16 @@ public class InspeksiAwal extends AppCompatActivity {
         fontUtils.applyFontToView(weatherData, typeface);
         getCurrentData();
 
+        //gettile
+        dbs.collection("templates")
+                .document(documentId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                String title = (String) task.getResult().get("templateTitle");
+                titleInspegsi.setText(title);
+            }
+        });
 
         lanjutkan.setOnClickListener(new View.OnClickListener() {
             @Override
