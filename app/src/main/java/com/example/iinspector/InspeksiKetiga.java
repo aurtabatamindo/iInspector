@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,7 +53,9 @@ import com.kyanogen.signatureview.SignatureView;
 
 import java.util.ArrayList;
 import java.util.Formattable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InspeksiKetiga extends AppCompatActivity {
 
@@ -105,10 +109,14 @@ public class InspeksiKetiga extends AppCompatActivity {
     String idAnSection;
     String parentId;
     Integer sizeawal;
+    String ck;
+    String idOpsi;
 
     //Textview
     TextView Description;
     TextView DescriptionSection;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +210,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                             String type = (String) document.get("type");
                             Log.d("gettype",type);
 
+
+
                             myLinearLayout = findViewById(R.id.lPertanyaan);
 
                             LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
@@ -243,35 +253,11 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Answer.setTextSize(11);
                             Answer.setHint("Jawab disini");
 
+
                             //actionPopup
                             actionPopup();
 
-                            Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                @Override
-                                public void onFocusChange(View v, boolean hasFocus) {
 
-                                    if (hasFocus) {
-                                        idAn = document.getId();
-                                        String parentId = (String) document.get("parentId");
-                                        Log.d("fokus","ya");
-                                        Log.d("ida",idAn);
-//                                        Log.d("idParent",parentId);
-                                    } else {
-//                                        Boolean hasparent = document.getBoolean("hasParent");
-//                                        Log.d("iniparent",hasparent.toString());
-                                        String idaAnswer = Answer.getText().toString();
-                                        pages.document(documentId)
-                                                .collection("pages")
-                                                .document(idPages)
-                                                .collection("contents")
-                                                .document(idAn)
-                                                .update("Answer",idaAnswer);
-
-                                        Log.d("fokus","tidak");
-//                                        Log.d("idaAnswer",idaAnswer);
-                                    }
-                                }
-                            });
                             allAnswer.add(Answer);
                             idContent = document.getId();
                             Log.d("getidContent", idContent);
@@ -286,11 +272,80 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 showContentSection();
                                 Log.d("Ini","Section");
 
-                            }else {
+                            }else if (type.equals("question")){
 
                                 myLinearLayout.addView(Description);
-                                myLinearLayout.addView(Answer);
-                                
+
+//                              //get Map typeOfresonse
+                                Map maptype = (Map) document.get("typeOfResponse");
+                                Log.d("maptype",maptype.toString());
+
+                                //get type in Map typeOfresponse
+                                String typeResponse = String.valueOf(maptype.get("type"));
+                                Log.d("getTypeResponse", typeResponse);
+
+                                if (typeResponse.equals("multiple-choices")){
+                                    ArrayList opsi = (ArrayList) maptype.get("options");
+                                    Log.d("iniOpsi", opsi.toString());
+
+                                    for (int i = 0; i < opsi.size(); i++){
+                                        // Type = multiple-choices
+                                        final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
+                                        boxOpsi.setLayoutParams(params);
+                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
+                                        boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
+                                        GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
+                                        drawable.setColor(Color.WHITE);
+                                        boxOpsi.setText(opsi.get(i).toString());
+                                        boxOpsi.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (boxOpsi.isChecked()){
+                                                    idOpsi = document.getId();
+                                                    ck = (String) boxOpsi.getText();
+                                                    Log.d("getcheckbox", ck);
+                                                }
+                                            }
+                                        });
+                                        myLinearLayout.addView(boxOpsi);
+                                    }
+                                }else{
+                                    Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                        @Override
+                                        public void onFocusChange(View v, boolean hasFocus) {
+
+                                            if (hasFocus) {
+                                                idAn = document.getId();
+                                                String parentId = (String) document.get("parentId");
+                                                Log.d("fokus","ya");
+                                                Log.d("ida",idAn);
+
+                                            } else {
+                                                    //Multiple Choices
+                                                    pages.document(documentId)
+                                                            .collection("pages")
+                                                            .document(idPages)
+                                                            .collection("contents")
+                                                            .document(idOpsi)
+                                                            .update("answer", FieldValue.arrayUnion(ck));
+
+                                                    //Text
+                                                    String idaAnswer = Answer.getText().toString();
+                                                    pages.document(documentId)
+                                                            .collection("pages")
+                                                            .document(idPages)
+                                                            .collection("contents")
+                                                            .document(idAn)
+                                                            .update("answer", idaAnswer);
+
+
+                                                    Log.d("fokus", "tidak");
+
+                                            }
+                                        }
+                                    });
+                                    myLinearLayout.addView(Answer);
+                                }
                                 Log.d("Ini","Question");
                             }
 
@@ -326,6 +381,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                             String descSection = (String) document.get("description");
                             Log.d("getdes", descSection);
 
+                            //Get type
+                            String type = (String) document.get("type");
+                            Log.d("gettype",type);
+
                             LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                             params.setMargins(30, 20, 30, 20);
 
@@ -347,17 +406,49 @@ public class InspeksiKetiga extends AppCompatActivity {
                             DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                             DescriptionSection.setText("Pertanyaan :" + "\n" + descSection);
 
-
                             // Type = Text
                             final EditText AnswerSection = new EditText(InspeksiKetiga.this);
                             AnswerSection.setLayoutParams(params);
                             AnswerSection.setTextSize(11);
                             AnswerSection.setHint("Jawab disini");
 
+
+                            //typeOfResponse
+                            if (type.equals("question")) {
+
+                                myLinearLayout.addView(DescriptionSection);
+
+//                              //get Map typeOfresonse
+                                Map maptype = (Map) document.get("typeOfResponse");
+                                Log.d("maptype", maptype.toString());
+
+                                //get type in Map typeOfresponse
+                                String typeResponse = String.valueOf(maptype.get("type"));
+                                Log.d("getTypeResponse", typeResponse);
+
+                                if (typeResponse.equals("multiple-choices")) {
+                                    ArrayList opsi = (ArrayList) maptype.get("options");
+                                    Log.d("iniOpsi", opsi.toString());
+
+                                    for (int i = 0; i < opsi.size(); i++) {
+                                        // Type = multiple-choices
+                                        final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
+                                        boxOpsi.setLayoutParams(params);
+                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
+                                        boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
+                                        GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
+                                        drawable.setColor(Color.WHITE);
+                                        boxOpsi.setText(opsi.get(i).toString());
+                                        myLinearLayout.addView(boxOpsi);
+                                    }
+                                } else {
+                                    myLinearLayout.addView(AnswerSection);
+                                }
+                            }
+
                             //actionPopup
                             actionPopupSection();
 
-                            allAnswerSection.add(AnswerSection);
 
                             AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                 @Override
@@ -371,27 +462,23 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                                     } else {
-                                            String idaAnswer = AnswerSection.getText().toString();
-                                            pages.document(documentId)
-                                                    .collection("pages")
-                                                    .document(idPages)
-                                                    .collection("contents")
+                                        String idaAnswer = AnswerSection.getText().toString();
+                                        pages.document(documentId)
+                                                .collection("pages")
+                                                .document(idPages)
+                                                .collection("contents")
 //                                                    .document(idDocSection)
-                                                    .document(parentId)
-                                                    .collection("contents")
-                                                    .document(idAnSection)
-                                                    .update("answer", idaAnswer);
+                                                .document(parentId)
+                                                .collection("contents")
+                                                .document(idAnSection)
+                                                .update("answer", idaAnswer);
 
-                                            Log.d("fokus Tidak "+"parentId",parentId+ "  idaSection : "+idAnSection);
+                                        Log.d("fokus Tidak "+"parentId",parentId+ "  idaSection : "+idAnSection);
 
-                                            Log.d("answer",idaAnswer);
+                                        Log.d("answer",idaAnswer);
                                     }
                                 }
                             });
-
-
-                            myLinearLayout.addView(DescriptionSection);
-                            myLinearLayout.addView(AnswerSection);
 
                         }
                     }
