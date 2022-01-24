@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -100,6 +101,8 @@ public class InspeksiKetiga extends AppCompatActivity {
     //answerSection
     List<EditText> allAnswerSection = new ArrayList<EditText>();
 
+
+
     //linear
     LinearLayoutCompat myLinearLayout;
 
@@ -107,14 +110,19 @@ public class InspeksiKetiga extends AppCompatActivity {
     String desc;
     String idAn;
     String idAnSection;
+    String idAnSectionBox;
     String parentId;
+    String parentIdBox;
     Integer sizeawal;
     String ck;
     String idOpsi;
 
+
     //Textview
     TextView Description;
     TextView DescriptionSection;
+
+
 
 
 
@@ -284,12 +292,15 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 String typeResponse = String.valueOf(maptype.get("type"));
                                 Log.d("getTypeResponse", typeResponse);
 
-                                if (typeResponse.equals("multiple-choices")){
+                                if (typeResponse.equals("checkboxes")){
                                     ArrayList opsi = (ArrayList) maptype.get("options");
                                     Log.d("iniOpsi", opsi.toString());
 
+                                    //MapOpsi
+                                    ArrayList<String> mapOpsi = new ArrayList<String>();
+
                                     for (int i = 0; i < opsi.size(); i++){
-                                        // Type = multiple-choices
+                                        // Type = checkboxes
                                         final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
                                         boxOpsi.setLayoutParams(params);
                                         boxOpsi.setTextColor(Color.parseColor("#767676"));
@@ -297,16 +308,36 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
                                         drawable.setColor(Color.WHITE);
                                         boxOpsi.setText(opsi.get(i).toString());
-                                        boxOpsi.setOnClickListener(new View.OnClickListener() {
+
+                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                             @Override
-                                            public void onClick(View v) {
-                                                if (boxOpsi.isChecked()){
+                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                                                if (isChecked){
                                                     idOpsi = document.getId();
-                                                    ck = (String) boxOpsi.getText();
-                                                    Log.d("getcheckbox", ck);
+                                                    mapOpsi.add(boxOpsi.getText().toString());
+                                                    Log.d("opsiAns",mapOpsi.toString());
+                                                    //checkboxes update
+                                                    pages.document(documentId)
+                                                            .collection("pages")
+                                                            .document(idPages)
+                                                            .collection("contents")
+                                                            .document(idOpsi)
+                                                            .update("answer", mapOpsi);
+                                                }else{
+                                                    idOpsi = document.getId();
+                                                    mapOpsi.remove(boxOpsi.getText().toString());
+                                                    //checkboxes update
+                                                    pages.document(documentId)
+                                                            .collection("pages")
+                                                            .document(idPages)
+                                                            .collection("contents")
+                                                            .document(idOpsi)
+                                                            .update("answer", mapOpsi);
                                                 }
                                             }
                                         });
+;
                                         myLinearLayout.addView(boxOpsi);
                                     }
                                 }else{
@@ -321,14 +352,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 Log.d("ida",idAn);
 
                                             } else {
-                                                    //Multiple Choices
-                                                    pages.document(documentId)
-                                                            .collection("pages")
-                                                            .document(idPages)
-                                                            .collection("contents")
-                                                            .document(idOpsi)
-                                                            .update("answer", FieldValue.arrayUnion(ck));
-
                                                     //Text
                                                     String idaAnswer = Answer.getText().toString();
                                                     pages.document(documentId)
@@ -414,24 +437,27 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                             //typeOfResponse
-                            if (type.equals("question")) {
+                            if (type.equals("question")){
 
                                 myLinearLayout.addView(DescriptionSection);
 
 //                              //get Map typeOfresonse
                                 Map maptype = (Map) document.get("typeOfResponse");
-                                Log.d("maptype", maptype.toString());
+                                Log.d("maptype",maptype.toString());
 
                                 //get type in Map typeOfresponse
                                 String typeResponse = String.valueOf(maptype.get("type"));
                                 Log.d("getTypeResponse", typeResponse);
 
-                                if (typeResponse.equals("multiple-choices")) {
+                                if (typeResponse.equals("checkboxes")){
                                     ArrayList opsi = (ArrayList) maptype.get("options");
                                     Log.d("iniOpsi", opsi.toString());
 
-                                    for (int i = 0; i < opsi.size(); i++) {
-                                        // Type = multiple-choices
+                                    //MapOpsiSection
+                                    ArrayList<String> mapOpsiSection = new ArrayList<String>();
+
+                                    for (int i = 0; i < opsi.size(); i++){
+                                        // Type = checkboxes
                                         final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
                                         boxOpsi.setLayoutParams(params);
                                         boxOpsi.setTextColor(Color.parseColor("#767676"));
@@ -439,9 +465,72 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
                                         drawable.setColor(Color.WHITE);
                                         boxOpsi.setText(opsi.get(i).toString());
+
+                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                            @Override
+                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
+                                                if (isChecked){
+                                                    idAnSectionBox = document.getId();
+                                                    parentIdBox = (String) document.get("parentId");
+                                                    mapOpsiSection.add(boxOpsi.getText().toString());
+
+                                                    Log.d("getparentIdBox",parentIdBox+" idopsi: "+idAnSectionBox +" answer: "+mapOpsiSection);
+                                                    //checkboxes update
+                                                    pages.document(documentId)
+                                                            .collection("pages")
+                                                            .document(idPages)
+                                                            .collection("contents")
+                                                            .document(parentIdBox)
+                                                            .collection("contents")
+                                                            .document(idAnSectionBox)
+                                                            .update("answer", mapOpsiSection);
+                                                }else{
+                                                    mapOpsiSection.remove(boxOpsi.getText().toString());
+                                                    idAnSectionBox = document.getId();
+                                                    //checkboxes update
+                                                    pages.document(documentId)
+                                                            .collection("pages")
+                                                            .document(idPages)
+                                                            .collection("contents")
+                                                            .document(parentIdBox)
+                                                            .collection("contents")
+                                                            .document(idAnSectionBox)
+                                                            .update("answer", mapOpsiSection);
+                                                }
+                                            }
+                                        });
+                                        ;
                                         myLinearLayout.addView(boxOpsi);
                                     }
-                                } else {
+                                }else{
+                                    AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                        @Override
+                                        public void onFocusChange(View v, boolean hasFocus) {
+
+                                            if (hasFocus) {
+
+                                                idAnSection = document.getId();
+                                                parentId = (String) document.get("parentId");
+                                                Log.d("fokus Ya "+"parentId",parentId+ "  idaSection : "+idAnSection);
+
+                                            } else {
+                                                //Text
+                                                String idaAnswer = AnswerSection.getText().toString();
+                                                pages.document(documentId)
+                                                        .collection("pages")
+                                                        .document(idPages)
+                                                        .collection("contents")
+                                                        .document(parentId)
+                                                        .collection("contents")
+                                                        .document(idAnSection)
+                                                        .update("answer", idaAnswer);
+
+                                                Log.d("fokus Tidak "+"parentId",parentId+ "  idaSection : "+idAnSection);
+                                            }
+                                        }
+                                    });
                                     myLinearLayout.addView(AnswerSection);
                                 }
                             }
@@ -449,36 +538,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                             //actionPopup
                             actionPopupSection();
 
-
-                            AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                @Override
-                                public void onFocusChange(View v, boolean hasFocus) {
-
-                                    if (hasFocus) {
-                                        idAnSection = document.getId();
-                                        parentId = (String) document.get("parentId");
-
-                                        Log.d("fokus Ya "+"parentId",parentId+ "  idaSection : "+idAnSection);
-
-
-                                    } else {
-                                        String idaAnswer = AnswerSection.getText().toString();
-                                        pages.document(documentId)
-                                                .collection("pages")
-                                                .document(idPages)
-                                                .collection("contents")
-//                                                    .document(idDocSection)
-                                                .document(parentId)
-                                                .collection("contents")
-                                                .document(idAnSection)
-                                                .update("answer", idaAnswer);
-
-                                        Log.d("fokus Tidak "+"parentId",parentId+ "  idaSection : "+idAnSection);
-
-                                        Log.d("answer",idaAnswer);
-                                    }
-                                }
-                            });
 
                         }
                     }
