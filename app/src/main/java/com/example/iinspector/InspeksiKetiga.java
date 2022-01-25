@@ -18,16 +18,19 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -121,10 +124,15 @@ public class InspeksiKetiga extends AppCompatActivity {
     //Textview
     TextView Description;
     TextView DescriptionSection;
+    TextView Section;
 
 
+    //Params
+    LinearLayoutCompat.LayoutParams params;
+    LinearLayoutCompat.LayoutParams params2;
+    LinearLayoutCompat.LayoutParams params3;
 
-
+    DocumentSnapshot lastvisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +194,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                     Log.d("testgettask", idPages);
 
                 }
+                lastvisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                 showcontent();
 
             }
@@ -207,6 +216,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                         if (document != null && document.exists()) {
+
+
+
                             //get Document
                             Log.d("getdoc",document.getId());
 
@@ -222,13 +234,14 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                             myLinearLayout = findViewById(R.id.lPertanyaan);
 
-                            LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+
+                            params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                             params.setMargins(30, 20, 30, 20);
 
-                            LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
+                            params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
                             params2.setMargins(50, 5, 50, 5);
 
-                            LinearLayoutCompat.LayoutParams params3 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                            params3 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                             params3.setMargins(10, 20, 10, 20);
 
                             // Build Description
@@ -244,7 +257,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Description.setText("Pertanyaan :" + "\n" + desc);
 
                             //Build Section
-                            final TextView Section = new TextView(InspeksiKetiga.this);
+                            Section = new TextView(InspeksiKetiga.this);
                             Section.setLayoutParams(params3);
                             Section.setBackgroundResource(R.drawable.cardsection);
                             Section.setTextSize(13);
@@ -274,11 +287,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                             if (type.equals("section")){
                                 myLinearLayout.addView(Section);
                                 idDocSection = document.getId();
-
                                 Log.d("idSection",idDocSection);
-
                                 showContentSection();
                                 Log.d("Ini","Section");
+
 
                             }else if (type.equals("question")){
 
@@ -374,8 +386,10 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                         }
                     }
+
                 }
             }
+
 
 
 
@@ -383,6 +397,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     }
 
     private void showContentSection() {
+
         pages.document(documentId)
                 .collection("pages")
                 .document(idPages)
@@ -397,6 +412,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                         if (document != null && document.exists()) {
+
+
+
                             //get Document
                             Log.d("getdoc", document.getId());
 
@@ -408,14 +426,14 @@ public class InspeksiKetiga extends AppCompatActivity {
                             String type = (String) document.get("type");
                             Log.d("gettype",type);
 
-                            LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params.setMargins(30, 20, 30, 20);
+                            //get Map typeOfresonse
+                            Map maptype = (Map) document.get("typeOfResponse");
+                            Log.d("maptype",maptype.toString());
 
-                            LinearLayoutCompat.LayoutParams params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
-                            params2.setMargins(50, 5, 50, 5);
+                            //get type in Map typeOfresponse
+                            String typeResponse = String.valueOf(maptype.get("type"));
+                            Log.d("getTypeResponse", typeResponse);
 
-                            LinearLayoutCompat.LayoutParams params3 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params3.setMargins(10, 20, 10, 20);
 
                             // Build Description
                             DescriptionSection = new TextView(InspeksiKetiga.this);
@@ -436,19 +454,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                             AnswerSection.setHint("Jawab disini");
 
 
-                            //typeOfResponse
-                            if (type.equals("question")){
+                            myLinearLayout.addView(DescriptionSection);
 
-                                myLinearLayout.addView(DescriptionSection);
-
-//                              //get Map typeOfresonse
-                                Map maptype = (Map) document.get("typeOfResponse");
-                                Log.d("maptype",maptype.toString());
-
-                                //get type in Map typeOfresponse
-                                String typeResponse = String.valueOf(maptype.get("type"));
-                                Log.d("getTypeResponse", typeResponse);
-
+//                            setContentView(DescriptionSection,params2);
                                 if (typeResponse.equals("checkboxes")){
                                     ArrayList opsi = (ArrayList) maptype.get("options");
                                     Log.d("iniOpsi", opsi.toString());
@@ -542,7 +550,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                         }
                     }
                 }
-            }
+
         });
 
     }
@@ -551,6 +559,29 @@ public class InspeksiKetiga extends AppCompatActivity {
         berikutnya.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                myLinearLayout.removeAllViews();
+                pages.document(documentId)
+                        .collection("pages")
+                        .startAfter(lastvisible)
+                        .limit(1)
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        //title
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            String title = (String) documentSnapshot.get("pageTitle");
+                            qtitle.setText(title);
+                            idPages = documentSnapshot.getId();
+                            Log.d("idclick", idPages+" title "+title);
+
+                        }
+                        showcontent();
+
+                    }
+
+
+                });
+
                 int angkaawal = Integer.parseInt(nPage.getText().toString());
                 int tambah = 1;
                 int hasil = angkaawal + tambah;
@@ -560,6 +591,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                 int jpage = Integer.parseInt(nPage.getText().toString());
 
                 if (allAnswer.isEmpty()){
+
                     Snackbar.make(findViewById(R.id.inspeksikedua),"Pertanyaan Belum di isi semua bos !",Snackbar.LENGTH_INDEFINITE)
                             .setAction("OK", new View.OnClickListener() {
                                 @Override
@@ -571,14 +603,19 @@ public class InspeksiKetiga extends AppCompatActivity {
                     if (jpage > jsize) {
                         ttd();
                         nPage.setText(String.valueOf(sizeawal));
+
+
+
                     }
                 }
 
 
             }
+
+
         });
     }
-
+    
     private void actionPopup() {
         //popup menu
         final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, Description);
