@@ -143,6 +143,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         documentId = getIntent().getStringExtra("doc");
         idtemplate = getIntent().getStringExtra("idtem");
 
+
         //judul
         qtitle = findViewById(R.id.qTitile);
 
@@ -556,9 +557,37 @@ public class InspeksiKetiga extends AppCompatActivity {
     }
 
     private void buttonberiktunya() {
+
         berikutnya.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //update
+                pages.document(documentId)
+                        .collection("pages")
+                        .document(idPages)
+                        .collection("contents")
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                if (document != null && document.exists()) {
+                                    df.document(idtemplate)
+                                            .collection("pages")
+                                            .document(idPages)
+                                            .collection("contents")
+                                            .add(document);
+
+                                    Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
+                                }
+                            }
+                        }
+                    }
+                });
+
+                //nextPage
                 myLinearLayout.removeAllViews();
                 pages.document(documentId)
                         .collection("pages")
@@ -851,7 +880,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
-            Snackbar.make(findViewById(R.id.inspeksikedua),"Inspeksi sedang berjalan anda tidak bisa kembali sesuka hati !",Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(findViewById(R.id.inspeksiketiga),"Inspeksi sedang berjalan anda tidak bisa kembali sesuka hati !",Snackbar.LENGTH_INDEFINITE)
                     .setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

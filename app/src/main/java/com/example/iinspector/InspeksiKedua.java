@@ -204,7 +204,8 @@ public class InspeksiKedua extends AppCompatActivity {
 
 
 
-                              db.collection("hasiltemplatestes").document(idtemplate)
+                              db.collection("hasiltemplatestes")
+                                              .document(idtemplate)
                                               .collection("pages")
                                               .document(idDocUpdate)
                                               .set(map);

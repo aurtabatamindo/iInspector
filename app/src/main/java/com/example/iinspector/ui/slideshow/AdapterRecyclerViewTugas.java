@@ -57,8 +57,8 @@ public class AdapterRecyclerViewTugas extends RecyclerView.Adapter<AdapterRecycl
         holder.btnlanjut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, InspeksiAwal.class);
-                context.startActivities(new Intent[]{intent});
+//                Intent intent = new Intent(context, InspeksiAwal.class);
+//                context.startActivities(new Intent[]{intent});
             }
         });
     }

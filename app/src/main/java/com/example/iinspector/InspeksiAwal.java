@@ -56,10 +56,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -211,13 +213,6 @@ public class InspeksiAwal extends AppCompatActivity {
                              Snackbar.make(findViewById(R.id.inspeksiawal),"Harap pilih team inspeksi",Snackbar.LENGTH_LONG).show();
                     }
                     else{
-//                        SendDataInspesiAwal sendDataInspesiAwal = new SendDataInspesiAwal(
-//                                lok,
-//                                spinertim,
-//                                suhu,
-//                                itgl
-//
-//                        );
 
 
                         dbs = FirebaseFirestore.getInstance();
@@ -255,20 +250,41 @@ public class InspeksiAwal extends AppCompatActivity {
                                     }
                                 });
 
-
                         dbs.collection("templates").document(documentId)
-                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                Log.d("datasitempate", documentSnapshot.toString());
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                ArrayList<Map> list = (ArrayList<Map>) documentSnapshot.get("data");
+                                String author = (String) task.getResult().get("author");
+                                String authorId = (String) task.getResult().get("authorId");
+                                String templateAddress = (String) task.getResult().get("templateAddress");
+                                String templateDate = (String) task.getResult().get("templateDate");
+                                String templateDescription = (String) task.getResult().get("templateDescription");
+                                String templateGroup = (String) task.getResult().get("templateGroup");
+                                String templateLocation = (String) task.getResult().get("templateLocation");
+                                String templateTeam = (String) task.getResult().get("templateTeam");
+                                String templateTemperature = (String) task.getResult().get("templateTemperature");
+                                String templateTitle = (String) task.getResult().get("templateTitle");
+
+                                Map<String, Object> dataTemplate = new HashMap<>();
+                                        dataTemplate.put("author",author);
+                                        dataTemplate.put("authorId",authorId);
+                                        dataTemplate.put("templateAddress",templateAddress);
+                                        dataTemplate.put("templateDate",templateDate);
+                                        dataTemplate.put("templateDescription",templateDescription);
+                                        dataTemplate.put("templateGroup",templateGroup);
+                                        dataTemplate.put("templateLocation",templateLocation);
+                                        dataTemplate.put("templateTeam",templateTeam);
+                                        dataTemplate.put("templateTemperature",templateTemperature);
+                                        dataTemplate.put("templateTitle",templateTitle);
 
                                 DocumentReference ref = dbs.collection("hasiltemplatestes").document();
                                 idtemplate = ref.getId();
-                                dbs.collection("hasiltemplatestes").document(idtemplate).set(documentSnapshot);
-                                Log.d("idtemplate", idtemplate);
+                                dbs.collection("hasiltemplatestes")
+                                        .document(idtemplate)
+                                        .set(dataTemplate);
 
+                                Log.d("idtemplate", idtemplate);
                                 Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKetiga.class);
                                 lanjut.putExtra("doc", documentId);
                                 lanjut.putExtra("idtem", idtemplate);

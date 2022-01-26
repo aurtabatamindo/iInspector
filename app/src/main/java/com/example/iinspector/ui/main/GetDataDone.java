@@ -7,19 +7,20 @@ import com.google.firebase.Timestamp;
 import java.util.Date;
 
 public class GetDataDone {
-    private Timestamp date;
-    private String group;
-    private String location;
-    private String team;
+    private String author;
+    private String status;
+    private String templateDescription;
+    private String templateGroup;
     private String templateTitle;
 
 
 
-    public GetDataDone(Timestamp date , String group , String location, String team , String templateTitle) {
+    public GetDataDone(String author, String status , String templateDescription, String templateGroup,String templateTitle ) {
 
-        this.date = date;
-        this.group = group;
-        this.team = team;
+        this.author = author;
+        this.status = status;
+        this.templateDescription = templateDescription;
+        this.templateGroup = templateGroup;
         this.templateTitle = templateTitle;
 
 
@@ -30,38 +31,36 @@ public class GetDataDone {
 
     }
 
-    public String getDate() {
-        long miliseconds = date.toDate().getTime();
-        String dateString = DateFormat.format("d MMM, yyyy", new Date(miliseconds)).toString();
-        return dateString;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public String getGroup() {
-        return group;
+    public String getStatus() {
+        return status;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getLocation() {
-        return location;
+    public String getTemplateDescription() {
+        return templateDescription;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setTemplateDescription(String templateDescription) {
+        this.templateDescription = templateDescription;
     }
 
-    public String getTeam() {
-        return team;
+    public String getTemplateGroup() {
+        return templateGroup;
     }
 
-    public void setTeam(String team) {
-        this.team = team;
+    public void setTemplateGroup(String templateGroup) {
+        this.templateGroup = templateGroup;
     }
 
     public String getTemplateTitle() {

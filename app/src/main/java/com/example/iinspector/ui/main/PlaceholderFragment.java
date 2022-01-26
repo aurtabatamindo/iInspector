@@ -46,7 +46,7 @@ public class PlaceholderFragment extends Fragment {
     RecyclerView.LayoutManager recylerViewLayoutManager;
     private View itemView;
     FirestoreRecyclerAdapter<GetDataTodo, TodoHolder> adaptercard;
-
+    FirestoreRecyclerAdapter<GetDataDone, DoneHolder> adaptercardDone;
     int Position;
     String documentId;
     Spinner spinner;
@@ -160,12 +160,44 @@ public class PlaceholderFragment extends Fragment {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 
-                context = getContext();
+//                context = getContext();
+//                recyclerView = rootView.findViewById(R.id.recycler_ViewDone);
+//                recylerViewLayoutManager = new LinearLayoutManager(context);
+//                recyclerView.setLayoutManager(recylerViewLayoutManager);
+//                recyclerViewAdapter = new AdapterRecyclerViewdone(context, subjects);
+//                recyclerView.setAdapter(recyclerViewAdapter);
+
                 recyclerView = rootView.findViewById(R.id.recycler_ViewDone);
-                recylerViewLayoutManager = new LinearLayoutManager(context);
-                recyclerView.setLayoutManager(recylerViewLayoutManager);
-                recyclerViewAdapter = new AdapterRecyclerViewdone(context, subjects);
-                recyclerView.setAdapter(recyclerViewAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                Query query = FirebaseFirestore.getInstance()
+                        .collection("hasiltemplatestes")
+                        .orderBy("templateTitle");
+
+                FirestoreRecyclerOptions<GetDataDone> options = new FirestoreRecyclerOptions.Builder<GetDataDone>()
+                        .setQuery(query, GetDataDone.class)
+                        .build();
+
+                adaptercardDone = new FirestoreRecyclerAdapter<GetDataDone, DoneHolder>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull DoneHolder holder, int position, @NonNull GetDataDone getDataDone) {
+                        holder.setauthorTitle(("Author : "+getDataDone.getAuthor()));
+                        holder.setTgroup(getDataDone.getTemplateGroup());
+                        holder.settemplateDesctiption("Desctiption : "+ getDataDone.getTemplateDescription());
+                        holder.settemplateTitle(getDataDone.getTemplateTitle());
+                        holder.setstatus("Status : "+getDataDone.getStatus());
+
+                    }
+
+                    @NonNull
+                    @Override
+                    public DoneHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
+                        return new DoneHolder(view);
+                    }
+                };
+                adaptercardDone.startListening();
+                recyclerView.setAdapter(adaptercardDone);
                 break;
             }
 
