@@ -19,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -100,6 +101,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     //answer
     List<EditText> allAnswer = new ArrayList<EditText>();
+    List<String> sizeAnswer = new ArrayList<String>();
 
     //answerSection
     List<EditText> allAnswerSection = new ArrayList<EditText>();
@@ -126,6 +128,10 @@ public class InspeksiKetiga extends AppCompatActivity {
     TextView DescriptionSection;
     TextView Section;
 
+//    //answer
+//    EditText Answer;
+//    EditText AnswerSection;
+    String idaAnswer;
 
     //Params
     LinearLayoutCompat.LayoutParams params;
@@ -133,6 +139,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     LinearLayoutCompat.LayoutParams params3;
 
     DocumentSnapshot lastvisible;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,17 +277,17 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Section.setText(desc);
 
                             // Type = Text
-                            final EditText Answer = new EditText(InspeksiKetiga.this);
+                            EditText Answer = new EditText(InspeksiKetiga.this);
                             Answer.setLayoutParams(params);
                             Answer.setTextSize(11);
                             Answer.setHint("Jawab disini");
 
+                            //sizeAnswer
+                            allAnswer.add(Answer);
 
                             //actionPopup
                             actionPopup();
 
-
-                            allAnswer.add(Answer);
                             idContent = document.getId();
                             Log.d("getidContent", idContent);
 
@@ -365,17 +372,17 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 Log.d("ida",idAn);
 
                                             } else {
-                                                    //Text
-                                                    String idaAnswer = Answer.getText().toString();
-                                                    pages.document(documentId)
+                                                //Text
+                                                idaAnswer = Answer.getText().toString();
+                                                sizeAnswer.add(idaAnswer);
+                                                pages.document(documentId)
                                                             .collection("pages")
                                                             .document(idPages)
                                                             .collection("contents")
                                                             .document(idAn)
                                                             .update("answer", idaAnswer);
 
-
-                                                    Log.d("fokus", "tidak");
+                                                Log.d("fokus", "tidak");
 
                                             }
                                         }
@@ -561,84 +568,96 @@ public class InspeksiKetiga extends AppCompatActivity {
         berikutnya.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //update
-                pages.document(documentId)
-                        .collection("pages")
-                        .document(idPages)
-                        .collection("contents")
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                if (document != null && document.exists()) {
-                                    df.document(idtemplate)
-                                            .collection("pages")
-                                            .document(idPages)
-                                            .collection("contents")
-                                            .add(document);
-
-                                    Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
-                                }
-                            }
-                        }
-                    }
-                });
-
-                //nextPage
-                myLinearLayout.removeAllViews();
-                pages.document(documentId)
-                        .collection("pages")
-                        .startAfter(lastvisible)
-                        .limit(1)
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        //title
-                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                            String title = (String) documentSnapshot.get("pageTitle");
-                            qtitle.setText(title);
-                            idPages = documentSnapshot.getId();
-                            Log.d("idclick", idPages+" title "+title);
-
-                        }
-                        showcontent();
-
-                    }
-
-
-                });
-
                 int angkaawal = Integer.parseInt(nPage.getText().toString());
                 int tambah = 1;
                 int hasil = angkaawal + tambah;
-                nPage.setText(String.valueOf(hasil));
+
 
                 int jsize = Integer.parseInt(jPage.getText().toString());
                 int jpage = Integer.parseInt(nPage.getText().toString());
 
-                if (allAnswer.isEmpty()){
 
-                    Snackbar.make(findViewById(R.id.inspeksikedua),"Pertanyaan Belum di isi semua bos !",Snackbar.LENGTH_INDEFINITE)
-                            .setAction("OK", new View.OnClickListener() {
+
+                int jsizeAnswer = allAnswer.size();
+                int jsizeinAnswer = sizeAnswer.size();
+
+                Log.d("jsizeAnswer",String.valueOf(jsizeAnswer)+" sizeAnswer : "+jsizeinAnswer);
+
+
+//                        String getAnswer = String.valueOf(Answer.getText());
+                        if (jsizeinAnswer < jsizeAnswer){
+                            Snackbar.make(findViewById(R.id.inspeksiketiga),"Pertanyaan Belum di isi semua bos !",Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("OK", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    }).show();
+                        }else{
+
+                            if (jpage >= jsize) {
+                                ttd();
+                                nPage.setText(String.valueOf(sizeawal));
+
+                            }else{
+                                //clearSize
+                                allAnswer.clear();
+                                sizeAnswer.clear();
+
+                            nPage.setText(String.valueOf(hasil));
+                            //update
+                            pages.document(documentId)
+                                    .collection("pages")
+                                    .document(idPages)
+                                    .collection("contents")
+                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
-                                public void onClick(View v) {
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                            if (document != null && document.exists()) {
+                                                df.document(idtemplate)
+                                                        .collection("pages")
+                                                        .document(idPages)
+                                                        .collection("contents")
+                                                        .add(document);
+
+                                                Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            //nextPage
+                            myLinearLayout.removeAllViews();
+                            pages.document(documentId)
+                                    .collection("pages")
+                                    .startAfter(lastvisible)
+                                    .limit(1)
+                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    //title
+                                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                        String title = (String) documentSnapshot.get("pageTitle");
+                                        qtitle.setText(title);
+                                        idPages = documentSnapshot.getId();
+                                        Log.d("idclick", idPages+" title "+title);
+
+                                    }
+                                    showcontent();
 
                                 }
-                            }).show();
-                }else{
-                    if (jpage > jsize) {
-                        ttd();
-                        nPage.setText(String.valueOf(sizeawal));
 
 
+                            });
+
+                        }
 
                     }
-                }
-
-
             }
 
 
@@ -799,7 +818,35 @@ public class InspeksiKetiga extends AppCompatActivity {
 
         alertDialog.setPositiveButton("Selesai",
                 new DialogInterface.OnClickListener() {
+
+
                     public void onClick(DialogInterface dialog, int which) {
+                        //update
+                        pages.document(documentId)
+                                .collection("pages")
+                                .document(idPages)
+                                .collection("contents")
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                        if (document != null && document.exists()) {
+                                            df.document(idtemplate)
+                                                    .collection("pages")
+                                                    .document(idPages)
+                                                    .collection("contents")
+                                                    .add(document);
+
+                                            Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        
                         Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
                         startActivity(selesai);
                         finish();

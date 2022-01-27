@@ -751,7 +751,6 @@ public class InspeksiKedua extends AppCompatActivity {
                                   }
                               });
                               String[] strings = new String[allEds.size()];
-                              ArrayList contentMap = (ArrayList) map2.get("contents");
                               for(int i=0; i < allEds.size(); i++){
                                   strings[i] = allEds.get(i).getText().toString();
                                   Log.d("please",strings[i].toString());
