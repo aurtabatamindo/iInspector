@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class PlaceholderFragment extends Fragment {
     FirestoreRecyclerAdapter<GetDataDone, DoneHolder> adaptercardDone;
     int Position;
     String documentId;
+    String documentClickId;
     Spinner spinner;
 
 
@@ -181,18 +183,30 @@ public class PlaceholderFragment extends Fragment {
                 adaptercardDone = new FirestoreRecyclerAdapter<GetDataDone, DoneHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull DoneHolder holder, int position, @NonNull GetDataDone getDataDone) {
-                        holder.setauthorTitle(("Author : "+getDataDone.getAuthor()));
+                        holder.settemplateTeam(("Pelaksana : "+getDataDone.getTemplateTeam()));
                         holder.setTgroup(getDataDone.getTemplateGroup());
-                        holder.settemplateDesctiption("Desctiption : "+ getDataDone.getTemplateDescription());
+                        holder.settemplateAddress("Lokasi : "+ getDataDone.getTemplateAddress());
                         holder.settemplateTitle(getDataDone.getTemplateTitle());
                         holder.setstatus("Status : "+getDataDone.getStatus());
+
+                        holder.setOnClickListener(new DoneHolder.ClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                documentClickId = getSnapshots().getSnapshot(position).getId();
+                                Log.d("getclickdoc", documentClickId);
+
+                                Intent intent = new Intent(getActivity(),DoneDetail.class);
+                                intent.putExtra("doc",documentClickId);
+                                startActivity(intent);
+                            }
+                        });
 
                     }
 
                     @NonNull
                     @Override
                     public DoneHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporandone, parent, false);
                         return new DoneHolder(view);
                     }
                 };

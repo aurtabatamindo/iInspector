@@ -7,19 +7,19 @@ import com.google.firebase.Timestamp;
 import java.util.Date;
 
 public class GetDataDone {
-    private String author;
+    private String templateTeam;
     private String status;
-    private String templateDescription;
+    private String templateAddress;
     private String templateGroup;
     private String templateTitle;
 
 
 
-    public GetDataDone(String author, String status , String templateDescription, String templateGroup,String templateTitle ) {
+    public GetDataDone(String templateTeam, String status , String templateAddress, String templateGroup,String templateTitle ) {
 
-        this.author = author;
+        this.templateTeam = templateTeam;
         this.status = status;
-        this.templateDescription = templateDescription;
+        this.templateAddress = templateAddress;
         this.templateGroup = templateGroup;
         this.templateTitle = templateTitle;
 
@@ -31,12 +31,12 @@ public class GetDataDone {
 
     }
 
-    public String getAuthor() {
-        return author;
+    public String getTemplateTeam() {
+        return templateTeam;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setTemplateTeam(String templateTeam) {
+        this.templateTeam = templateTeam;
     }
 
     public String getStatus() {
@@ -47,12 +47,12 @@ public class GetDataDone {
         this.status = status;
     }
 
-    public String getTemplateDescription() {
-        return templateDescription;
+    public String getTemplateAddress() {
+        return templateAddress;
     }
 
-    public void setTemplateDescription(String templateDescription) {
-        this.templateDescription = templateDescription;
+    public void setTemplateAddress(String templateAddress) {
+        this.templateAddress = templateAddress;
     }
 
     public String getTemplateGroup() {

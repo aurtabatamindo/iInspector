@@ -24,9 +24,9 @@ public class DoneHolder extends RecyclerView.ViewHolder{
         });
     }
 
-    void setauthorTitle(String authorTitle){
-        TextView textView = view.findViewById(R.id.Tauth);
-        textView.setText(authorTitle);
+    void settemplateTeam(String templateTeam){
+        TextView textView = view.findViewById(R.id.Tteam);
+        textView.setText(templateTeam);
     }
 
     void setTgroup(String group) {
@@ -43,9 +43,9 @@ public class DoneHolder extends RecyclerView.ViewHolder{
         }
     }
 
-    void settemplateDesctiption(String templateDesctiption) {
-        TextView textView = view.findViewById(R.id.Tdescription);
-        textView.setText(templateDesctiption);
+    void settemplateAddress(String templateAddress) {
+        TextView textView = view.findViewById(R.id.Tlokasi);
+        textView.setText(templateAddress);
     }
 
     void settemplateTitle(String templateTitle) {

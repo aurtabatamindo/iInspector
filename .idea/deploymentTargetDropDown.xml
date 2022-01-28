@@ -6,23 +6,12 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\ssd-dev1\.android\avd\Samsung_Galaxy_M11_API_28_5.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="159e1064" />
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\ssd-dev1\.android\avd\Samsung_Galaxy_M11_API_28_5.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-01-27T03:09:50.936376500Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-01-28T04:28:41.812670300Z" />
   </component>
 </project>

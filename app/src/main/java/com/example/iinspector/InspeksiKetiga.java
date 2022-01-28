@@ -277,7 +277,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Section.setText(desc);
 
                             // Type = Text
-                            EditText Answer = new EditText(InspeksiKetiga.this);
+                            final EditText Answer = new EditText(InspeksiKetiga.this);
                             Answer.setLayoutParams(params);
                             Answer.setTextSize(11);
                             Answer.setHint("Jawab disini");
@@ -584,25 +584,25 @@ public class InspeksiKetiga extends AppCompatActivity {
                 Log.d("jsizeAnswer",String.valueOf(jsizeAnswer)+" sizeAnswer : "+jsizeinAnswer);
 
 
-//                        String getAnswer = String.valueOf(Answer.getText());
-                        if (jsizeinAnswer < jsizeAnswer){
-                            Snackbar.make(findViewById(R.id.inspeksiketiga),"Pertanyaan Belum di isi semua bos !",Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("OK", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                        }
-                                    }).show();
-                        }else{
+////                        String getAnswer = String.valueOf(Answer.getText());
+//                        if (jsizeinAnswer < jsizeAnswer){
+//                            Snackbar.make(findViewById(R.id.inspeksiketiga),"Pertanyaan Belum di isi semua bos !",Snackbar.LENGTH_INDEFINITE)
+//                                    .setAction("OK", new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View v) {
+//
+//                                        }
+//                                    }).show();
+//                        }else{
 
                             if (jpage >= jsize) {
                                 ttd();
                                 nPage.setText(String.valueOf(sizeawal));
 
                             }else{
-                                //clearSize
-                                allAnswer.clear();
-                                sizeAnswer.clear();
+//                                //clearSize
+//                                allAnswer.clear();
+//                                sizeAnswer.clear();
 
                             nPage.setText(String.valueOf(hasil));
                             //update
@@ -658,7 +658,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                         }
 
                     }
-            }
+//            }
 
 
         });
@@ -821,32 +821,34 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                     public void onClick(DialogInterface dialog, int which) {
-                        //update
-                        pages.document(documentId)
-                                .collection("pages")
-                                .document(idPages)
-                                .collection("contents")
-                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                        if (document != null && document.exists()) {
-                                            df.document(idtemplate)
-                                                    .collection("pages")
-                                                    .document(idPages)
-                                                    .collection("contents")
-                                                    .add(document);
-
-                                            Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        
+//                        //update
+//                        pages.document(documentId)
+//                                .collection("pages")
+//                                .document(idPages)
+//                                .collection("contents")
+//                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                if (task.isSuccessful()) {
+//
+//                                    for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                        if (document != null && document.exists()) {
+//                                            df.document(idtemplate)
+//                                                    .collection("pages")
+//                                                    .document(idPages)
+//                                                    .collection("contents")
+//                                                    .add(document);
+//
+//                                            Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        });
+                        //update status
+                        df.document(idtemplate)
+                                .update("status","Aman");
                         Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
                         startActivity(selesai);
                         finish();
