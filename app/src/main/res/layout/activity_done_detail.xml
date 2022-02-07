@@ -149,6 +149,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/status"/>
 
+            <ImageView
+                android:id="@+id/signatureImg"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/signature"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

@@ -1,5 +1,7 @@
 package com.example.iinspector;
 
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -124,6 +126,9 @@ public class InspeksiAwal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
+
+
+
         //putextra
         documentId = getIntent().getStringExtra("doc");
 

@@ -1,9 +1,13 @@
 package com.example.iinspector;
 
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -13,11 +17,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.util.Log;
@@ -43,6 +51,8 @@ import com.example.iinspector.ui.main.GetDataTodo;
 import com.example.iinspector.ui.main.TodoHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -54,8 +64,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.kishan.askpermission.AskPermission;
+import com.kishan.askpermission.PermissionCallback;
 import com.kyanogen.signatureview.SignatureView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Formattable;
 import java.util.HashMap;
@@ -63,6 +84,15 @@ import java.util.List;
 import java.util.Map;
 
 public class InspeksiKetiga extends AppCompatActivity {
+
+    //TTD
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static final int REQUEST_LOCATION = 2;
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 3;
+    StorageReference storageReference;
+    SignatureView mSignaturePad;
+    private static final int REQUEST_PERMISSIONS = 20;
 
     //camera
     private static final int CAMERA_REQUEST = 1888;
@@ -84,7 +114,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     CollectionReference df = db.collection("hasiltemplatestes");
 
     //penamaan
-    TextView qtitle,berikutnya,jPage,nPage;
+    TextView qtitle, berikutnya, jPage, nPage;
 
     //getIntentString
     String documentId;
@@ -92,6 +122,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     //idPages
     String idPages;
+
 
     //idContent
     String idContent;
@@ -107,7 +138,6 @@ public class InspeksiKetiga extends AppCompatActivity {
     List<EditText> allAnswerSection = new ArrayList<EditText>();
 
 
-
     //linear
     LinearLayoutCompat myLinearLayout;
 
@@ -121,14 +151,14 @@ public class InspeksiKetiga extends AppCompatActivity {
     Integer sizeawal;
     String ck;
     String idOpsi;
-
+    String ttd;
 
     //Textview
     TextView Description;
     TextView DescriptionSection;
     TextView Section;
 
-//    //answer
+    //    //answer
 //    EditText Answer;
 //    EditText AnswerSection;
     String idaAnswer;
@@ -169,7 +199,6 @@ public class InspeksiKetiga extends AppCompatActivity {
         buttonberiktunya();
 
 
-
     }
 
     private void halaman() {
@@ -177,13 +206,13 @@ public class InspeksiKetiga extends AppCompatActivity {
         pages.document(documentId)
                 .collection("pages")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        sizeawal = task.getResult().size();
-                        Log.d("sizeawal : ", String.valueOf(sizeawal));
-                        jPage.setText(String.valueOf(sizeawal));
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                sizeawal = task.getResult().size();
+                Log.d("sizeawal : ", String.valueOf(sizeawal));
+                jPage.setText(String.valueOf(sizeawal));
+            }
+        });
     }
 
     private void showtitle() {
@@ -226,18 +255,16 @@ public class InspeksiKetiga extends AppCompatActivity {
                         if (document != null && document.exists()) {
 
 
-
                             //get Document
-                            Log.d("getdoc",document.getId());
+                            Log.d("getdoc", document.getId());
 
                             //Get Description
                             desc = (String) document.get("description");
-                            Log.d("getdes",desc);
+                            Log.d("getdes", desc);
 
                             //Get type
                             String type = (String) document.get("type");
-                            Log.d("gettype",type);
-
+                            Log.d("gettype", type);
 
 
                             myLinearLayout = findViewById(R.id.lPertanyaan);
@@ -292,34 +319,34 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Log.d("getidContent", idContent);
 
 
-                            if (type.equals("section")){
+                            if (type.equals("section")) {
                                 myLinearLayout.addView(Section);
                                 idDocSection = document.getId();
-                                Log.d("idSection",idDocSection);
+                                Log.d("idSection", idDocSection);
                                 showContentSection();
-                                Log.d("Ini","Section");
+                                Log.d("Ini", "Section");
 
 
-                            }else if (type.equals("question")){
+                            } else if (type.equals("question")) {
 
                                 myLinearLayout.addView(Description);
 
 //                              //get Map typeOfresonse
                                 Map maptype = (Map) document.get("typeOfResponse");
-                                Log.d("maptype",maptype.toString());
+                                Log.d("maptype", maptype.toString());
 
                                 //get type in Map typeOfresponse
                                 String typeResponse = String.valueOf(maptype.get("type"));
                                 Log.d("getTypeResponse", typeResponse);
 
-                                if (typeResponse.equals("checkboxes")){
+                                if (typeResponse.equals("checkboxes")) {
                                     ArrayList opsi = (ArrayList) maptype.get("options");
                                     Log.d("iniOpsi", opsi.toString());
 
                                     //MapOpsi
                                     ArrayList<String> mapOpsi = new ArrayList<String>();
 
-                                    for (int i = 0; i < opsi.size(); i++){
+                                    for (int i = 0; i < opsi.size(); i++) {
                                         // Type = checkboxes
                                         final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
                                         boxOpsi.setLayoutParams(params);
@@ -333,10 +360,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                                             @Override
                                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                                                if (isChecked){
+                                                if (isChecked) {
                                                     idOpsi = document.getId();
                                                     mapOpsi.add(boxOpsi.getText().toString());
-                                                    Log.d("opsiAns",mapOpsi.toString());
+                                                    Log.d("opsiAns", mapOpsi.toString());
                                                     //checkboxes update
                                                     pages.document(documentId)
                                                             .collection("pages")
@@ -344,7 +371,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                             .collection("contents")
                                                             .document(idOpsi)
                                                             .update("answer", mapOpsi);
-                                                }else{
+                                                } else {
                                                     idOpsi = document.getId();
                                                     mapOpsi.remove(boxOpsi.getText().toString());
                                                     //checkboxes update
@@ -357,10 +384,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 }
                                             }
                                         });
-;
+                                        ;
                                         myLinearLayout.addView(boxOpsi);
                                     }
-                                }else{
+                                } else {
                                     Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                         @Override
                                         public void onFocusChange(View v, boolean hasFocus) {
@@ -368,19 +395,19 @@ public class InspeksiKetiga extends AppCompatActivity {
                                             if (hasFocus) {
                                                 idAn = document.getId();
                                                 String parentId = (String) document.get("parentId");
-                                                Log.d("fokus","ya");
-                                                Log.d("ida",idAn);
+                                                Log.d("fokus", "ya");
+                                                Log.d("ida", idAn);
 
                                             } else {
                                                 //Text
                                                 idaAnswer = Answer.getText().toString();
                                                 sizeAnswer.add(idaAnswer);
                                                 pages.document(documentId)
-                                                            .collection("pages")
-                                                            .document(idPages)
-                                                            .collection("contents")
-                                                            .document(idAn)
-                                                            .update("answer", idaAnswer);
+                                                        .collection("pages")
+                                                        .document(idPages)
+                                                        .collection("contents")
+                                                        .document(idAn)
+                                                        .update("answer", idaAnswer);
 
                                                 Log.d("fokus", "tidak");
 
@@ -389,7 +416,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     });
                                     myLinearLayout.addView(Answer);
                                 }
-                                Log.d("Ini","Question");
+                                Log.d("Ini", "Question");
                             }
 
                         }
@@ -397,8 +424,6 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                 }
             }
-
-
 
 
         });
@@ -422,7 +447,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                         if (document != null && document.exists()) {
 
 
-
                             //get Document
                             Log.d("getdoc", document.getId());
 
@@ -432,11 +456,11 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                             //Get type
                             String type = (String) document.get("type");
-                            Log.d("gettype",type);
+                            Log.d("gettype", type);
 
                             //get Map typeOfresonse
                             Map maptype = (Map) document.get("typeOfResponse");
-                            Log.d("maptype",maptype.toString());
+                            Log.d("maptype", maptype.toString());
 
                             //get type in Map typeOfresponse
                             String typeResponse = String.valueOf(maptype.get("type"));
@@ -465,99 +489,99 @@ public class InspeksiKetiga extends AppCompatActivity {
                             myLinearLayout.addView(DescriptionSection);
 
 //                            setContentView(DescriptionSection,params2);
-                                if (typeResponse.equals("checkboxes")){
-                                    ArrayList opsi = (ArrayList) maptype.get("options");
-                                    Log.d("iniOpsi", opsi.toString());
+                            if (typeResponse.equals("checkboxes")) {
+                                ArrayList opsi = (ArrayList) maptype.get("options");
+                                Log.d("iniOpsi", opsi.toString());
 
-                                    //MapOpsiSection
-                                    ArrayList<String> mapOpsiSection = new ArrayList<String>();
+                                //MapOpsiSection
+                                ArrayList<String> mapOpsiSection = new ArrayList<String>();
 
-                                    for (int i = 0; i < opsi.size(); i++){
-                                        // Type = checkboxes
-                                        final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
-                                        boxOpsi.setLayoutParams(params);
-                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
-                                        boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
-                                        GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
-                                        drawable.setColor(Color.WHITE);
-                                        boxOpsi.setText(opsi.get(i).toString());
+                                for (int i = 0; i < opsi.size(); i++) {
+                                    // Type = checkboxes
+                                    final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
+                                    boxOpsi.setLayoutParams(params);
+                                    boxOpsi.setTextColor(Color.parseColor("#767676"));
+                                    boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
+                                    GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
+                                    drawable.setColor(Color.WHITE);
+                                    boxOpsi.setText(opsi.get(i).toString());
 
-                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                            @Override
-                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-
-                                                if (isChecked){
-                                                    idAnSectionBox = document.getId();
-                                                    parentIdBox = (String) document.get("parentId");
-                                                    mapOpsiSection.add(boxOpsi.getText().toString());
-
-                                                    Log.d("getparentIdBox",parentIdBox+" idopsi: "+idAnSectionBox +" answer: "+mapOpsiSection);
-                                                    //checkboxes update
-                                                    pages.document(documentId)
-                                                            .collection("pages")
-                                                            .document(idPages)
-                                                            .collection("contents")
-                                                            .document(parentIdBox)
-                                                            .collection("contents")
-                                                            .document(idAnSectionBox)
-                                                            .update("answer", mapOpsiSection);
-                                                }else{
-                                                    mapOpsiSection.remove(boxOpsi.getText().toString());
-                                                    idAnSectionBox = document.getId();
-                                                    //checkboxes update
-                                                    pages.document(documentId)
-                                                            .collection("pages")
-                                                            .document(idPages)
-                                                            .collection("contents")
-                                                            .document(parentIdBox)
-                                                            .collection("contents")
-                                                            .document(idAnSectionBox)
-                                                            .update("answer", mapOpsiSection);
-                                                }
-                                            }
-                                        });
-                                        ;
-                                        myLinearLayout.addView(boxOpsi);
-                                    }
-                                }else{
-                                    AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                    boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                         @Override
-                                        public void onFocusChange(View v, boolean hasFocus) {
+                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                                            if (hasFocus) {
 
-                                                idAnSection = document.getId();
-                                                parentId = (String) document.get("parentId");
-                                                Log.d("fokus Ya "+"parentId",parentId+ "  idaSection : "+idAnSection);
+                                            if (isChecked) {
+                                                idAnSectionBox = document.getId();
+                                                parentIdBox = (String) document.get("parentId");
+                                                mapOpsiSection.add(boxOpsi.getText().toString());
 
-                                            } else {
-                                                //Text
-                                                String idaAnswer = AnswerSection.getText().toString();
+                                                Log.d("getparentIdBox", parentIdBox + " idopsi: " + idAnSectionBox + " answer: " + mapOpsiSection);
+                                                //checkboxes update
                                                 pages.document(documentId)
                                                         .collection("pages")
                                                         .document(idPages)
                                                         .collection("contents")
-                                                        .document(parentId)
+                                                        .document(parentIdBox)
                                                         .collection("contents")
-                                                        .document(idAnSection)
-                                                        .update("answer", idaAnswer);
-
-                                                Log.d("fokus Tidak "+"parentId",parentId+ "  idaSection : "+idAnSection);
+                                                        .document(idAnSectionBox)
+                                                        .update("answer", mapOpsiSection);
+                                            } else {
+                                                mapOpsiSection.remove(boxOpsi.getText().toString());
+                                                idAnSectionBox = document.getId();
+                                                //checkboxes update
+                                                pages.document(documentId)
+                                                        .collection("pages")
+                                                        .document(idPages)
+                                                        .collection("contents")
+                                                        .document(parentIdBox)
+                                                        .collection("contents")
+                                                        .document(idAnSectionBox)
+                                                        .update("answer", mapOpsiSection);
                                             }
                                         }
                                     });
-                                    myLinearLayout.addView(AnswerSection);
+                                    ;
+                                    myLinearLayout.addView(boxOpsi);
                                 }
+                            } else {
+                                AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                    @Override
+                                    public void onFocusChange(View v, boolean hasFocus) {
+
+                                        if (hasFocus) {
+
+                                            idAnSection = document.getId();
+                                            parentId = (String) document.get("parentId");
+                                            Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
+
+                                        } else {
+                                            //Text
+                                            String idaAnswer = AnswerSection.getText().toString();
+                                            pages.document(documentId)
+                                                    .collection("pages")
+                                                    .document(idPages)
+                                                    .collection("contents")
+                                                    .document(parentId)
+                                                    .collection("contents")
+                                                    .document(idAnSection)
+                                                    .update("answer", idaAnswer);
+
+                                            Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
+                                        }
+                                    }
+                                });
+                                myLinearLayout.addView(AnswerSection);
                             }
-
-                            //actionPopup
-                            actionPopupSection();
-
-
                         }
+
+                        //actionPopup
+                        actionPopupSection();
+
+
                     }
                 }
+            }
 
         });
 
@@ -577,11 +601,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                 int jpage = Integer.parseInt(nPage.getText().toString());
 
 
-
                 int jsizeAnswer = allAnswer.size();
                 int jsizeinAnswer = sizeAnswer.size();
 
-                Log.d("jsizeAnswer",String.valueOf(jsizeAnswer)+" sizeAnswer : "+jsizeinAnswer);
+                Log.d("jsizeAnswer", String.valueOf(jsizeAnswer) + " sizeAnswer : " + jsizeinAnswer);
 
 
 ////                        String getAnswer = String.valueOf(Answer.getText());
@@ -595,75 +618,75 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                    }).show();
 //                        }else{
 
-                            if (jpage >= jsize) {
-                                ttd();
-                                nPage.setText(String.valueOf(sizeawal));
+                if (jpage >= jsize) {
+                    ttd();
+                    nPage.setText(String.valueOf(sizeawal));
 
-                            }else{
+                } else {
 //                                //clearSize
 //                                allAnswer.clear();
 //                                sizeAnswer.clear();
 
-                            nPage.setText(String.valueOf(hasil));
-                            //update
-                            pages.document(documentId)
-                                    .collection("pages")
-                                    .document(idPages)
-                                    .collection("contents")
-                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
+                    nPage.setText(String.valueOf(hasil));
+                    //update
+                    pages.document(documentId)
+                            .collection("pages")
+                            .document(idPages)
+                            .collection("contents")
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
 
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                            if (document != null && document.exists()) {
-                                                df.document(idtemplate)
-                                                        .collection("pages")
-                                                        .document(idPages)
-                                                        .collection("contents")
-                                                        .add(document);
+                                    if (document != null && document.exists()) {
+                                        df.document(idtemplate)
+                                                .collection("pages")
+                                                .document(idPages)
+                                                .collection("contents")
+                                                .add(document);
 
-                                                Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
+                                        Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
+
+                                        //nextPage
+                                        myLinearLayout.removeAllViews();
+                                        pages.document(documentId)
+                                                .collection("pages")
+                                                .startAfter(lastvisible)
+                                                .limit(1)
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                //title
+                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                    String title = (String) documentSnapshot.get("pageTitle");
+                                                    qtitle.setText(title);
+                                                    idPages = documentSnapshot.getId();
+                                                    Log.d("idclick", idPages + " title " + title);
+
+                                                }
+                                                showcontent();
+
                                             }
-                                        }
+
+
+                                        });
                                     }
                                 }
-                            });
-
-                            //nextPage
-                            myLinearLayout.removeAllViews();
-                            pages.document(documentId)
-                                    .collection("pages")
-                                    .startAfter(lastvisible)
-                                    .limit(1)
-                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    //title
-                                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                        String title = (String) documentSnapshot.get("pageTitle");
-                                        qtitle.setText(title);
-                                        idPages = documentSnapshot.getId();
-                                        Log.d("idclick", idPages+" title "+title);
-
-                                    }
-                                    showcontent();
-
-                                }
-
-
-                            });
-
+                            }
                         }
+                    });
 
-                    }
+                }
+
+            }
 //            }
 
 
         });
     }
-    
+
     private void actionPopup() {
         //popup menu
         final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, Description);
@@ -809,12 +832,12 @@ public class InspeksiKetiga extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
         alertDialog.setTitle("Tanda Tangan");
 
-        final SignatureView input = new SignatureView(InspeksiKetiga.this, null);
+        mSignaturePad = new SignatureView(InspeksiKetiga.this, null);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        alertDialog.setView(input);
+        mSignaturePad.setLayoutParams(lp);
+        alertDialog.setView(mSignaturePad);
 
         alertDialog.setPositiveButton("Selesai",
                 new DialogInterface.OnClickListener() {
@@ -822,36 +845,63 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                     public void onClick(DialogInterface dialog, int which) {
 //                        //update
-//                        pages.document(documentId)
-//                                .collection("pages")
-//                                .document(idPages)
-//                                .collection("contents")
-//                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                if (task.isSuccessful()) {
-//
-//                                    for (QueryDocumentSnapshot document : task.getResult()) {
-//
-//                                        if (document != null && document.exists()) {
-//                                            df.document(idtemplate)
-//                                                    .collection("pages")
-//                                                    .document(idPages)
-//                                                    .collection("contents")
-//                                                    .add(document);
-//
-//                                            Log.d("update :","udah" + " idtemplate : "+idtemplate + " idpages : "+idPages);
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        });
-                        //update status
-                        df.document(idtemplate)
-                                .update("status","Aman");
-                        Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
-                        startActivity(selesai);
-                        finish();
+                        pages.document(documentId)
+                                .collection("pages")
+                                .document(idPages)
+                                .collection("contents")
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                        if (document != null && document.exists()) {
+                                            df.document(idtemplate)
+                                                    .collection("pages")
+                                                    .document(idPages)
+                                                    .collection("contents")
+                                                    .add(document).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
+
+                                                    //uploadTtd
+                                                    if (ContextCompat.checkSelfPermission(
+                                                            getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                                    ) != PackageManager.PERMISSION_GRANTED) {
+                                                        ActivityCompat.requestPermissions(InspeksiKetiga.this,
+                                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                                                REQUEST_CODE_STORAGE_PERMISSION);
+                                                    } else {
+                                                        Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
+
+                                                        if (addJpgSignatureToGallery(signatureBitmap)) {
+                                                            Log.d("ttd", "masuknih");
+                                                            UploadSignatureToCloudStore(signatureBitmap);
+
+                                                            //updatestatus
+                                                            df.document(idtemplate)
+                                                                    .update("status", "Aman",
+                                                                            "signature",ttd);
+
+                                                            Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
+                                                            startActivity(selesai);
+                                                            finish();
+                                                        }
+                                                    }
+
+
+                                                }
+                                            });
+
+
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
 
                     }
                 });
@@ -866,7 +916,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         alertDialog.show();
     }
 
-    void ambilfoto() {
+    private void ambilfoto() {
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
@@ -876,6 +926,103 @@ public class InspeksiKetiga extends AppCompatActivity {
         }
 
 
+    }
+
+    private void UploadSignatureToCloudStore(Bitmap signatureBitmap) {
+        final String namefile = String.format("Signature_%d.jpg", System.currentTimeMillis());
+        ttd = namefile;
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference mountainImagesRef = storageRef.child("Signature/" + namefile);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        signatureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = mountainImagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.d("DrawSignatureActivity", "Fail! upload images. error : " + exception);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                Log.d("Scan", "Success upload images");
+
+            }
+        });
+    }
+    public boolean addJpgSignatureToGallery(Bitmap signature) {
+        boolean result = false;
+        String namefile = String.format("Signature_%d.jpg", System.currentTimeMillis());
+
+        try {
+            File photo = new File(getAlbumStorageDir("SignaturePad"), namefile);
+            saveBitmapToJPG(signature, photo);
+            scanMediaFile(photo);
+            result = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        if(result){
+//            includesForUploadFiles(namefile);
+//        }
+        return result;
+    }
+
+    public File getAlbumStorageDir(String albumName) {
+        // Get the directory for the user's public pictures directory.
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            Log.e("SignaturePad", "Directory not created");
+        }
+        return file;
+    }
+
+
+    public void saveBitmapToJPG(Bitmap bitmap, File photo) throws IOException {
+        Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newBitmap);
+        canvas.drawColor(Color.WHITE);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+        OutputStream stream = new FileOutputStream(photo);
+        newBitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        stream.close();
+
+    }
+
+
+    private void scanMediaFile(File photo) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri contentUri = Uri.fromFile(photo);
+        mediaScanIntent.setData(contentUri);
+        InspeksiKetiga.this.sendBroadcast(mediaScanIntent);
+    }
+
+
+    /**
+     * Checks if the app has permission to write to device storage
+     * <p/>
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity the activity from which permissions are checked
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 
     @Override

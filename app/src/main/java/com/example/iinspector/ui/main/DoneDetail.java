@@ -4,21 +4,29 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.iinspector.R;
 import com.example.iinspector.Side;
 import com.example.iinspector.ui.gallery.GalleryFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class DoneDetail extends AppCompatActivity {
     String documentClickId;
@@ -30,6 +38,7 @@ public class DoneDetail extends AppCompatActivity {
     CollectionReference df = db.collection("hasiltemplatestes");
 
     TextView title,description,team,waktu,temperatur,kordinat,lokasi,status,signature;
+    ImageView signatureImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,7 @@ public class DoneDetail extends AppCompatActivity {
         lokasi = findViewById(R.id.lokasiInspeksi);
         status = findViewById(R.id.status);
         signature = findViewById(R.id.signature);
+        signatureImg = findViewById(R.id.signatureImg);
 
         df.document(documentClickId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -62,6 +72,8 @@ public class DoneDetail extends AppCompatActivity {
                 String templateTeam = (String) task.getResult().get("templateTeam");
                 String templateTemperature = (String) task.getResult().get("templateTemperature");
                 String templateTitle = (String) task.getResult().get("templateTitle");
+                String statusInspeksi = (String) task.getResult().get("status");
+                String signatureId = (String) task.getResult().get("signature");
                 Log.d("title",templateTitle);
 
                 title.setText("Title Inspeksi : "+"\n"+templateTitle);
@@ -71,9 +83,25 @@ public class DoneDetail extends AppCompatActivity {
                 temperatur.setText("Temperatur Saat Inspeksi : "+"\n"+templateTemperature);
                 kordinat.setText("Kordinat Inspeksi : "+"\n"+templateLocation);
                 lokasi.setText("Lokasi Inspeksi : "+"\n"+templateAddress);
-                status.setText("Status Inspeksi :"+"\n");
+                status.setText("Status Inspeksi :"+"\n"+statusInspeksi);
                 signature.setText("Signature :"+"\n");
 
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference photoReference= storageReference.child("Signature/"+signatureId);
+                final long ONE_MEGABYTE = 1024 * 1024;
+                photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        signatureImg.setImageBitmap(bmp);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
