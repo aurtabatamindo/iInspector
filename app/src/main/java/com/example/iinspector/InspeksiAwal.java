@@ -304,27 +304,27 @@ public class InspeksiAwal extends AppCompatActivity {
         });
 
 
-        tambah3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tambahcatatan();
-            }
-        });
-
-
-        foto3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ambilfoto();
-            }
-        });
-
-        atindakan3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tindakan();
-            }
-        });
+//        tambah3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tambahcatatan();
+//            }
+//        });
+//
+//
+//        foto3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ambilfoto();
+//            }
+//        });
+//
+//        atindakan3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tindakan();
+//            }
+//        });
     }
 
 

@@ -112,6 +112,8 @@ public class InspeksiKetiga extends AppCompatActivity {
     CollectionReference pages = db.collection("templates");
     //Collection hasiltemplates
     CollectionReference df = db.collection("hasiltemplatestes");
+    //Collection hasiltemplates
+    CollectionReference tugas = db.collection("tugasTemplate");
 
     //penamaan
     TextView qtitle, berikutnya, jPage, nPage;
@@ -623,6 +625,30 @@ public class InspeksiKetiga extends AppCompatActivity {
                     nPage.setText(String.valueOf(sizeawal));
 
                 } else {
+
+                    //nextPage
+                    myLinearLayout.removeAllViews();
+                    pages.document(documentId)
+                            .collection("pages")
+                            .startAfter(lastvisible)
+                            .limit(1)
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            //title
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                String title = (String) documentSnapshot.get("pageTitle");
+                                qtitle.setText(title);
+                                idPages = documentSnapshot.getId();
+                                Log.d("idclick", idPages + " title " + title);
+
+                            }
+                            showcontent();
+
+                        }
+
+
+                    });
 //                                //clearSize
 //                                allAnswer.clear();
 //                                sizeAnswer.clear();
@@ -649,29 +675,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                         Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
 
-                                        //nextPage
-                                        myLinearLayout.removeAllViews();
-                                        pages.document(documentId)
-                                                .collection("pages")
-                                                .startAfter(lastvisible)
-                                                .limit(1)
-                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                //title
-                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                                    String title = (String) documentSnapshot.get("pageTitle");
-                                                    qtitle.setText(title);
-                                                    idPages = documentSnapshot.getId();
-                                                    Log.d("idclick", idPages + " title " + title);
 
-                                                }
-                                                showcontent();
-
-                                            }
-
-
-                                        });
                                     }
                                 }
                             }
@@ -783,10 +787,41 @@ public class InspeksiKetiga extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setTitle("Tambah Tindakan");
 
+        EditText eTitle = (EditText) dialogView.findViewById(R.id.teditText1);
+        EditText eDeskripsi = (EditText) dialogView.findViewById(R.id.teditText2);
+        EditText eTeam = (EditText) dialogView.findViewById(R.id.teditText3);
+
         dialog.setPositiveButton("Tambah",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
+                        String title = eTitle.getText().toString();
+                        String deskripsi = eDeskripsi.getText().toString();
+                        String team = eTeam.getText().toString();
+
+                        Map<String, Object> tugasTemplate = new HashMap<>();
+                        tugasTemplate.put("titleTugas",title);
+                        tugasTemplate.put("deskripsi",deskripsi);
+                        tugasTemplate.put("teamTugas",team);
+
+                        if (title.isEmpty() && deskripsi.isEmpty() && team.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        } else if (title.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        }else if (deskripsi.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        }else if (team.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        } else {
+                            //addTugas
+                            tugas.document()
+                                    .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     }
                 });
 
@@ -955,6 +990,7 @@ public class InspeksiKetiga extends AppCompatActivity {
             }
         });
     }
+
     public boolean addJpgSignatureToGallery(Bitmap signature) {
         boolean result = false;
         String namefile = String.format("Signature_%d.jpg", System.currentTimeMillis());
@@ -983,7 +1019,6 @@ public class InspeksiKetiga extends AppCompatActivity {
         return file;
     }
 
-
     public void saveBitmapToJPG(Bitmap bitmap, File photo) throws IOException {
         Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(newBitmap);
@@ -995,14 +1030,12 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     }
 
-
     private void scanMediaFile(File photo) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri contentUri = Uri.fromFile(photo);
         mediaScanIntent.setData(contentUri);
         InspeksiKetiga.this.sendBroadcast(mediaScanIntent);
     }
-
 
     /**
      * Checks if the app has permission to write to device storage
