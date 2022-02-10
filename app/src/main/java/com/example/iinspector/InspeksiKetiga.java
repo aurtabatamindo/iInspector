@@ -33,6 +33,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -125,12 +126,17 @@ public class InspeksiKetiga extends AppCompatActivity {
     //idPages
     String idPages;
 
+    //idDesClick
+    String idDesclick;
 
     //idContent
     String idContent;
 
     //idDocSection
     String idDocSection;
+
+    //documenttest
+    boolean documentTest;
 
     //answer
     List<EditText> allAnswer = new ArrayList<EditText>();
@@ -256,7 +262,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                         if (document != null && document.exists()) {
 
-
+                            documentTest = document.exists();
                             //get Document
                             Log.d("getdoc", document.getId());
 
@@ -292,6 +298,21 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
                             Description.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                             Description.setText("Pertanyaan :" + "\n" + desc);
+                            Description.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+                                    idDesclick = document.getId();
+                                    Log.d("idDesc",idDesclick);
+                                    return false;
+                                }
+                            });
+//                            Description.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    idDesclick = document.getId();
+//                                    Log.d("idDesc",idDesclick);
+//                                }
+//                            });
 
                             //Build Section
                             Section = new TextView(InspeksiKetiga.this);
@@ -480,6 +501,12 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
                             DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                             DescriptionSection.setText("Pertanyaan :" + "\n" + descSection);
+                            DescriptionSection.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    idDesclick = document.getId();
+                                }
+                            });
 
                             // Type = Text
                             final EditText AnswerSection = new EditText(InspeksiKetiga.this);
@@ -625,35 +652,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                     nPage.setText(String.valueOf(sizeawal));
 
                 } else {
-
-                    //nextPage
-                    myLinearLayout.removeAllViews();
-                    pages.document(documentId)
-                            .collection("pages")
-                            .startAfter(lastvisible)
-                            .limit(1)
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            //title
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                String title = (String) documentSnapshot.get("pageTitle");
-                                qtitle.setText(title);
-                                idPages = documentSnapshot.getId();
-                                Log.d("idclick", idPages + " title " + title);
-
-                            }
-                            showcontent();
-
-                        }
-
-
-                    });
-//                                //clearSize
-//                                allAnswer.clear();
-//                                sizeAnswer.clear();
-
-                    nPage.setText(String.valueOf(hasil));
                     //update
                     pages.document(documentId)
                             .collection("pages")
@@ -675,12 +673,38 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                         Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
 
-
+                                        nPage.setText(String.valueOf(hasil));
                                     }
                                 }
                             }
                         }
                     });
+
+
+
+
+                    //nextPage
+                    myLinearLayout.removeAllViews();
+                    pages.document(documentId)
+                            .collection("pages")
+                            .startAfter(lastvisible)
+                            .limit(1)
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            //title
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                String title = (String) documentSnapshot.get("pageTitle");
+                                qtitle.setText(title);
+                                idPages = documentSnapshot.getId();
+                                Log.d("idclick", idPages + " title " + title);
+
+                            }
+                            lastvisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                            showcontent();
+                        }
+                    });
+
 
                 }
 
@@ -751,6 +775,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                 int id = menuItem.getItemId();
                 //handle clicks
                 if (id == 0) {
+
                     tambahcatatan();
                     //Copy clicked
                     //set text
@@ -839,16 +864,23 @@ public class InspeksiKetiga extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
         alertDialog.setTitle("Tambah Catatan");
 
-        final EditText input = new EditText(InspeksiKetiga.this);
+        final EditText catatan = new EditText(InspeksiKetiga.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        alertDialog.setView(input);
+        catatan.setLayoutParams(lp);
+        alertDialog.setView(catatan);
 
         alertDialog.setPositiveButton("Tambah",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        String getcatatan = catatan.getText().toString();
+                        pages.document(documentId)
+                                .collection("pages")
+                                .document(idPages)
+                                .collection("contents")
+                                .document(idDesclick)
+                                .update("catatan", getcatatan);
 
                     }
                 });
@@ -955,6 +987,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+
         } else {
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
@@ -1008,6 +1041,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 //        }
         return result;
     }
+
 
     public File getAlbumStorageDir(String albumName) {
         // Get the directory for the user's public pictures directory.
