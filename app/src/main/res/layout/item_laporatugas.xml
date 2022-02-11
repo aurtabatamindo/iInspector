@@ -20,6 +20,7 @@
         android:textColor="@color/text_dark" />
 
     <TextView
+        android:id="@+id/desk"
         android:layout_width="260dp"
         android:layout_height="40dp"
         android:layout_marginLeft="15dp"
@@ -28,6 +29,7 @@
         android:textColor="@color/abucard" />
 
     <TextView
+        android:id="@+id/team"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

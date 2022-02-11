@@ -160,6 +160,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     String ck;
     String idOpsi;
     String ttd;
+    String sPhoto;
 
     //Textview
     TextView Description;
@@ -880,7 +881,12 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 .document(idPages)
                                 .collection("contents")
                                 .document(idDesclick)
-                                .update("catatan", getcatatan);
+                                .update("catatan", getcatatan).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Catatan", Toast.LENGTH_LONG).show();
+                            }
+                        });
 
                     }
                 });
@@ -1042,7 +1048,6 @@ public class InspeksiKetiga extends AppCompatActivity {
         return result;
     }
 
-
     public File getAlbumStorageDir(String albumName) {
         // Get the directory for the user's public pictures directory.
         File file = new File(Environment.getExternalStoragePublicDirectory(
@@ -1071,26 +1076,26 @@ public class InspeksiKetiga extends AppCompatActivity {
         InspeksiKetiga.this.sendBroadcast(mediaScanIntent);
     }
 
-    /**
-     * Checks if the app has permission to write to device storage
-     * <p/>
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity the activity from which permissions are checked
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
-    }
+//    /**
+//     * Checks if the app has permission to write to device storage
+//     * <p/>
+//     * If the app does not has permission then the user will be prompted to grant permissions
+//     *
+//     * @param activity the activity from which permissions are checked
+//     */
+//    public static void verifyStoragePermissions(Activity activity) {
+//        // Check if we have write permission
+//        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//
+//        if (permission != PackageManager.PERMISSION_GRANTED) {
+//            // We don't have permission so prompt the user
+//            ActivityCompat.requestPermissions(
+//                    activity,
+//                    PERMISSIONS_STORAGE,
+//                    REQUEST_EXTERNAL_STORAGE
+//            );
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -1117,14 +1122,31 @@ public class InspeksiKetiga extends AppCompatActivity {
             alertDialogBuilder.setTitle("Tambah Foto");
             alertDialogBuilder.setView(promptView);
             imageView = (ImageView) promptView.findViewById(R.id.gambar1);
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
-
+            Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photoBitmap);
+            Log.d("testPhoto",photoBitmap.toString());
 
             alertDialogBuilder.setPositiveButton("Tambah",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
+                            if (addJpgPhotoToGallery(photoBitmap)) {
+                                Log.d("photoAdd", "masuknih");
+                                UploadPhotoToCloudStore(photoBitmap);
+
+                                pages.document(documentId)
+                                        .collection("pages")
+                                        .document(idPages)
+                                        .collection("contents")
+                                        .document(idDesclick)
+                                        .update("photo", sPhoto).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                            }
                         }
                     });
 
@@ -1137,6 +1159,52 @@ public class InspeksiKetiga extends AppCompatActivity {
 
             alertDialogBuilder.show();
         }
+    }
+
+    public boolean addJpgPhotoToGallery(Bitmap photoBitmap) {
+        boolean result = false;
+        String namefile = String.format("Photo_%d.jpg", System.currentTimeMillis());
+
+        try {
+            File photo = new File(getAlbumStorageDir("Photo"), namefile);
+            saveBitmapToJPG(photoBitmap, photo);
+            scanMediaFile(photo);
+            result = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        if(result){
+//            includesForUploadFiles(namefile);
+//        }
+        return result;
+    }
+
+    private void UploadPhotoToCloudStore(Bitmap photoBitmap) {
+        final String namefile = String.format("Photo_%d.jpg", System.currentTimeMillis());
+        sPhoto = namefile;
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference mountainImagesRef = storageRef.child("Photo/" + namefile);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = mountainImagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.d("DrawSignatureActivity", "Fail! upload images. error : " + exception);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                Log.d("Scan", "Success upload images");
+
+            }
+        });
     }
 
     @Override
