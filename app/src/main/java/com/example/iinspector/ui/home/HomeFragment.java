@@ -3,6 +3,7 @@ package com.example.iinspector.ui.home;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.iinspector.InspeksiHasil;
 import com.example.iinspector.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
@@ -31,6 +40,15 @@ public class HomeFragment extends Fragment {
     PieChart pieChart;
     Button bTgl;
     CardView cardsatu,carddua,cardtiga;
+
+    Integer allInspeksi;
+    Integer allAman;
+    Integer allTidakAman;
+
+    //firestore
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    //Collection hasiltemplates
+    CollectionReference df = db.collection("hasiltemplatestes");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,27 +66,56 @@ public class HomeFragment extends Fragment {
         carddua = root.findViewById(R.id.carddua);
         cardtiga = root.findViewById(R.id.cardtiga);
 
-        tvR.setText(Integer.toString(40));
-        tvPython.setText(Integer.toString(30));
-        tvCPP.setText(Integer.toString(10));
+        //allInspeksi
+        df.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                allInspeksi = task.getResult().size();
+                tvR.setText(String.valueOf(allInspeksi));
+                pieChart.addPieSlice(
+                        new PieModel(
+                                "R",
+                                Integer.parseInt(tvR.getText().toString()),
+                                Color.parseColor("#29B6F6")));
+            }
+        });
+
+        //inspeksiAman
+        df.whereEqualTo("status","Aman").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                allAman = task.getResult().size();
+                tvPython.setText(String.valueOf(allAman));
+
+                pieChart.addPieSlice(
+                        new PieModel(
+                                "Python",
+                                Integer.parseInt(tvPython.getText().toString()),
+                                Color.parseColor("#66BB6A")));
+            }
+        });
+
+        //inspeksiTidakAman
+        df.whereEqualTo("status","Tidak Aman").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                allTidakAman = task.getResult().size();
+                tvCPP.setText(String.valueOf(allTidakAman));
+
+                pieChart.addPieSlice(
+                        new PieModel(
+                                "C++",
+                                Integer.parseInt(tvCPP.getText().toString()),
+                                Color.parseColor("#EF5350")));
+            }
+        });
+
+//        tvR.setText(Integer.toString(40));
+//        tvPython.setText(Integer.toString(2));
+//        tvCPP.setText(Integer.toString(2));
 
 
-        // Set the data and color to the pie chart
-        pieChart.addPieSlice(
-                new PieModel(
-                        "R",
-                        Integer.parseInt(tvR.getText().toString()),
-                        Color.parseColor("#29B6F6")));
-        pieChart.addPieSlice(
-                new PieModel(
-                        "Python",
-                        Integer.parseInt(tvPython.getText().toString()),
-                        Color.parseColor("#66BB6A")));
-        pieChart.addPieSlice(
-                new PieModel(
-                        "C++",
-                        Integer.parseInt(tvCPP.getText().toString()),
-                        Color.parseColor("#EF5350")));
+
 
 
         // To animate the pie chart
@@ -93,6 +140,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent detaildua = new Intent(getActivity(), InspeksiHasil.class);
+                detaildua.putExtra("status", "Aman");
                 startActivity(detaildua);
             }
         });
@@ -100,6 +148,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent detailtiga = new Intent(getActivity(), InspeksiHasil.class);
+                detailtiga.putExtra("status", "Tidak Aman");
                 startActivity(detailtiga);
             }
         });

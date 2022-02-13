@@ -135,6 +135,7 @@ public class InspeksiAwal extends AppCompatActivity {
         //gps
         resultReceiver = new AddressResultReceiver(new Handler());
 
+
         //tgl & jam
         String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
 

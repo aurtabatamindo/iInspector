@@ -34,24 +34,34 @@
             android:layout_gravity="center" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginLeft="100dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:text="Filter Group :"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView4" />-->
+
+<!--    <Spinner-->
+<!--        android:id="@+id/sfilter"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="20dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginRight="60dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/textView2"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView4" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_ViewDetail"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="20dp"
-        android:text="Filter Group :"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <Spinner
-        android:id="@+id/sfilter"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
