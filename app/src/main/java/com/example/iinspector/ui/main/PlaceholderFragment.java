@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -52,7 +53,8 @@ public class PlaceholderFragment extends Fragment {
     String documentId;
     String documentClickId;
     Spinner spinner;
-
+    Query queryTodo;
+    Query queryDone;
 
     String[] subjects = {
             "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
@@ -89,45 +91,57 @@ public class PlaceholderFragment extends Fragment {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 
-                recyclerView = rootView.findViewById(R.id.recycler_ViewTodo);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-//                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//                FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-
-//                Query query = rootRef.collection("templates")
-//                        .whereEqualTo("uid",currentUser.getUid());
-
-//                String fsd = "FSD";
-//                String wsh = "WSH";
-//                String semua = "Semua";
-//                String spinergroup = spinner.getSelectedItem().toString().trim();
+                String fsd = "FSD";
+                String wsh = "WSH";
+                String semua = "Semua";
 
 
-                    Query query = FirebaseFirestore.getInstance()
-                            .collection("templates")
-                            .orderBy("templateTitle");
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String spinergroup = spinner.getSelectedItem().toString().trim();
+                        Log.d("cekquery",spinergroup);
 
-                    FirestoreRecyclerOptions<GetDataTodo> options = new FirestoreRecyclerOptions.Builder<GetDataTodo>()
-                            .setQuery(query, GetDataTodo.class)
-                            .build();
+                        if (spinergroup.equals(semua)){
+                            queryTodo = FirebaseFirestore.getInstance()
+                                    .collection("templates")
+                                    .orderBy("templateTitle");
 
-                    adaptercard = new FirestoreRecyclerAdapter<GetDataTodo, TodoHolder>(options) {
-                        @Override
-                        protected void onBindViewHolder(@NonNull TodoHolder holder, int position, @NonNull GetDataTodo getDataTodo) {
-                            holder.setauthorTitle(("Author : "+getDataTodo.getAuthor()));
-                            holder.setTgroup(getDataTodo.getTemplateGroup());
-                            holder.settemplateDesctiption("Desctiption : "+ getDataTodo.getTemplateDescription());
-                            holder.settemplateTitle(getDataTodo.getTemplateTitle());
-                            holder.setstatus("Status : "+getDataTodo.getStatus());
+                        }else if (spinergroup.equals(wsh)){
+                            queryTodo = FirebaseFirestore.getInstance()
+                                    .collection("templates")
+                                    .whereEqualTo("templateGroup",wsh);
 
-                            holder.setOnClickListener(new TodoHolder.ClickListener() {
-                                @Override
-                                public void onItemClick(View view, int position) {
+                        }else if (spinergroup.equals(fsd)){
+                            queryTodo = FirebaseFirestore.getInstance()
+                                    .collection("templates")
+                                    .whereEqualTo("templateGroup",fsd);
 
-                                    documentId = getSnapshots().getSnapshot(position).getId();
-                                    Position = position;
+                        }
+
+                        recyclerView = rootView.findViewById(R.id.recycler_ViewTodo);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+                        FirestoreRecyclerOptions<GetDataTodo> options = new FirestoreRecyclerOptions.Builder<GetDataTodo>()
+                                .setQuery(queryTodo, GetDataTodo.class)
+                                .build();
+
+                        adaptercard = new FirestoreRecyclerAdapter<GetDataTodo, TodoHolder>(options) {
+                            @Override
+                            protected void onBindViewHolder(@NonNull TodoHolder holder, int position, @NonNull GetDataTodo getDataTodo) {
+                                holder.setauthorTitle(("Author : "+getDataTodo.getAuthor()));
+                                holder.setTgroup(getDataTodo.getTemplateGroup());
+                                holder.settemplateDesctiption("Desctiption : "+ getDataTodo.getTemplateDescription());
+                                holder.settemplateTitle(getDataTodo.getTemplateTitle());
+                                holder.setstatus("Status : "+getDataTodo.getStatus());
+
+                                holder.setOnClickListener(new TodoHolder.ClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+
+                                        documentId = getSnapshots().getSnapshot(position).getId();
+                                        Position = position;
 //                                    if (getDataTodo.getStatus().equals("Sedang Dikerjakan")){
 //                                        Snackbar.make(rootView.findViewById(R.id.todoku),"Inspeksi Sedang dikerjakan !",Snackbar.LENGTH_LONG).show();
 //                                    }else {
@@ -135,19 +149,30 @@ public class PlaceholderFragment extends Fragment {
 //                                    }
 
 
-                                }
-                            });
-                        }
+                                    }
+                                });
+                            }
 
-                        @NonNull
-                        @Override
-                        public TodoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
-                            return new TodoHolder(view);
-                        }
-                    };
-                    adaptercard.startListening();
-                    recyclerView.setAdapter(adaptercard);
+                            @NonNull
+                            @Override
+                            public TodoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
+                                return new TodoHolder(view);
+                            }
+                        };
+                        adaptercard.startListening();
+                        recyclerView.setAdapter(adaptercard);
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+
+
 
 
                 break;
@@ -162,56 +187,83 @@ public class PlaceholderFragment extends Fragment {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 
-//                context = getContext();
-//                recyclerView = rootView.findViewById(R.id.recycler_ViewDone);
-//                recylerViewLayoutManager = new LinearLayoutManager(context);
-//                recyclerView.setLayoutManager(recylerViewLayoutManager);
-//                recyclerViewAdapter = new AdapterRecyclerViewdone(context, subjects);
-//                recyclerView.setAdapter(recyclerViewAdapter);
+                String fsd = "FSD";
+                String wsh = "WSH";
+                String semua = "Semua";
 
-                recyclerView = rootView.findViewById(R.id.recycler_ViewDone);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-                Query query = FirebaseFirestore.getInstance()
-                        .collection("hasiltemplatestes")
-                        .orderBy("templateTitle");
-
-                FirestoreRecyclerOptions<GetDataDone> options = new FirestoreRecyclerOptions.Builder<GetDataDone>()
-                        .setQuery(query, GetDataDone.class)
-                        .build();
-
-                adaptercardDone = new FirestoreRecyclerAdapter<GetDataDone, DoneHolder>(options) {
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    protected void onBindViewHolder(@NonNull DoneHolder holder, int position, @NonNull GetDataDone getDataDone) {
-                        holder.settemplateTeam(("Pelaksana : "+getDataDone.getTemplateTeam()));
-                        holder.setTgroup(getDataDone.getTemplateGroup());
-                        holder.settemplateAddress("Lokasi : "+ getDataDone.getTemplateAddress());
-                        holder.settemplateTitle(getDataDone.getTemplateTitle());
-                        holder.setstatus("Status : "+getDataDone.getStatus());
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String spinergroup = spinner.getSelectedItem().toString().trim();
+                        Log.d("cekquery",spinergroup);
 
-                        holder.setOnClickListener(new DoneHolder.ClickListener() {
+                        if (spinergroup.equals(semua)){
+                            queryDone = FirebaseFirestore.getInstance()
+                                    .collection("hasiltemplatestes")
+                                    .orderBy("templateTitle");
+
+                        }else if (spinergroup.equals(wsh)){
+                            queryDone = FirebaseFirestore.getInstance()
+                                    .collection("hasiltemplatestes")
+                                    .whereEqualTo("templateGroup",wsh);
+
+                        }else if (spinergroup.equals(fsd)){
+                            queryDone = FirebaseFirestore.getInstance()
+                                    .collection("hasiltemplatestes")
+                                    .whereEqualTo("templateGroup",fsd);
+
+                        }
+
+                        recyclerView = rootView.findViewById(R.id.recycler_ViewDone);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        
+
+                        FirestoreRecyclerOptions<GetDataDone> options = new FirestoreRecyclerOptions.Builder<GetDataDone>()
+                                .setQuery(queryDone, GetDataDone.class)
+                                .build();
+
+                        adaptercardDone = new FirestoreRecyclerAdapter<GetDataDone, DoneHolder>(options) {
                             @Override
-                            public void onItemClick(View view, int position) {
-                                documentClickId = getSnapshots().getSnapshot(position).getId();
-                                Log.d("getclickdoc", documentClickId);
+                            protected void onBindViewHolder(@NonNull DoneHolder holder, int position, @NonNull GetDataDone getDataDone) {
+                                holder.settemplateTeam(("Pelaksana : "+getDataDone.getTemplateTeam()));
+                                holder.setTgroup(getDataDone.getTemplateGroup());
+                                holder.settemplateAddress("Lokasi : "+ getDataDone.getTemplateAddress());
+                                holder.settemplateTitle(getDataDone.getTemplateTitle());
+                                holder.setstatus("Status : "+getDataDone.getStatus());
 
-                                Intent intent = new Intent(getActivity(),DoneDetail.class);
-                                intent.putExtra("doc",documentClickId);
-                                startActivity(intent);
+                                holder.setOnClickListener(new DoneHolder.ClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        documentClickId = getSnapshots().getSnapshot(position).getId();
+                                        Log.d("getclickdoc", documentClickId);
+
+                                        Intent intent = new Intent(getActivity(),DoneDetail.class);
+                                        intent.putExtra("doc",documentClickId);
+                                        startActivity(intent);
+                                    }
+                                });
+
                             }
-                        });
+
+                            @NonNull
+                            @Override
+                            public DoneHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporandone, parent, false);
+                                return new DoneHolder(view);
+                            }
+                        };
+                        adaptercardDone.startListening();
+                        recyclerView.setAdapter(adaptercardDone);
 
                     }
 
-                    @NonNull
                     @Override
-                    public DoneHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporandone, parent, false);
-                        return new DoneHolder(view);
+                    public void onNothingSelected(AdapterView<?> parent) {
+
                     }
-                };
-                adaptercardDone.startListening();
-                recyclerView.setAdapter(adaptercardDone);
+                });
+
+
                 break;
             }
 
