@@ -161,6 +161,8 @@ public class InspeksiKetiga extends AppCompatActivity {
     String idOpsi;
     String ttd;
     String sPhoto;
+    String status;
+
 
     //Textview
     TextView Description;
@@ -582,7 +584,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         if (hasFocus) {
 
                                             idAnSection = document.getId();
-                                            parentId = (String) document.get("parentId");
+                                            parentId = (String) document.get("parentContentId");
                                             Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
 
                                         } else {
@@ -845,6 +847,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
+                                    status = "Tidak Aman";
                                 }
                             });
                         }
@@ -954,10 +957,15 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                             UploadSignatureToCloudStore(signatureBitmap);
 
                                                             //updatestatus
-                                                            df.document(idtemplate)
-                                                                    .update("status", "Aman",
-                                                                            "signature",ttd);
-
+                                                            if (status == null) {
+                                                                df.document(idtemplate)
+                                                                        .update("status", "Aman",
+                                                                                "signature", ttd);
+                                                            }else {
+                                                                df.document(idtemplate)
+                                                                        .update("status", "Tidak Aman",
+                                                                                "signature", ttd);
+                                                            }
                                                             Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
                                                             startActivity(selesai);
                                                             finish();
