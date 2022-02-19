@@ -36,11 +36,14 @@ public class DoneHolder extends RecyclerView.ViewHolder{
         TextView textView2 = view.findViewById(R.id.Tgroup2);
         textView1.setText(group);
 
-        if (group.equals("FSD")) {
-            textView1.setVisibility(View.INVISIBLE);
-        }else{
-            textView2.setVisibility(View.INVISIBLE);
+        if (group != null){
+            if (group.equals("FSD")) {
+                textView1.setVisibility(View.INVISIBLE);
+            }else{
+                textView2.setVisibility(View.INVISIBLE);
+            }
         }
+
     }
 
     void settemplateAddress(String templateAddress) {

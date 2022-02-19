@@ -35,7 +35,7 @@ public class DoneDetail extends AppCompatActivity {
     //collection templates
     CollectionReference pages = db.collection("templates");
     //Collection hasiltemplates
-    CollectionReference df = db.collection("hasiltemplatestes");
+    CollectionReference df = db.collection("inspections");
 
     TextView title,description,team,waktu,temperatur,kordinat,lokasi,status,signature;
     ImageView signatureImg;

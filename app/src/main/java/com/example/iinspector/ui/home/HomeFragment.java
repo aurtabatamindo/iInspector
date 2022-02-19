@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
     //firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     //Collection hasiltemplates
-    CollectionReference df = db.collection("hasiltemplatestes");
+    CollectionReference df = db.collection("inspections");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

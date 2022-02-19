@@ -189,7 +189,7 @@ public class InspeksiAwal extends AppCompatActivity {
         getCurrentData();
 
         //gettile
-        dbs.collection("templates")
+        dbs.collection("inspections")
                 .document(documentId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -222,7 +222,7 @@ public class InspeksiAwal extends AppCompatActivity {
 
 
                         dbs = FirebaseFirestore.getInstance();
-                        dbs.collection("templates").document(documentId)
+                        dbs.collection("inspections").document(documentId)
                                 .update("templateLocation",lok,
                                         "templateTeam",spinertim,
                                         "templateTemperature",suhu,
@@ -234,7 +234,7 @@ public class InspeksiAwal extends AppCompatActivity {
                                         if (task.isSuccessful()) {
 
                                             //pushtotemplates
-                                            dbs.collection("templates").document(documentId).get()
+                                            dbs.collection("inspections").document(documentId).get()
                                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -256,41 +256,41 @@ public class InspeksiAwal extends AppCompatActivity {
                                     }
                                 });
 
-                        dbs.collection("templates").document(documentId)
+                        dbs.collection("inspections").document(documentId)
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                String author = (String) task.getResult().get("author");
-                                String authorId = (String) task.getResult().get("authorId");
-                                String templateAddress = (String) task.getResult().get("templateAddress");
-                                String templateDate = (String) task.getResult().get("templateDate");
-                                String templateDescription = (String) task.getResult().get("templateDescription");
-                                String templateGroup = (String) task.getResult().get("templateGroup");
-                                String templateLocation = (String) task.getResult().get("templateLocation");
-                                String templateTeam = (String) task.getResult().get("templateTeam");
-                                String templateTemperature = (String) task.getResult().get("templateTemperature");
-                                String templateTitle = (String) task.getResult().get("templateTitle");
-
-                                Map<String, Object> dataTemplate = new HashMap<>();
-                                        dataTemplate.put("author",author);
-                                        dataTemplate.put("authorId",authorId);
-                                        dataTemplate.put("templateAddress",templateAddress);
-                                        dataTemplate.put("templateDate",templateDate);
-                                        dataTemplate.put("templateDescription",templateDescription);
-                                        dataTemplate.put("templateGroup",templateGroup);
-                                        dataTemplate.put("templateLocation",templateLocation);
-                                        dataTemplate.put("templateTeam",templateTeam);
-                                        dataTemplate.put("templateTemperature",templateTemperature);
-                                        dataTemplate.put("templateTitle",templateTitle);
-
-                                DocumentReference ref = dbs.collection("hasiltemplatestes").document();
-                                idtemplate = ref.getId();
-                                dbs.collection("hasiltemplatestes")
-                                        .document(idtemplate)
-                                        .set(dataTemplate);
-
-                                Log.d("idtemplate", idtemplate);
+//                                String author = (String) task.getResult().get("author");
+//                                String authorId = (String) task.getResult().get("authorId");
+//                                String templateAddress = (String) task.getResult().get("templateAddress");
+//                                String templateDate = (String) task.getResult().get("templateDate");
+//                                String templateDescription = (String) task.getResult().get("templateDescription");
+//                                String templateGroup = (String) task.getResult().get("templateGroup");
+//                                String templateLocation = (String) task.getResult().get("templateLocation");
+//                                String templateTeam = (String) task.getResult().get("templateTeam");
+//                                String templateTemperature = (String) task.getResult().get("templateTemperature");
+//                                String templateTitle = (String) task.getResult().get("templateTitle");
+//
+//                                Map<String, Object> dataTemplate = new HashMap<>();
+//                                        dataTemplate.put("author",author);
+//                                        dataTemplate.put("authorId",authorId);
+//                                        dataTemplate.put("templateAddress",templateAddress);
+//                                        dataTemplate.put("templateDate",templateDate);
+//                                        dataTemplate.put("templateDescription",templateDescription);
+//                                        dataTemplate.put("templateGroup",templateGroup);
+//                                        dataTemplate.put("templateLocation",templateLocation);
+//                                        dataTemplate.put("templateTeam",templateTeam);
+//                                        dataTemplate.put("templateTemperature",templateTemperature);
+//                                        dataTemplate.put("templateTitle",templateTitle);
+//
+//                                DocumentReference ref = dbs.collection("hasiltemplatestes").document();
+//                                idtemplate = ref.getId();
+//                                dbs.collection("hasiltemplatestes")
+//                                        .document(idtemplate)
+//                                        .set(dataTemplate);
+//
+//                                Log.d("idtemplate", idtemplate);
                                 Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKetiga.class);
                                 lanjut.putExtra("doc", documentId);
                                 lanjut.putExtra("idtem", idtemplate);

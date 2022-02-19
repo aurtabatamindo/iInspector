@@ -1,5 +1,6 @@
 package com.example.iinspector.ui.main;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +25,24 @@ import com.example.iinspector.R;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.mail.Quota;
 
@@ -41,6 +55,11 @@ public class PlaceholderFragment extends Fragment {
 
     private PageViewModel pageViewModel;
 
+    //firestore
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    //collection templates
+    CollectionReference inspections = db.collection("inspections");
+
     //hardCardview
     Context context;
     RecyclerView recyclerView;
@@ -52,14 +71,17 @@ public class PlaceholderFragment extends Fragment {
     int Position;
     String documentId;
     String documentClickId;
+    String doc;
+
     Spinner spinner;
     Query queryTodo;
     Query queryDone;
-
+    ProgressDialog progress;
     String[] subjects = {
             "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
             "Inspeksi", "Inspeksi"
     };
+
 
 
     public static PlaceholderFragment newInstance(int index) {
@@ -83,6 +105,12 @@ public class PlaceholderFragment extends Fragment {
             case 1: {
 
                 rootView = inflater.inflate(R.layout.todo, container, false);
+
+                //loading
+                progress = new ProgressDialog(getContext());
+                progress.setTitle("Loading");
+                progress.setMessage("Memproses Data...");
+                progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
 
                 //spiner
                 spinner = (Spinner) rootView.findViewById(R.id.sfilter);
@@ -199,17 +227,17 @@ public class PlaceholderFragment extends Fragment {
 
                         if (spinergroup.equals(semua)){
                             queryDone = FirebaseFirestore.getInstance()
-                                    .collection("hasiltemplatestes")
+                                    .collection("inspections")
                                     .orderBy("templateTitle");
 
                         }else if (spinergroup.equals(wsh)){
                             queryDone = FirebaseFirestore.getInstance()
-                                    .collection("hasiltemplatestes")
+                                    .collection("inspections")
                                     .whereEqualTo("templateGroup",wsh);
 
                         }else if (spinergroup.equals(fsd)){
                             queryDone = FirebaseFirestore.getInstance()
-                                    .collection("hasiltemplatestes")
+                                    .collection("inspections")
                                     .whereEqualTo("templateGroup",fsd);
 
                         }
@@ -281,6 +309,8 @@ public class PlaceholderFragment extends Fragment {
             alertDialogBuilder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
+                    progress.show();
+
 
 //                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 //                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -291,10 +321,20 @@ public class PlaceholderFragment extends Fragment {
 //                            .addOnSuccessListener(new OnSuccessListener<Void>() {
 //                                @Override
 //                                public void onSuccess(Void aVoid) {
+                                    Map<String, Object> templateId = new HashMap<>();
+                                    templateId.put("templateId",documentId);
 
-                                    Intent intent = new Intent(getActivity(), InspeksiAwal.class);
-                                    intent.putExtra("doc",documentId);
-                                    startActivity(intent);
+                                    inspections.add(templateId)
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    doc = task.getResult().getId();
+                                                    Log.d("cekdoc",doc);
+                                                    Intent intent = new Intent(getActivity(), InspeksiAwal.class);
+                                                    intent.putExtra("doc",doc);
+                                                    startActivity(intent);
+                                                }
+                                            });
 
 //                                }
 //                            });

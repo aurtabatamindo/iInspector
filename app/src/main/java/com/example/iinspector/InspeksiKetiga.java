@@ -110,7 +110,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     //firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     //collection templates
-    CollectionReference pages = db.collection("templates");
+    CollectionReference pages = db.collection("inspections");
     //Collection hasiltemplates
     CollectionReference df = db.collection("hasiltemplatestes");
     //Collection hasiltemplates
@@ -135,6 +135,8 @@ public class InspeksiKetiga extends AppCompatActivity {
     //idDocSection
     String idDocSection;
 
+
+    String parentSection;
     //documenttest
     boolean documentTest;
 
@@ -181,7 +183,9 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     DocumentSnapshot lastvisible;
 
+    String inSection;
 
+    String statusTindakan;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -504,10 +508,13 @@ public class InspeksiKetiga extends AppCompatActivity {
                             Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
                             DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                             DescriptionSection.setText("Pertanyaan :" + "\n" + descSection);
-                            DescriptionSection.setOnClickListener(new View.OnClickListener() {
+                            DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
                                 @Override
-                                public void onClick(View v) {
+                                public boolean onTouch(View v, MotionEvent event) {
                                     idDesclick = document.getId();
+                                    parentSection = (String) document.get("parentContentId");
+                                    Log.d("idDesc",idDesclick);
+                                    return false;
                                 }
                             });
 
@@ -655,37 +662,35 @@ public class InspeksiKetiga extends AppCompatActivity {
                     nPage.setText(String.valueOf(sizeawal));
 
                 } else {
-                    //update
-                    pages.document(documentId)
-                            .collection("pages")
-                            .document(idPages)
-                            .collection("contents")
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
+//                    //update
+//                    pages.document(documentId)
+//                            .collection("pages")
+//                            .document(idPages)
+//                            .collection("contents")
+//                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if (task.isSuccessful()) {
+//
+//                                for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                    if (document != null && document.exists()) {
+//                                        df.document(idtemplate)
+//                                                .collection("pages")
+//                                                .document(idPages)
+//                                                .collection("contents")
+//                                                .add(document);
+//
+//                                        Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
+//
+//                                        nPage.setText(String.valueOf(hasil));
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    });
 
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                    if (document != null && document.exists()) {
-                                        df.document(idtemplate)
-                                                .collection("pages")
-                                                .document(idPages)
-                                                .collection("contents")
-                                                .add(document);
-
-                                        Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
-
-                                        nPage.setText(String.valueOf(hasil));
-                                    }
-                                }
-                            }
-                        }
-                    });
-
-
-
-
+                    nPage.setText(String.valueOf(hasil));
                     //nextPage
                     myLinearLayout.removeAllViews();
                     pages.document(documentId)
@@ -779,17 +784,17 @@ public class InspeksiKetiga extends AppCompatActivity {
                 //handle clicks
                 if (id == 0) {
 
-                    tambahcatatan();
+                    tambahcatatanSection();
                     //Copy clicked
                     //set text
                     //selectedTv.setText("Copy clicked");
                 } else if (id == 1) {
-                    ambilfoto();
+                    ambilfotoSection();
                     //Share clicked
                     //set text
                     // selectedTv.setText("Share clicked");
                 } else if (id == 2) {
-                    tindakan();
+                    tindakanSection();
                     //Save clicked
                     //set text
                     //selectedTv.setText("Save clicked");
@@ -819,6 +824,35 @@ public class InspeksiKetiga extends AppCompatActivity {
         EditText eDeskripsi = (EditText) dialogView.findViewById(R.id.teditText2);
         EditText eTeam = (EditText) dialogView.findViewById(R.id.teditText3);
 
+        CheckBox low = dialogView.findViewById(R.id.low);
+        low.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    statusTindakan = "low";
+                }
+            }
+        });
+        CheckBox medium = dialogView.findViewById(R.id.medium);
+        medium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    statusTindakan = "medium";
+                }
+            }
+        });
+        CheckBox hight = dialogView.findViewById(R.id.hight);
+        hight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    statusTindakan = "hight";
+                }
+
+            }
+        });
+
         dialog.setPositiveButton("Tambah",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -831,6 +865,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                         tugasTemplate.put("titleTugas",title);
                         tugasTemplate.put("deskripsi",deskripsi);
                         tugasTemplate.put("teamTugas",team);
+                        tugasTemplate.put("inspectionsId",documentId);
+                        tugasTemplate.put("pagesId",idPages);
+                        tugasTemplate.put("questionId",idDesclick);
+                        tugasTemplate.put("status",statusTindakan);
 
                         if (title.isEmpty() && deskripsi.isEmpty() && team.isEmpty()){
                             Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
@@ -848,6 +886,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
                                     status = "Tidak Aman";
+                                    statusTindakan = "";
                                 }
                             });
                         }
@@ -858,6 +897,100 @@ public class InspeksiKetiga extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        statusTindakan = "";
+                    }
+                });
+
+        dialog.show();
+    }
+
+    private void tindakanSection() {
+        dialog = new AlertDialog.Builder(InspeksiKetiga.this);
+        inflater = getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.tindakan, null);
+        dialog.setView(dialogView);
+        dialog.setCancelable(true);
+        dialog.setTitle("Tambah Tindakan");
+
+        EditText eTitle = (EditText) dialogView.findViewById(R.id.teditText1);
+        EditText eDeskripsi = (EditText) dialogView.findViewById(R.id.teditText2);
+        EditText eTeam = (EditText) dialogView.findViewById(R.id.teditText3);
+
+        CheckBox low = dialogView.findViewById(R.id.low);
+        low.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    statusTindakan = "low";
+                }
+            }
+        });
+        CheckBox medium = dialogView.findViewById(R.id.medium);
+        medium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    statusTindakan = "medium";
+                }
+            }
+        });
+        CheckBox hight = dialogView.findViewById(R.id.hight);
+        hight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    statusTindakan = "hight";
+                }
+
+            }
+        });
+
+        dialog.setPositiveButton("Tambah",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String title = eTitle.getText().toString();
+                        String deskripsi = eDeskripsi.getText().toString();
+                        String team = eTeam.getText().toString();
+
+                        Map<String, Object> tugasTemplate = new HashMap<>();
+                        tugasTemplate.put("titleTugas",title);
+                        tugasTemplate.put("deskripsi",deskripsi);
+                        tugasTemplate.put("teamTugas",team);
+                        tugasTemplate.put("inspectionsId",documentId);
+                        tugasTemplate.put("pagesId",idPages);
+                        tugasTemplate.put("contentsId",parentSection);
+                        tugasTemplate.put("questionId",idDesclick);
+                        tugasTemplate.put("status",statusTindakan);
+
+                        if (title.isEmpty() && deskripsi.isEmpty() && team.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        } else if (title.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        }else if (deskripsi.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        }else if (team.isEmpty()){
+                            Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
+                        } else {
+                            //addTugas
+                            tugas.document()
+                                    .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
+                                    status = "Tidak Aman";
+                                    statusTindakan = "";
+                                }
+                            });
+                        }
+                    }
+                });
+
+        dialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        statusTindakan = "";
                     }
                 });
 
@@ -878,10 +1011,54 @@ public class InspeksiKetiga extends AppCompatActivity {
         alertDialog.setPositiveButton("Tambah",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         String getcatatan = catatan.getText().toString();
                         pages.document(documentId)
                                 .collection("pages")
                                 .document(idPages)
+                                .collection("contents")
+                                .document(idDesclick)
+                                .update("catatan", getcatatan).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Catatan", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    }
+                });
+
+        alertDialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+    void tambahcatatanSection() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
+        alertDialog.setTitle("Tambah Catatan");
+
+        final EditText catatan = new EditText(InspeksiKetiga.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        catatan.setLayoutParams(lp);
+        alertDialog.setView(catatan);
+
+        alertDialog.setPositiveButton("Tambah",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String getcatatan = catatan.getText().toString();
+                        pages.document(documentId)
+                                .collection("pages")
+                                .document(idPages)
+                                .collection("contents")
+                                .document(parentSection)
                                 .collection("contents")
                                 .document(idDesclick)
                                 .update("catatan", getcatatan).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -920,27 +1097,27 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                     public void onClick(DialogInterface dialog, int which) {
-//                        //update
-                        pages.document(documentId)
-                                .collection("pages")
-                                .document(idPages)
-                                .collection("contents")
-                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                        if (document != null && document.exists()) {
-                                            df.document(idtemplate)
-                                                    .collection("pages")
-                                                    .document(idPages)
-                                                    .collection("contents")
-                                                    .add(document).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                    Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
+////                        //update
+//                        pages.document(documentId)
+//                                .collection("pages")
+//                                .document(idPages)
+//                                .collection("contents")
+//                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                if (task.isSuccessful()) {
+//
+//                                    for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                        if (document != null && document.exists()) {
+//                                            df.document(idtemplate)
+//                                                    .collection("pages")
+//                                                    .document(idPages)
+//                                                    .collection("contents")
+//                                                    .add(document).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+//                                                    Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
 
                                                     //uploadTtd
                                                     if (ContextCompat.checkSelfPermission(
@@ -958,11 +1135,11 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                             //updatestatus
                                                             if (status == null) {
-                                                                df.document(idtemplate)
+                                                                pages.document(documentId)
                                                                         .update("status", "Aman",
                                                                                 "signature", ttd);
                                                             }else {
-                                                                df.document(idtemplate)
+                                                                pages.document(documentId)
                                                                         .update("status", "Tidak Aman",
                                                                                 "signature", ttd);
                                                             }
@@ -973,15 +1150,15 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                     }
 
 
-                                                }
-                                            });
-
-
-                                        }
-                                    }
-                                }
-                            }
-                        });
+//                                                }
+//                                            });
+//
+//
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        });
 
 
                     }
@@ -999,6 +1176,19 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     private void ambilfoto() {
 
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+
+        } else {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
+
+
+    }
+
+    private void ambilfotoSection() {
+        inSection = "ambilfotoSection";
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
 
@@ -1123,6 +1313,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+
             // Show pop up window
             LayoutInflater layoutInflater = LayoutInflater.from(InspeksiKetiga.this);
             View promptView = layoutInflater.inflate(R.layout.hasilfoto, null);
@@ -1142,17 +1333,35 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 Log.d("photoAdd", "masuknih");
                                 UploadPhotoToCloudStore(photoBitmap);
 
-                                pages.document(documentId)
-                                        .collection("pages")
-                                        .document(idPages)
-                                        .collection("contents")
-                                        .document(idDesclick)
-                                        .update("photo", sPhoto).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
-                                    }
-                                });
+                                if (inSection.equals("ambilfotoSection")){
+                                    pages.document(documentId)
+                                            .collection("pages")
+                                            .document(idPages)
+                                            .collection("contents")
+                                            .document(parentSection)
+                                            .collection("contents")
+                                            .document(idDesclick)
+                                            .update("photo", sPhoto).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
+                                            inSection = "";
+                                        }
+                                    });
+
+                                }else{
+                                    pages.document(documentId)
+                                            .collection("pages")
+                                            .document(idPages)
+                                            .collection("contents")
+                                            .document(idDesclick)
+                                            .update("photo", sPhoto).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
 
                             }
                         }
@@ -1161,6 +1370,7 @@ public class InspeksiKetiga extends AppCompatActivity {
             alertDialogBuilder.setNegativeButton("Batal",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            inSection = "";
                             dialog.cancel();
                         }
                     });
@@ -1168,6 +1378,7 @@ public class InspeksiKetiga extends AppCompatActivity {
             alertDialogBuilder.show();
         }
     }
+
 
     public boolean addJpgPhotoToGallery(Bitmap photoBitmap) {
         boolean result = false;
@@ -1229,5 +1440,12 @@ public class InspeksiKetiga extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        inSection = "";
+        statusTindakan = "";
+        super.onBackPressed();
     }
 }

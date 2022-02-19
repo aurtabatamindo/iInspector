@@ -50,11 +50,11 @@ public class InspeksiHasil extends AppCompatActivity {
 
         if (status == null){
             query = FirebaseFirestore.getInstance()
-                    .collection("hasiltemplatestes")
+                    .collection("inspections")
                     .orderBy("status");
         }else{
             query = FirebaseFirestore.getInstance()
-                    .collection("hasiltemplatestes")
+                    .collection("inspections")
                     .whereEqualTo("status",status);
         }
 
