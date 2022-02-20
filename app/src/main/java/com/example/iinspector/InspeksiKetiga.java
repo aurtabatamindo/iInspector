@@ -48,6 +48,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.iinspector.SendNotificationPack.APIService;
+import com.example.iinspector.SendNotificationPack.Data;
+import com.example.iinspector.SendNotificationPack.MyResponse;
+import com.example.iinspector.SendNotificationPack.NotificationSender;
 import com.example.iinspector.ui.main.GetDataTodo;
 import com.example.iinspector.ui.main.TodoHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -57,6 +61,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -84,7 +92,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class InspeksiKetiga extends AppCompatActivity {
+    //notif
+    private APIService apiService;
+    final private String admin1 = "4kCznhvJW5aZfz4hkBGme3ZvV1r2";
+    final private String title = "!TEMUAN!";
+    final private String pesan = "!RESIKO HIGHT!";
 
     //TTD
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -884,6 +901,23 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    if (status.equals("hight")){
+                                        FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                String usertoken = dataSnapshot.getValue(String.class);
+                                                Log.d("usertoken",usertoken);
+                                                kirimnotif(usertoken, title.toString().trim(), pesan.toString().trim());
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                        kirim();
+                                    }
                                     Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
                                     status = "Tidak Aman";
                                     statusTindakan = "";
@@ -977,6 +1011,23 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    if (status.equals("hight")){
+                                        FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                String usertoken = dataSnapshot.getValue(String.class);
+                                                Log.d("usertoken",usertoken);
+                                                kirimnotif(usertoken, title.toString().trim(), pesan.toString().trim());
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                        kirim();
+                                    }
                                     Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
                                     status = "Tidak Aman";
                                     statusTindakan = "";
@@ -995,6 +1046,41 @@ public class InspeksiKetiga extends AppCompatActivity {
                 });
 
         dialog.show();
+    }
+
+    public void kirimnotif(String usertoken, String title, String message) {
+        Data data = new Data(title, message);
+        NotificationSender sender = new NotificationSender(data, usertoken);
+        apiService.sendNotifcation(sender).enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                if (response.code() == 200) {
+                    if (response.body().success != 1) {
+                        Snackbar.make(findViewById(R.id.inspeksiawal),"Berhasil Mengirim Tindakan",Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public  void kirim(){
+        String email = "aurtafalen@batamindo.co.id";
+        String subject = "TEMUAN";
+        String message = "RESIKO HIGH";
+
+        String mEmail = email.toString();
+        String mSubject = subject.toString();
+        String mMessage = message.toString();
+
+        JavaMailAPI javaMailAPI = new JavaMailAPI(InspeksiKetiga.this, mEmail, mSubject, mMessage);
+        javaMailAPI.execute();
+
+        Snackbar.make(findViewById(R.id.inspeksiawal),"Berhasil Mengirim Tindakan",Snackbar.LENGTH_LONG).show();
     }
 
     void tambahcatatan() {
