@@ -44,6 +44,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -91,6 +92,8 @@ import java.util.Formattable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -160,6 +163,12 @@ public class InspeksiKetiga extends AppCompatActivity {
     //answer
     List<EditText> allAnswer = new ArrayList<EditText>();
     List<String> sizeAnswer = new ArrayList<String>();
+    Map<String, Object> mapHasil = new HashMap<>();
+    ArrayList <Map> tempatTerakhir = new ArrayList<Map>();
+//    Map<String, Object> contents = new HashMap<>();
+//    Map<String, Object> childContent = new HashMap<>();
+
+
 
     //answerSection
     List<EditText> allAnswerSection = new ArrayList<EditText>();
@@ -203,6 +212,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     String inSection;
 
     String statusTindakan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -247,7 +257,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         });
     }
 
-    private void showtitle() {
+     private void showtitle() {
 
         pages.document(documentId)
                 .collection("pages")
@@ -269,6 +279,7 @@ public class InspeksiKetiga extends AppCompatActivity {
             }
 
 
+
         });
     }
 
@@ -280,192 +291,452 @@ public class InspeksiKetiga extends AppCompatActivity {
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                ArrayList parentContent = new ArrayList();
                 if (task.isSuccessful()) {
+                    HashMap<String, Object> contentArray = new HashMap<>();
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
+                        myLinearLayout = findViewById(R.id.lPertanyaan);
+                        params3 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                        params3.setMargins(10, 20, 10, 20);
+
+                        params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                        params.setMargins(30, 20, 30, 20);
+
                         if (document != null && document.exists()) {
 
-                            documentTest = document.exists();
-                            //get Document
-                            Log.d("getdoc", document.getId());
-
-                            //Get Description
                             desc = (String) document.get("description");
-                            Log.d("getdes", desc);
 
-                            //Get type
+
+
                             String type = (String) document.get("type");
-                            Log.d("gettype", type);
+                            if (type.equals("section")){
+                                contentArray.put("description", document.get("description"));
+                                contentArray.put("type", document.get("type"));
+                                contentArray.put("id", document.getId());
 
+                                ArrayList childContent = new ArrayList();
 
-                            myLinearLayout = findViewById(R.id.lPertanyaan);
-
-
-                            params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params.setMargins(30, 20, 30, 20);
-
-                            params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
-                            params2.setMargins(50, 5, 50, 5);
-
-                            params3 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                            params3.setMargins(10, 20, 10, 20);
-
-                            // Build Description
-                            Description = new TextView(InspeksiKetiga.this);
-                            Description.setBackgroundResource(R.drawable.cardpertanyaan);
-                            Description.setTextSize(11);
-                            Description.setPaddingRelative(50, 25, 10, 25);
-                            Description.setTypeface(null, Typeface.ITALIC);
-                            Description.setTextColor(Color.parseColor("#767676"));
-                            Description.setLayoutParams(params3);
-                            Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
-                            Description.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
-                            Description.setText("Pertanyaan :" + "\n" + desc);
-                            Description.setOnTouchListener(new View.OnTouchListener() {
-                                @Override
-                                public boolean onTouch(View v, MotionEvent event) {
-                                    idDesclick = document.getId();
-                                    Log.d("idDesc",idDesclick);
-                                    return false;
-                                }
-                            });
-//                            Description.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    idDesclick = document.getId();
-//                                    Log.d("idDesc",idDesclick);
-//                                }
-//                            });
-
-                            //Build Section
-                            Section = new TextView(InspeksiKetiga.this);
-                            Section.setLayoutParams(params3);
-                            Section.setBackgroundResource(R.drawable.cardsection);
-                            Section.setTextSize(13);
-                            Section.setPaddingRelative(50, 25, 10, 25);
-                            Section.setTypeface(null, Typeface.ITALIC);
-                            Section.setTextColor(Color.parseColor("#767676"));
-                            Drawable img1 = getApplicationContext().getResources().getDrawable(R.drawable.down_icon);
-                            Section.setCompoundDrawablesWithIntrinsicBounds(null, null, img1, null);
-                            Section.setText(desc);
-
-                            // Type = Text
-                            final EditText Answer = new EditText(InspeksiKetiga.this);
-                            Answer.setLayoutParams(params);
-                            Answer.setTextSize(11);
-                            Answer.setHint("Jawab disini");
-
-                            //sizeAnswer
-                            allAnswer.add(Answer);
-
-                            //actionPopup
-                            actionPopup();
-
-                            idContent = document.getId();
-                            Log.d("getidContent", idContent);
-
-
-                            if (type.equals("section")) {
-                                myLinearLayout.addView(Section);
+//                                contentArray.get("id", )
                                 idDocSection = document.getId();
-                                Log.d("idSection", idDocSection);
-                                showContentSection();
-                                Log.d("Ini", "Section");
+                                pages.document(documentId)
+                                        .collection("pages")
+                                        .document(idPages)
+                                        .collection("contents")
+                                        .document(idDocSection)
+                                        .collection("contents")
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+                                        ArrayList items = new ArrayList<>();
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                if (document != null && document.exists()) {
+                                                    Map<String, Object> childContentObj = new HashMap<>();
+                                                    items.add(document.getData());
+                                                    childContentObj.put("id", document.getId());
+                                                    childContentObj.put("parentContentId", document.getString("parentContentId"));
+                                                    childContentObj.put("type", document.getString("type"));
+                                                    childContentObj.put("description", document.getString("description"));
+                                                    childContentObj.put("typeOfResponse", document.get("typeOfResponse"));
+                                                    childContent.add(childContentObj);
+                                                }
+                                            }
+                                            contentArray.put("childContents", childContent);
+                                            Log.d("childContents",contentArray.toString());
 
-                            } else if (type.equals("question")) {
+                                            tempatTerakhir.add(contentArray);
+                                            Log.d("tempatTerakhir",tempatTerakhir.toString());
+                                        }
+                                        parentContent.add(contentArray);
+                                        Log.d("inSection","yes"+parentContent);
 
-                                myLinearLayout.addView(Description);
+                                        int sizeTempatTerakhir = tempatTerakhir.size();
+                                        for (int i = 0; i <sizeTempatTerakhir ; i++) {
+                                            String descS = tempatTerakhir.get(i).get("description").toString();
+                                            Log.d("getDescS",descS);
 
-//                              //get Map typeOfresonse
-                                Map maptype = (Map) document.get("typeOfResponse");
-                                Log.d("maptype", maptype.toString());
+                                            //Build Section
+                                            Section = new TextView(InspeksiKetiga.this);
+                                            Section.setLayoutParams(params3);
+                                            Section.setBackgroundResource(R.drawable.cardsection);
+                                            Section.setTextSize(13);
+                                            Section.setPaddingRelative(50, 25, 10, 25);
+                                            Section.setTypeface(null, Typeface.ITALIC);
+                                            Section.setTextColor(Color.parseColor("#767676"));
+                                            Drawable img1 = getApplicationContext().getResources().getDrawable(R.drawable.down_icon);
+                                            Section.setCompoundDrawablesWithIntrinsicBounds(null, null, img1, null);
+                                            Section.setText(descS);
 
-                                //get type in Map typeOfresponse
-                                String typeResponse = String.valueOf(maptype.get("type"));
-                                Log.d("getTypeResponse", typeResponse);
+                                            myLinearLayout.addView(Section);
 
-                                if (typeResponse.equals("checkboxes")) {
-                                    ArrayList opsi = (ArrayList) maptype.get("options");
-                                    Log.d("iniOpsi", opsi.toString());
+                                            ArrayList<Map> isi = (ArrayList<Map>) tempatTerakhir.get(i).get("childContents");
+                                            for (int a = 0; a < isi.size(); a++) {
+                                                String descIsi = isi.get(a).get("description").toString();
+                                                idAnSection = isi.get(a).get("id").toString();
+                                                parentId = (String) isi.get(a).get("parentContentId");
 
-                                    //MapOpsi
-                                    ArrayList<String> mapOpsi = new ArrayList<String>();
+                                                Log.d("iniDesc",descIsi);
+                                                // Build Description
+                                                DescriptionSection = new TextView(InspeksiKetiga.this);
+                                                DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
+                                                DescriptionSection.setTextSize(11);
+                                                DescriptionSection.setPaddingRelative(50, 25, 10, 25);
+                                                DescriptionSection.setTypeface(null, Typeface.ITALIC);
+                                                DescriptionSection.setTextColor(Color.parseColor("#767676"));
+                                                DescriptionSection.setLayoutParams(params);
+                                                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+                                                DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+                                                DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
+                                                DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
+                                                    @Override
+                                                    public boolean onTouch(View v, MotionEvent event) {
+                                                        idDesclick = document.getId();
+                                                        parentSection = (String) document.get("parentContentId");
+                                                        Log.d("idDesc",idDesclick);
+                                                        return false;
+                                                    }
+                                                });
 
-                                    for (int i = 0; i < opsi.size(); i++) {
-                                        // Type = checkboxes
-                                        final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
-                                        boxOpsi.setLayoutParams(params);
-                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
-                                        boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
-                                        GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
-                                        drawable.setColor(Color.WHITE);
-                                        boxOpsi.setText(opsi.get(i).toString());
+                                                // Type = Text
+                                                final EditText AnswerSection = new EditText(InspeksiKetiga.this);
+                                                AnswerSection.setLayoutParams(params);
+                                                AnswerSection.setTextSize(11);
+                                                AnswerSection.setHint("Jawab disini");
+                                                AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                                    @Override
+                                                    public void onFocusChange(View v, boolean hasFocus) {
 
-                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                            @Override
-                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                        if (hasFocus) {
 
-                                                if (isChecked) {
-                                                    idOpsi = document.getId();
-                                                    mapOpsi.add(boxOpsi.getText().toString());
-                                                    Log.d("opsiAns", mapOpsi.toString());
-                                                    //checkboxes update
-                                                    pages.document(documentId)
-                                                            .collection("pages")
-                                                            .document(idPages)
-                                                            .collection("contents")
-                                                            .document(idOpsi)
-                                                            .update("answer", mapOpsi);
+//                                                            idAnSection = document.getId();
+
+                                                            Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
+
+                                                        } else {
+                                                            //Text
+                                                            String idaAnswer = AnswerSection.getText().toString();
+                                                            pages.document(documentId)
+                                                                    .collection("pages")
+                                                                    .document(idPages)
+                                                                    .collection("contents")
+                                                                    .document(parentId)
+                                                                    .collection("contents")
+                                                                    .document(idAnSection)
+                                                                    .update("answer", idaAnswer);
+
+                                                            Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
+                                                        }
+                                                    }
+                                                });
+
+                                                myLinearLayout.addView(DescriptionSection);
+                                                myLinearLayout.addView(AnswerSection);
+                                            }
+                                        }
+
+//
+//
+//                                            ArrayList<Map> list = (ArrayList<Map>) contentArray.get("contents");
+//                                            Log.d("testContent",list.toString());
+//                                            int ukuranArray = list.size();
+//                                            for (int i = 0; i < ukuranArray; i++) {
+//                                                String deskripsi = list.get(i).get("description").toString();
+//
+//
+//
+//
+//                                                // Type = Text
+//                                                final EditText AnswerSection = new EditText(InspeksiKetiga.this);
+//                                                AnswerSection.setLayoutParams(params);
+//                                                AnswerSection.setTextSize(11);
+//                                                AnswerSection.setHint("Jawab disini");
+//                                                AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                                                    @Override
+//                                                    public void onFocusChange(View v, boolean hasFocus) {
+//
+//                                                        if (hasFocus) {
+//
+////                                                            idAnSection = document.getId();
+////                                                            idAnSection = contentArray.get("id").toString();
+//                                                            parentId = (String) document.get("parentContentId");
+//                                                            Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
+//
+//                                                        } else {
+//                                                            //Text
+//                                                            String idaAnswer = AnswerSection.getText().toString();
+//                                                            pages.document(documentId)
+//                                                                    .collection("pages")
+//                                                                    .document(idPages)
+//                                                                    .collection("contents")
+//                                                                    .document(parentId)
+//                                                                    .collection("contents")
+//                                                                    .document(idAnSection)
+//                                                                    .update("answer", idaAnswer);
+//
+//                                                            Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
+//                                                        }
+//                                                    }
+//                                                });
+//
+//                                                myLinearLayout.addView(DescriptionSection);
+//                                                myLinearLayout.addView(AnswerSection);
+//
+//                                                Log.d("items",parentContent.toString());
+//                                            }
+                                        }
+
+                                });
+
+                            }
+
+                            else{
+                                Description = new TextView(InspeksiKetiga.this);
+                                Description.setBackgroundResource(R.drawable.cardpertanyaan);
+                                Description.setTextSize(11);
+                                Description.setPaddingRelative(50, 25, 10, 25);
+                                Description.setTypeface(null, Typeface.ITALIC);
+                                Description.setTextColor(Color.parseColor("#767676"));
+                                Description.setLayoutParams(params3);
+                                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+                                Description.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+                                Description.setText("Pertanyaan :" + "\n" + desc);
+                                Description.setOnTouchListener(new View.OnTouchListener() {
+                                    @Override
+                                    public boolean onTouch(View v, MotionEvent event) {
+                                        idDesclick = document.getId();
+                                        Log.d("idDesc",idDesclick);
+                                        return false;
+                                    }
+                                });
+
+                                    // Type = Text
+                                final EditText Answer = new EditText(InspeksiKetiga.this);
+                                Answer.setLayoutParams(params);
+                                Answer.setTextSize(11);
+                                Answer.setHint("Jawab disini");
+
+                                Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                    @Override
+                                    public void onFocusChange(View v, boolean hasFocus) {
+
+                                        if (hasFocus) {
+                                            idAn = document.getId();
+                                            String parentId = (String) document.get("parentId");
+                                            Log.d("fokus", "ya");
+                                            Log.d("ida", idAn);
+
                                                 } else {
-                                                    idOpsi = document.getId();
-                                                    mapOpsi.remove(boxOpsi.getText().toString());
-                                                    //checkboxes update
+                                                    //Text
+                                                    idaAnswer = Answer.getText().toString();
+                                                    sizeAnswer.add(idaAnswer);
                                                     pages.document(documentId)
                                                             .collection("pages")
                                                             .document(idPages)
                                                             .collection("contents")
-                                                            .document(idOpsi)
-                                                            .update("answer", mapOpsi);
+                                                            .document(idAn)
+                                                            .update("answer", idaAnswer);
+
+                                                    Log.d("fokus", "tidak");
                                                 }
                                             }
                                         });
-                                        ;
-                                        myLinearLayout.addView(boxOpsi);
-                                    }
-                                } else {
-                                    Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                        @Override
-                                        public void onFocusChange(View v, boolean hasFocus) {
 
-                                            if (hasFocus) {
-                                                idAn = document.getId();
-                                                String parentId = (String) document.get("parentId");
-                                                Log.d("fokus", "ya");
-                                                Log.d("ida", idAn);
+                                //sizeAnswer
+                                allAnswer.add(Answer);
 
-                                            } else {
-                                                //Text
-                                                idaAnswer = Answer.getText().toString();
-                                                sizeAnswer.add(idaAnswer);
-                                                pages.document(documentId)
-                                                        .collection("pages")
-                                                        .document(idPages)
-                                                        .collection("contents")
-                                                        .document(idAn)
-                                                        .update("answer", idaAnswer);
+                                //actionPopup
+                                actionPopup();
 
-                                                Log.d("fokus", "tidak");
+                                idContent = document.getId();
 
-                                            }
-                                        }
-                                    });
-                                    myLinearLayout.addView(Answer);
-                                }
-                                Log.d("Ini", "Question");
+                                myLinearLayout.addView(Description);
+                                myLinearLayout.addView(Answer);
+
                             }
 
+
+
+//                            documentTest = document.exists();
+//                            //get Document
+//                            Log.d("getdoc", document.getId());
+//
+//                            //Get Description
+//                            desc = (String) document.get("description");
+//                            Log.d("getdes", desc);
+//
+//                            //Get type
+//                            String type = (String) document.get("type");
+//                            Log.d("gettype", type);
+//
+//
+//                            myLinearLayout = findViewById(R.id.lPertanyaan);
+//
+//
+//                            params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+//                            params.setMargins(30, 20, 30, 20);
+//
+//                            params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.FILL_PARENT, LinearLayoutCompat.LayoutParams.FILL_PARENT);
+//                            params2.setMargins(50, 5, 50, 5);
+//
+//                            params3 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+//                            params3.setMargins(10, 20, 10, 20);
+//
+//
+//
+//                            // Build Description
+//                            Description = new TextView(InspeksiKetiga.this);
+//                            Description.setBackgroundResource(R.drawable.cardpertanyaan);
+//                            Description.setTextSize(11);
+//                            Description.setPaddingRelative(50, 25, 10, 25);
+//                            Description.setTypeface(null, Typeface.ITALIC);
+//                            Description.setTextColor(Color.parseColor("#767676"));
+//                            Description.setLayoutParams(params3);
+//                            Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+//                            Description.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+//                            Description.setText("Pertanyaan :" + "\n" + desc);
+//                            Description.setOnTouchListener(new View.OnTouchListener() {
+//                                @Override
+//                                public boolean onTouch(View v, MotionEvent event) {
+//                                    idDesclick = document.getId();
+//                                    Log.d("idDesc",idDesclick);
+//                                    return false;
+//                                }
+//                            });
+//
+//                            //Build Section
+//                            Section = new TextView(InspeksiKetiga.this);
+//                            Section.setLayoutParams(params3);
+//                            Section.setBackgroundResource(R.drawable.cardsection);
+//                            Section.setTextSize(13);
+//                            Section.setPaddingRelative(50, 25, 10, 25);
+//                            Section.setTypeface(null, Typeface.ITALIC);
+//                            Section.setTextColor(Color.parseColor("#767676"));
+//                            Drawable img1 = getApplicationContext().getResources().getDrawable(R.drawable.down_icon);
+//                            Section.setCompoundDrawablesWithIntrinsicBounds(null, null, img1, null);
+//                            Section.setText(desc);
+//
+//                            // Type = Text
+//                            final EditText Answer = new EditText(InspeksiKetiga.this);
+//                            Answer.setLayoutParams(params);
+//                            Answer.setTextSize(11);
+//                            Answer.setHint("Jawab disini");
+//
+//                            //sizeAnswer
+//                            allAnswer.add(Answer);
+//
+//                            //actionPopup
+//                            actionPopup();
+//
+//                            idContent = document.getId();
+//                            Log.d("getidContent", idContent);
+//
+//
+//                                if (type.equals("section")) {
+//                                    myLinearLayout.addView(Section);
+//                                    idDocSection = document.getId();
+//                                    showContentSection();
+////                                if (myLinearLayout.getParent() != null){
+////                                    myLinearLayout.addView(Section);
+////                                    idDocSection = document.getId();
+////                                    Log.d("idSection", idDocSection);
+////                                    showContentSection();
+////                                    Log.d("Ini", "Section");
+////                                }
+//
+//                                } else  {
+//
+//                                    myLinearLayout.addView(Description);
+//
+////                                  //get Map typeOfresonse
+//                                    Map maptype = (Map) document.get("typeOfResponse");
+//                                    Log.d("maptype", maptype.toString());
+//
+//                                    //get type in Map typeOfresponse
+//                                    String typeResponse = String.valueOf(maptype.get("type"));
+//                                    Log.d("getTypeResponse", typeResponse);
+//
+//                                    if (typeResponse.equals("checkboxes")) {
+//                                        ArrayList opsi = (ArrayList) maptype.get("options");
+//                                        Log.d("iniOpsi", opsi.toString());
+//
+//                                        //MapOpsi
+//                                        ArrayList<String> mapOpsi = new ArrayList<String>();
+//
+//                                        for (int i = 0; i < opsi.size(); i++) {
+//                                            // Type = checkboxes
+//                                            final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
+//                                            boxOpsi.setLayoutParams(params);
+//                                            boxOpsi.setTextColor(Color.parseColor("#767676"));
+//                                            boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
+//                                            GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
+//                                            drawable.setColor(Color.WHITE);
+//                                            boxOpsi.setText(opsi.get(i).toString());
+//
+//                                            boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                                                @Override
+//                                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                                                    if (isChecked) {
+//                                                        idOpsi = document.getId();
+//                                                        mapOpsi.add(boxOpsi.getText().toString());
+//                                                        Log.d("opsiAns", mapOpsi.toString());
+//                                                        //checkboxes update
+//                                                        pages.document(documentId)
+//                                                                .collection("pages")
+//                                                                .document(idPages)
+//                                                                .collection("contents")
+//                                                                .document(idOpsi)
+//                                                                .update("answer", mapOpsi);
+//                                                    } else {
+//                                                        idOpsi = document.getId();
+//                                                        mapOpsi.remove(boxOpsi.getText().toString());
+//                                                        //checkboxes update
+//                                                        pages.document(documentId)
+//                                                                .collection("pages")
+//                                                                .document(idPages)
+//                                                                .collection("contents")
+//                                                                .document(idOpsi)
+//                                                                .update("answer", mapOpsi);
+//                                                    }
+//                                                }
+//                                            });
+//                                            ;
+//                                            myLinearLayout.addView(boxOpsi);
+//                                        }
+//                                    } else {
+//                                        Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                                            @Override
+//                                            public void onFocusChange(View v, boolean hasFocus) {
+//
+//                                                if (hasFocus) {
+//                                                    idAn = document.getId();
+//                                                    String parentId = (String) document.get("parentId");
+//                                                    Log.d("fokus", "ya");
+//                                                    Log.d("ida", idAn);
+//
+//                                                } else {
+//                                                    //Text
+//                                                    idaAnswer = Answer.getText().toString();
+//                                                    sizeAnswer.add(idaAnswer);
+//                                                    pages.document(documentId)
+//                                                            .collection("pages")
+//                                                            .document(idPages)
+//                                                            .collection("contents")
+//                                                            .document(idAn)
+//                                                            .update("answer", idaAnswer);
+//
+//                                                    Log.d("fokus", "tidak");
+//
+//                                                }
+//                                            }
+//                                        });
+//                                        myLinearLayout.addView(Answer);
+//                                    }
+//                                    Log.d("Ini", "Question");
+//                                }
                         }
                     }
 
@@ -513,6 +784,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                             String typeResponse = String.valueOf(maptype.get("type"));
                             Log.d("getTypeResponse", typeResponse);
 
+//                            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+//                                relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, Section.getId());
 
                             // Build Description
                             DescriptionSection = new TextView(InspeksiKetiga.this);
@@ -521,7 +794,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                             DescriptionSection.setPaddingRelative(50, 25, 10, 25);
                             DescriptionSection.setTypeface(null, Typeface.ITALIC);
                             DescriptionSection.setTextColor(Color.parseColor("#767676"));
-                            DescriptionSection.setLayoutParams(params);
+                            DescriptionSection.setLayoutParams(params3);
                             Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
                             DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                             DescriptionSection.setText("Pertanyaan :" + "\n" + descSection);
@@ -541,7 +814,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                             AnswerSection.setTextSize(11);
                             AnswerSection.setHint("Jawab disini");
 
-
+//                            myLinearLayout.removeView(Section);
                             myLinearLayout.addView(DescriptionSection);
 
 //                            setContentView(DescriptionSection,params2);
@@ -598,7 +871,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         }
                                     });
                                     ;
-                                    myLinearLayout.addView(boxOpsi);
+                                    myLinearLayout.addView(boxOpsi,2);
                                 }
                             } else {
                                 AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
