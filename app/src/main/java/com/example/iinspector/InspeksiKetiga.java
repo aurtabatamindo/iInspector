@@ -196,8 +196,8 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     //Textview
     TextView Description;
-    TextView DescriptionSection;
     TextView Section;
+    TextView DescriptionSection;
 
     //    //answer
 //    EditText Answer;
@@ -219,6 +219,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_ketiga);
+
 
 
         //idDocument
@@ -359,7 +360,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                         for (int i = 0; i <sizeTempatTerakhir ; i++) {
         
                                                             String descS = tempatTerakhir.get(i).get("description").toString();
-        
+
+
                                                             Log.d("getDescS",descS);
                                                             Log.d("tempatTerakhir",tempatTerakhir.toString());
         
@@ -376,16 +378,15 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                             Section.setText(descS);
         
                                                             myLinearLayout.addView(Section);
-        
+
                                                             ArrayList<Map> isi = (ArrayList<Map>) tempatTerakhir.get(i).get("childContents");
                                                             for (int a = 0; a < isi.size(); a++) {
                                                                 String descIsi = isi.get(a).get("description").toString();
-                                                                idAnSection = isi.get(a).get("id").toString();
+                                                                String typeS = isi.get(a).get("type").toString();
 
-        
-                                                                Log.d("iniDesc",descIsi);
+                                                                Log.d("iniDesc", descIsi);
                                                                 // Build Description
-                                                                DescriptionSection = new TextView(InspeksiKetiga.this);
+                                                                final TextView DescriptionSection = new TextView(InspeksiKetiga.this);
                                                                 DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
                                                                 DescriptionSection.setTextSize(11);
                                                                 DescriptionSection.setPaddingRelative(50, 25, 10, 25);
@@ -394,57 +395,154 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                 DescriptionSection.setLayoutParams(params);
                                                                 Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
                                                                 DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+                                                                DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
+                                                                DescriptionSection.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
                                                                 DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
-
-//                                                                DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
-//                                                                    @Override
-//                                                                    public boolean onTouch(View v, MotionEvent event) {
-//                                                                        idDesclick = document.getId();
-//                                                                        parentSection = (String) document.get("parentContentId");
-//                                                                        Log.d("idDesc",idDesclick);
-//                                                                        return false;
-//                                                                    }
-//                                                                });
-
-
-                                                                final EditText AnswerSection = new EditText(InspeksiKetiga.this);
-                                                                AnswerSection.setLayoutParams(params);
-                                                                AnswerSection.setTextSize(11);
-                                                                AnswerSection.setHint("Jawab disini");
-                                                                AnswerSection.setTag(R.id.id,isi.get(a).get("id"));
-                                                                AnswerSection.setTag(R.id.parentContentId,isi.get(a).get("parentContentId"));
-
-
-                                                                AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                                                Log.d("idclickk",DescriptionSection.getTag(R.id.idClick).toString() + "parentSection : "+ DescriptionSection.getTag(R.id.parentSection).toString());
+                                                                DescriptionSection.setOnClickListener(new View.OnClickListener() {
                                                                     @Override
-                                                                    public void onFocusChange(View v, boolean hasFocus) {
-        
-                                                                        if (hasFocus) {
-                                                                            idAnSection = AnswerSection.getTag(R.id.id).toString();
-                                                                            parentId = AnswerSection.getTag(R.id.parentContentId).toString();
+                                                                    public void onClick(View v) {
+                                                                        idDesclick = DescriptionSection.getTag(R.id.idClick).toString();
+                                                                        parentSection = DescriptionSection.getTag(R.id.parentSection).toString();
+                                                                        Log.d("idDesc",idDesclick+" parent : "+parentSection);
 
-                                                                            Log.d("getIdSectionAsu",idAnSection);
-                                                                            Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
-        
-                                                                        } else {
-                                                                            //Text
-                                                                            String idaAnswer = AnswerSection.getText().toString();
-                                                                            pages.document(documentId)
-                                                                                    .collection("pages")
-                                                                                    .document(idPages)
-                                                                                    .collection("contents")
-                                                                                    .document(parentId)
-                                                                                    .collection("contents")
-                                                                                    .document(idAnSection)
-                                                                                    .update("answer", idaAnswer);
+                                                                        //popup menu
+                                                                        final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, DescriptionSection);
+                                                                        //add menu items in popup menu
+                                                                        popupMenu2.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+                                                                        popupMenu2.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+                                                                        popupMenu2.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
 
-//                                                                            Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
-                                                                        }
+                                                                        //handle menu item clicks
+                                                                        popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                                                            @Override
+                                                                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                                                                //get id of the clicked item
+                                                                                int id = menuItem.getItemId();
+                                                                                //handle clicks
+                                                                                if (id == 0) {
+
+                                                                                    tambahcatatanSection();
+                                                                                    //Copy clicked
+                                                                                    //set text
+                                                                                    //selectedTv.setText("Copy clicked");
+                                                                                } else if (id == 1) {
+                                                                                    ambilfotoSection();
+                                                                                    //Share clicked
+                                                                                    //set text
+                                                                                    // selectedTv.setText("Share clicked");
+                                                                                } else if (id == 2) {
+                                                                                    tindakanSection();
+                                                                                    //Save clicked
+                                                                                    //set text
+                                                                                    //selectedTv.setText("Save clicked");
+                                                                                }
+
+                                                                                return false;
+                                                                            }
+                                                                        });
+                                                                        popupMenu2.show();
                                                                     }
                                                                 });
-        
+
                                                                 myLinearLayout.addView(DescriptionSection);
-                                                                myLinearLayout.addView(AnswerSection);
+
+                                                                if (typeS.equals("checkboxes")) {
+//                                                                    ArrayList opsi = (ArrayList) maptype.get("options");
+//                                                                    Log.d("iniOpsi", opsi.toString());
+//
+//                                                                    //MapOpsiSection
+//                                                                    ArrayList<String> mapOpsiSection = new ArrayList<String>();
+//
+//                                                                    for (int i = 0; i < opsi.size(); i++) {
+//                                                                        // Type = checkboxes
+//                                                                        final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
+//                                                                        boxOpsi.setLayoutParams(params);
+//                                                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
+//                                                                        boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
+//                                                                        GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
+//                                                                        drawable.setColor(Color.WHITE);
+//                                                                        boxOpsi.setText(opsi.get(i).toString());
+//
+//                                                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                                                                            @Override
+//                                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//
+//                                                                                if (isChecked) {
+//                                                                                    idAnSectionBox = document.getId();
+//                                                                                    parentIdBox = (String) document.get("parentId");
+//                                                                                    mapOpsiSection.add(boxOpsi.getText().toString());
+//
+//                                                                                    Log.d("getparentIdBox", parentIdBox + " idopsi: " + idAnSectionBox + " answer: " + mapOpsiSection);
+//                                                                                    //checkboxes update
+//                                                                                    pages.document(documentId)
+//                                                                                            .collection("pages")
+//                                                                                            .document(idPages)
+//                                                                                            .collection("contents")
+//                                                                                            .document(parentIdBox)
+//                                                                                            .collection("contents")
+//                                                                                            .document(idAnSectionBox)
+//                                                                                            .update("answer", mapOpsiSection);
+//                                                                                } else {
+//                                                                                    mapOpsiSection.remove(boxOpsi.getText().toString());
+//                                                                                    idAnSectionBox = document.getId();
+//                                                                                    //checkboxes update
+//                                                                                    pages.document(documentId)
+//                                                                                            .collection("pages")
+//                                                                                            .document(idPages)
+//                                                                                            .collection("contents")
+//                                                                                            .document(parentIdBox)
+//                                                                                            .collection("contents")
+//                                                                                            .document(idAnSectionBox)
+//                                                                                            .update("answer", mapOpsiSection);
+//                                                                                }
+//                                                                            }
+//                                                                        });
+//                                                                        ;
+//                                                                        myLinearLayout.addView(boxOpsi);
+//                                                                    }
+                                                                } else {
+
+                                                                    final EditText AnswerSection = new EditText(InspeksiKetiga.this);
+                                                                    AnswerSection.setLayoutParams(params);
+                                                                    AnswerSection.setTextSize(11);
+                                                                    AnswerSection.setHint("Jawab disini");
+                                                                    AnswerSection.setTag(R.id.id, isi.get(a).get("id"));
+                                                                    AnswerSection.setTag(R.id.parentContentId, isi.get(a).get("parentContentId"));
+
+
+                                                                    AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                                                        @Override
+                                                                        public void onFocusChange(View v, boolean hasFocus) {
+
+                                                                            if (hasFocus) {
+                                                                                idAnSection = AnswerSection.getTag(R.id.id).toString();
+                                                                                parentId = AnswerSection.getTag(R.id.parentContentId).toString();
+
+                                                                                Log.d("getIdSectionAsu", idAnSection);
+                                                                                Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
+
+                                                                            } else {
+                                                                                //Text
+                                                                                String idaAnswer = AnswerSection.getText().toString();
+                                                                                pages.document(documentId)
+                                                                                        .collection("pages")
+                                                                                        .document(idPages)
+                                                                                        .collection("contents")
+                                                                                        .document(parentId)
+                                                                                        .collection("contents")
+                                                                                        .document(idAnSection)
+                                                                                        .update("answer", idaAnswer);
+
+//                                                                            Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
+                                                                            }
+                                                                        }
+                                                                    });
+
+                                                                    myLinearLayout.addView(AnswerSection);
+
+                                                                }
                                                             }
                                                         }
                                                         }
@@ -865,7 +963,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                         }
 
                         //actionPopup
-                        actionPopupSection();
+//                        actionPopupSection();
 
 
                     }
@@ -975,14 +1073,14 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     private void actionPopup() {
         //popup menu
-        final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, Description);
+        final PopupMenu popupMenu = new PopupMenu(InspeksiKetiga.this, Description);
         //add menu items in popup menu
-        popupMenu2.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
-        popupMenu2.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
-        popupMenu2.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+        popupMenu.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+        popupMenu.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
 
         //handle menu item clicks
-        popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 //get id of the clicked item
@@ -1012,12 +1110,14 @@ public class InspeksiKetiga extends AppCompatActivity {
         Description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popupMenu2.show();
+                popupMenu.show();
+
             }
         });
     }
 
     private void actionPopupSection() {
+
         //popup menu
         final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, DescriptionSection);
         //add menu items in popup menu
@@ -1057,6 +1157,9 @@ public class InspeksiKetiga extends AppCompatActivity {
         DescriptionSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                idDesclick = DescriptionSection.getTag(R.id.idClick).toString();
+                parentSection = DescriptionSection.getTag(R.id.parentSection).toString();
+                Log.d("idDesc",idDesclick+" parent : "+parentSection);
                 popupMenu2.show();
             }
         });
@@ -1134,7 +1237,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (status.equals("hight")){
+                                    if (status == "hight"){
                                         FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1244,7 +1347,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (status.equals("hight")){
+                                    if (status == "hight"){
                                         FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1652,7 +1755,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 Log.d("photoAdd", "masuknih");
                                 UploadPhotoToCloudStore(photoBitmap);
 
-                                if (inSection.equals("ambilfotoSection")){
+                                if (inSection == "ambilfotoSection"){
                                     pages.document(documentId)
                                             .collection("pages")
                                             .document(idPages)

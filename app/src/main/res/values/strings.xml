@@ -34,4 +34,6 @@
     <item type="id" name="id" />
     <item type="id" name="parentContentId" />
 
+    <item type="id" name="idClick" />
+    <item type="id" name="parentSection" />
 </resources>
