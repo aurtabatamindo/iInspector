@@ -30,4 +30,8 @@
     </string-array>
 
     <string name="title_activity_login">login</string>
+
+    <item type="id" name="id" />
+    <item type="id" name="parentContentId" />
+
 </resources>

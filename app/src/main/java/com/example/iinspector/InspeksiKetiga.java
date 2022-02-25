@@ -243,22 +243,6 @@ public class InspeksiKetiga extends AppCompatActivity {
         //Button
         buttonberiktunya();
 
-        pages.document(documentId)
-                .collection("pages")
-                .limit(1)
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                for (DocumentSnapshot document : queryDocumentSnapshots) {
-                    if (document.exists()) {
-
-                    }
-                }
-
-            }
-        });
-
     }
 
     private void halaman() {
@@ -304,6 +288,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     }
 
     private void showcontent() {
+
         pages.document(documentId)
                 .collection("pages")
                 .document(idPages)
@@ -311,15 +296,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        ArrayList <Map> tempatTerakhir = new ArrayList<Map>();
-        
-        //                ArrayList parentContent = new ArrayList();
                         if (task.isSuccessful()) {
-        
                             for (QueryDocumentSnapshot document : task.getResult()) {
-        //                for (DocumentSnapshot document : queryDocumentSnapshots) {
-        //
-        //                    if (document.exists()) {
+
                                 myLinearLayout = findViewById(R.id.lPertanyaan);
                                 params3 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                                 params3.setMargins(10, 20, 10, 20);
@@ -334,14 +313,15 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     if (type.equals("section")) {
         
                                         HashMap<String, Object> contentArray = new HashMap<>();
+
                                         contentArray.put("description", document.get("description"));
                                         contentArray.put("type", document.get("type"));
                                         contentArray.put("id", document.getId());
-        //                                parentContent.add(contentArray);
         
                                         Log.d("cekDes", contentArray.get("description").toString());
+
+                                        ArrayList <Map> tempatTerakhir = new ArrayList<Map>();
                                         ArrayList childContent = new ArrayList();
-        
                                         idDocSection = document.getId();
                                         pages
                                             .document(documentId)
@@ -358,7 +338,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                         for (QueryDocumentSnapshot document : task.getResult()) {
         
                                                                 Map<String, Object> childContentObj = new HashMap<>();
-            //                                                            items.add(document.getData());
                                                                 childContentObj.put("id", document.getId());
                                                                 childContentObj.put("parentContentId", document.getString("parentContentId"));
                                                                 childContentObj.put("type", document.getString("type"));
@@ -369,11 +348,13 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                             }
 
                                                         }
-                                                        contentArray.put("childContents", childContent);
-                                                        Log.d("childContents", contentArray.toString());
-                                                        tempatTerakhir.add(contentArray);
 
-                                                        Log.d("RIPasu",tempatTerakhir.toString());
+                                                        contentArray.put("childContents", childContent);
+                                                        Log.d("asu1", contentArray.toString());
+                                                        tempatTerakhir.remove(contentArray);
+                                                        tempatTerakhir.add(contentArray);
+                                                        Log.d("asu2", tempatTerakhir.toString());
+
                                                         int sizeTempatTerakhir = tempatTerakhir.size() ;
                                                         for (int i = 0; i <sizeTempatTerakhir ; i++) {
         
@@ -400,7 +381,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                             for (int a = 0; a < isi.size(); a++) {
                                                                 String descIsi = isi.get(a).get("description").toString();
                                                                 idAnSection = isi.get(a).get("id").toString();
-                                                                parentId = (String) isi.get(a).get("parentContentId");
+
         
                                                                 Log.d("iniDesc",descIsi);
                                                                 // Build Description
@@ -414,46 +395,50 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                 Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
                                                                 DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                                                                 DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
-        //                                                        DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
-        //                                                            @Override
-        //                                                            public boolean onTouch(View v, MotionEvent event) {
-        //                                                                idDesclick = document.getId();
-        //                                                                parentSection = (String) document.get("parentContentId");
-        //                                                                Log.d("idDesc",idDesclick);
-        //                                                                return false;
-        //                                                            }
-        //                                                        });
-        
-                                                                // Type = Text
+
+//                                                                DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
+//                                                                    @Override
+//                                                                    public boolean onTouch(View v, MotionEvent event) {
+//                                                                        idDesclick = document.getId();
+//                                                                        parentSection = (String) document.get("parentContentId");
+//                                                                        Log.d("idDesc",idDesclick);
+//                                                                        return false;
+//                                                                    }
+//                                                                });
+
+
                                                                 final EditText AnswerSection = new EditText(InspeksiKetiga.this);
                                                                 AnswerSection.setLayoutParams(params);
                                                                 AnswerSection.setTextSize(11);
                                                                 AnswerSection.setHint("Jawab disini");
-        //                                                        AnswerSection.setId(Integer.parseInt((String) Objects.requireNonNull(isi.get(a).get("id"))));
+                                                                AnswerSection.setTag(R.id.id,isi.get(a).get("id"));
+                                                                AnswerSection.setTag(R.id.parentContentId,isi.get(a).get("parentContentId"));
+
+
                                                                 AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                                                     @Override
                                                                     public void onFocusChange(View v, boolean hasFocus) {
         
                                                                         if (hasFocus) {
-                                                                            idAnSection = String.valueOf(AnswerSection.getId());
+                                                                            idAnSection = AnswerSection.getTag(R.id.id).toString();
+                                                                            parentId = AnswerSection.getTag(R.id.parentContentId).toString();
+
                                                                             Log.d("getIdSectionAsu",idAnSection);
-        //                                                                   idAnSection = document.getId();
-        
                                                                             Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
         
                                                                         } else {
-        //                                                                    //Text
-        //                                                                    String idaAnswer = AnswerSection.getText().toString();
-        //                                                                    pages.document(documentId)
-        //                                                                            .collection("pages")
-        //                                                                            .document(idPages)
-        //                                                                            .collection("contents")
-        //                                                                            .document(parentId)
-        //                                                                            .collection("contents")
-        //                                                                            .document(idAnSection)
-        //                                                                            .update("answer", idaAnswer);
-        //
-        //                                                                    Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
+                                                                            //Text
+                                                                            String idaAnswer = AnswerSection.getText().toString();
+                                                                            pages.document(documentId)
+                                                                                    .collection("pages")
+                                                                                    .document(idPages)
+                                                                                    .collection("contents")
+                                                                                    .document(parentId)
+                                                                                    .collection("contents")
+                                                                                    .document(idAnSection)
+                                                                                    .update("answer", idaAnswer);
+
+//                                                                            Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
                                                                         }
                                                                     }
                                                                 });
@@ -530,7 +515,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         myLinearLayout.addView(Answer);
         
                                     }
-        
+
         //                            documentTest = document.exists();
         //                            //get Document
         //                            Log.d("getdoc", document.getId());
@@ -714,15 +699,11 @@ public class InspeksiKetiga extends AppCompatActivity {
         
         
                         }
-        
-                        Log.d("tempatyangpalingindah", "" + tempatTerakhir);
+
                     }
 
         });
 
-//        for (int i = 0; i < ; i++) {
-//
-//        }
 
     }
 
