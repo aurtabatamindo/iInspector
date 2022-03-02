@@ -467,7 +467,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                                     for (int b = 0; b < opsi.size(); b++) {
                                                                         // Type = checkboxes
-                                                                        final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
+                                                                        final Button boxOpsi = new Button(InspeksiKetiga.this);
                                                                         boxOpsi.setLayoutParams(params);
                                                                         boxOpsi.setTextColor(Color.parseColor("#767676"));
                                                                         boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
@@ -477,12 +477,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                         boxOpsi.setTag(R.id.idClick, isi.get(a).get("id"));
                                                                         boxOpsi.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
 
-                                                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                                                        boxOpsi.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                                                             @Override
-                                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-
-                                                                                if (isChecked) {
+                                                                            public void onFocusChange(View v, boolean hasFocus) {
+                                                                                if (hasFocus){
                                                                                     idAnSectionBox = boxOpsi.getTag(R.id.idClick).toString();
                                                                                     parentIdBox = boxOpsi.getTag(R.id.parentSection).toString();
 
@@ -500,7 +498,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                                             .collection("contents")
                                                                                             .document(idAnSectionBox)
                                                                                             .update("answer", mapOpsiSection);
-                                                                                } else {
+                                                                                }else  {
                                                                                     mapOpsiSection.remove(boxOpsi.getText().toString());
                                                                                     idAnSectionBox = boxOpsi.getTag(R.id.idClick).toString();
                                                                                     //checkboxes update
@@ -515,7 +513,44 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                                 }
                                                                             }
                                                                         });
-                                                                        ;
+//                                                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                                                                            @Override
+//                                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//
+//                                                                                if (isChecked) {
+//                                                                                    idAnSectionBox = boxOpsi.getTag(R.id.idClick).toString();
+//                                                                                    parentIdBox = boxOpsi.getTag(R.id.parentSection).toString();
+//
+////                                                                                    idAnSectionBox = document.getId();
+////                                                                                    parentIdBox = (String) document.get("parentId");
+//                                                                                    mapOpsiSection.add(boxOpsi.getText().toString());
+//
+////                                                                                    Log.d("getparentIdBox", parentIdBox + " idopsi: " + idAnSectionBox + " answer: " + mapOpsiSection);
+//                                                                                    //checkboxes update
+//                                                                                    pages.document(documentId)
+//                                                                                            .collection("pages")
+//                                                                                            .document(idPages)
+//                                                                                            .collection("contents")
+//                                                                                            .document(parentIdBox)
+//                                                                                            .collection("contents")
+//                                                                                            .document(idAnSectionBox)
+//                                                                                            .update("answer", mapOpsiSection);
+//                                                                                } else {
+//                                                                                    mapOpsiSection.remove(boxOpsi.getText().toString());
+//                                                                                    idAnSectionBox = boxOpsi.getTag(R.id.idClick).toString();
+//                                                                                    //checkboxes update
+//                                                                                    pages.document(documentId)
+//                                                                                            .collection("pages")
+//                                                                                            .document(idPages)
+//                                                                                            .collection("contents")
+//                                                                                            .document(parentIdBox)
+//                                                                                            .collection("contents")
+//                                                                                            .document(idAnSectionBox)
+//                                                                                            .update("answer", mapOpsiSection);
+//                                                                                }
+//                                                                            }
+//                                                                        });
                                                                         myLinearLayout.addView(boxOpsi);
                                                                     }
                                                                 } else {
@@ -604,19 +639,39 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                             for (int i = 0; i < opsi.size(); i++) {
                                                 // Type = checkboxes
-                                                final CheckBox boxOpsi = new CheckBox(InspeksiKetiga.this);
+                                                final Button boxOpsi = new Button(InspeksiKetiga.this);
                                                 boxOpsi.setLayoutParams(params);
                                                 boxOpsi.setTextColor(Color.parseColor("#767676"));
                                                 boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
                                                 GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
                                                 drawable.setColor(Color.WHITE);
                                                 boxOpsi.setText(opsi.get(i).toString());
+                                                boxOpsi.setFocusable(true);
+                                                boxOpsi.setFocusableInTouchMode(true);
+//                                                boxOpsi.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View v) {
+//
+//                                                        idOpsi = document.getId();
+//                                                        mapOpsi.add(boxOpsi.getText().toString());
+//                                                        Log.d("opsiAns", mapOpsi.toString());
+//                                                        //checkboxes update
+//                                                        pages.document(documentId)
+//                                                                .collection("pages")
+//                                                                .document(idPages)
+//                                                                .collection("contents")
+//                                                                .document(idOpsi)
+//                                                                .update("answer", boxOpsi.getText());
+//                                                    }
+//                                                });
 
-                                                boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                                boxOpsi.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                                     @Override
-                                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                    public void onFocusChange(View v, boolean hasFocus) {
+                                                        if (hasFocus){
 
-                                                        if (isChecked) {
+                                                            boxOpsi.setBackgroundColor(getResources().getColor(R.color.Python));
+                                                            boxOpsi.setTextColor(Color.WHITE);
                                                             idOpsi = document.getId();
                                                             mapOpsi.add(boxOpsi.getText().toString());
                                                             Log.d("opsiAns", mapOpsi.toString());
@@ -627,7 +682,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                     .collection("contents")
                                                                     .document(idOpsi)
                                                                     .update("answer", mapOpsi);
-                                                        } else {
+                                                        }else{
+                                                            boxOpsi.setBackgroundColor(Color.WHITE);
+                                                            boxOpsi.setTextColor(Color.GRAY);
                                                             idOpsi = document.getId();
                                                             mapOpsi.remove(boxOpsi.getText().toString());
                                                             //checkboxes update
@@ -640,7 +697,35 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                         }
                                                     }
                                                 });
-                                                ;
+
+//                                                boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                                                    @Override
+//                                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                                                        if (isChecked) {
+//                                                            idOpsi = document.getId();
+//                                                            mapOpsi.add(boxOpsi.getText().toString());
+//                                                            Log.d("opsiAns", mapOpsi.toString());
+//                                                            //checkboxes update
+//                                                            pages.document(documentId)
+//                                                                    .collection("pages")
+//                                                                    .document(idPages)
+//                                                                    .collection("contents")
+//                                                                    .document(idOpsi)
+//                                                                    .update("answer", mapOpsi);
+//                                                        } else {
+//                                                            idOpsi = document.getId();
+//                                                            mapOpsi.remove(boxOpsi.getText().toString());
+//                                                            //checkboxes update
+//                                                            pages.document(documentId)
+//                                                                    .collection("pages")
+//                                                                    .document(idPages)
+//                                                                    .collection("contents")
+//                                                                    .document(idOpsi)
+//                                                                    .update("answer", mapOpsi);
+//                                                        }
+//                                                    }
+//                                                });
                                                 myLinearLayout.addView(boxOpsi);
                                             }
                                         } else {
