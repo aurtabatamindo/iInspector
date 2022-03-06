@@ -22,6 +22,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,9 +42,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -209,12 +213,18 @@ public class InspeksiKetiga extends AppCompatActivity {
     LinearLayoutCompat.LayoutParams params;
     LinearLayoutCompat.LayoutParams params2;
     LinearLayoutCompat.LayoutParams params3;
+    LinearLayoutCompat.LayoutParams params4;
+    LinearLayoutCompat.LayoutParams params5;
+
 
     DocumentSnapshot lastvisible;
 
     String inSection;
 
     String statusTindakan;
+
+    RadioButton boxOpsi;
+    RadioButton boxOpsiSec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,6 +318,12 @@ public class InspeksiKetiga extends AppCompatActivity {
         
                                 params = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                                 params.setMargins(30, 20, 30, 20);
+
+                                params4 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT,100);
+                                params4.setMargins(30, 20, 30, 20);
+
+                                params5 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT,100);
+                                params5.setMargins(50, 20, 50, 20);
         
                                 if (document != null && document.exists()) {
                                     desc = (String) document.get("description");
@@ -465,57 +481,58 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                                     //MapOpsiSection
                                                                     ArrayList<String> mapOpsiSection = new ArrayList<String>();
+                                                                    RadioGroup rgs = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
+                                                                    rgs.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
 
                                                                     for (int b = 0; b < opsi.size(); b++) {
                                                                         // Type = checkboxes
-                                                                        final Button boxOpsiSec = new Button(InspeksiKetiga.this);
-                                                                        boxOpsiSec.setLayoutParams(params);
-                                                                        boxOpsiSec.setTextColor(Color.parseColor("#767676"));
-                                                                        boxOpsiSec.setBackgroundResource(R.drawable.btn_jawab);
-                                                                        GradientDrawable drawable = (GradientDrawable) boxOpsiSec.getBackground();
-                                                                        drawable.setColor(Color.WHITE);
+                                                                        boxOpsiSec = new RadioButton(InspeksiKetiga.this);
+                                                                        boxOpsiSec.setLayoutParams(params5);
+                                                                        boxOpsiSec.setId(View.generateViewId());
                                                                         boxOpsiSec.setText(opsi.get(b).toString());
                                                                         boxOpsiSec.setTag(R.id.idClick, isi.get(a).get("id"));
                                                                         boxOpsiSec.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
-                                                                        boxOpsiSec.setFocusable(true);
-                                                                        boxOpsiSec.setFocusableInTouchMode(true);
+                                                                        boxOpsiSec.setBackgroundColor(Color.parseColor("#F1F1F1"));
+                                                                        boxOpsiSec.setTextColor(Color.parseColor("#767676"));
+                                                                        boxOpsiSec.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                                                        rgs.addView(boxOpsiSec);
 
-                                                                        boxOpsiSec.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                                                            @Override
-                                                                            public void onFocusChange(View v, boolean hasFocus) {
-                                                                                if (hasFocus){
-                                                                                    idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
-                                                                                    parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
-                                                                                    mapOpsiSection.add(boxOpsiSec.getText().toString());
-
-                                                                                    boxOpsiSec.setBackgroundColor(getResources().getColor(R.color.Python));
-                                                                                    boxOpsiSec.setTextColor(Color.WHITE);
-
-                                                                                    pages.document(documentId)
-                                                                                            .collection("pages")
-                                                                                            .document(idPages)
-                                                                                            .collection("contents")
-                                                                                            .document(parentIdBox)
-                                                                                            .collection("contents")
-                                                                                            .document(idAnSectionBox)
-                                                                                            .update("answer", mapOpsiSection);
-                                                                                }else  {
-                                                                                    boxOpsiSec.setBackgroundColor(Color.WHITE);
-                                                                                    boxOpsiSec.setTextColor(Color.GRAY);
-                                                                                    mapOpsiSection.remove(boxOpsiSec.getText().toString());
-                                                                                    idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
-                                                                                    //checkboxes update
-                                                                                    pages.document(documentId)
-                                                                                            .collection("pages")
-                                                                                            .document(idPages)
-                                                                                            .collection("contents")
-                                                                                            .document(parentIdBox)
-                                                                                            .collection("contents")
-                                                                                            .document(idAnSectionBox)
-                                                                                            .update("answer", mapOpsiSection);
-                                                                                }
-                                                                            }
-                                                                        });
+//                                                                        boxOpsiSec.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                                                                            @Override
+//                                                                            public void onFocusChange(View v, boolean hasFocus) {
+//                                                                                if (hasFocus){
+//                                                                                    idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
+//                                                                                    parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
+//                                                                                    mapOpsiSection.add(boxOpsiSec.getText().toString());
+//
+//                                                                                    boxOpsiSec.setBackgroundColor(getResources().getColor(R.color.Python));
+//                                                                                    boxOpsiSec.setTextColor(Color.WHITE);
+//
+//                                                                                    pages.document(documentId)
+//                                                                                            .collection("pages")
+//                                                                                            .document(idPages)
+//                                                                                            .collection("contents")
+//                                                                                            .document(parentIdBox)
+//                                                                                            .collection("contents")
+//                                                                                            .document(idAnSectionBox)
+//                                                                                            .update("answer", mapOpsiSection);
+//                                                                                }else  {
+//                                                                                    boxOpsiSec.setBackgroundColor(Color.WHITE);
+//                                                                                    boxOpsiSec.setTextColor(Color.GRAY);
+//                                                                                    mapOpsiSection.remove(boxOpsiSec.getText().toString());
+//                                                                                    idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
+//                                                                                    //checkboxes update
+//                                                                                    pages.document(documentId)
+//                                                                                            .collection("pages")
+//                                                                                            .document(idPages)
+//                                                                                            .collection("contents")
+//                                                                                            .document(parentIdBox)
+//                                                                                            .collection("contents")
+//                                                                                            .document(idAnSectionBox)
+//                                                                                            .update("answer", mapOpsiSection);
+//                                                                                }
+//                                                                            }
+//                                                                        });
 //                                                                        boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //                                                                            @Override
 //                                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -554,8 +571,29 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                                                }
 //                                                                            }
 //                                                                        });
-                                                                        myLinearLayout.addView(boxOpsiSec);
                                                                     }
+                                                                    rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                                        @Override
+                                                                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                                                            boxOpsiSec = (RadioButton) findViewById(checkedId);
+//                                                                          Toast.makeText(InspeksiKetiga.this, boxOpsiSec.getText(), Toast.LENGTH_SHORT).show();
+
+                                                                            idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
+                                                                            parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
+                                                                            mapOpsiSection.add(boxOpsiSec.getText().toString());
+
+                                                                            pages.document(documentId)
+                                                                                    .collection("pages")
+                                                                                    .document(idPages)
+                                                                                    .collection("contents")
+                                                                                    .document(parentIdBox)
+                                                                                    .collection("contents")
+                                                                                    .document(idAnSectionBox)
+                                                                                    .update("answer", boxOpsiSec.getText());
+
+                                                                        }
+                                                                    });
+                                                                    myLinearLayout.addView(rgs);
                                                                 } else {
 
                                                                     final EditText AnswerSection = new EditText(InspeksiKetiga.this);
@@ -640,34 +678,28 @@ public class InspeksiKetiga extends AppCompatActivity {
                                             //MapOpsi
                                             ArrayList<String> mapOpsi = new ArrayList<String>();
 
+
+                                            RadioGroup rg = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
+                                            rg.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
+
                                             for (int i = 0; i < opsi.size(); i++) {
                                                 // Type = checkboxes
-                                                final Button boxOpsi = new Button(InspeksiKetiga.this);
-                                                boxOpsi.setLayoutParams(params);
-                                                boxOpsi.setTextColor(Color.parseColor("#767676"));
-                                                boxOpsi.setBackgroundResource(R.drawable.btn_jawab);
-                                                GradientDrawable drawable = (GradientDrawable) boxOpsi.getBackground();
-                                                drawable.setColor(Color.WHITE);
+                                                boxOpsi = new RadioButton(InspeksiKetiga.this);
                                                 boxOpsi.setText(opsi.get(i).toString());
+                                                boxOpsi.setId(View.generateViewId());
+                                                boxOpsi.setLayoutParams(params4);
+                                                boxOpsi.setBackgroundColor(Color.parseColor("#F1F1F1"));
+                                                boxOpsi.setTextColor(Color.parseColor("#767676"));
+//                                                boxOpsi.setButtonDrawable(new StateListDrawable()); //remove circle
+                                                boxOpsi.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                                rg.addView(boxOpsi);
 //                                                boxOpsi.setFocusable(true);
 //                                                boxOpsi.setFocusableInTouchMode(true);
-                                                boxOpsi.setOnTouchListener(new View.OnTouchListener() {
-                                                    @Override
-                                                    public boolean onTouch(View v, MotionEvent event) {
-                                                        if (event.getAction() > MotionEvent.ACTION_DOWN){
-                                                            boxOpsi.setTextColor(Color.WHITE);
-                                                            boxOpsi.setBackgroundColor(getResources().getColor(R.color.Python));
-                                                        }else if (event.getAction() < MotionEvent.ACTION_UP){
-                                                            boxOpsi.setTextColor(Color.GRAY);
-                                                            boxOpsi.setBackgroundColor(Color.WHITE);
-                                                        }
-                                                        return false;
-                                                    }
-                                                });
 
 //                                                boxOpsi.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //                                                    @Override
 //                                                    public void onFocusChange(View v, boolean hasFocus) {
+//
 //                                                        if (hasFocus){
 //
 //                                                            boxOpsi.setBackgroundColor(getResources().getColor(R.color.Python));
@@ -682,7 +714,9 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                                    .collection("contents")
 //                                                                    .document(idOpsi)
 //                                                                    .update("answer", mapOpsi);
+//
 //                                                        }else{
+//
 //                                                            boxOpsi.setBackgroundColor(Color.WHITE);
 //                                                            boxOpsi.setTextColor(Color.GRAY);
 //                                                            idOpsi = document.getId();
@@ -694,10 +728,13 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                                    .collection("contents")
 //                                                                    .document(idOpsi)
 //                                                                    .update("answer", mapOpsi);
+//
+//
 //                                                        }
+//
 //                                                    }
+//
 //                                                });
-
 //                                                boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //                                                    @Override
 //                                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -726,9 +763,31 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                        }
 //                                                    }
 //                                                });
-                                                myLinearLayout.addView(boxOpsi);
+
                                             }
-                                        } else {
+                                            rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                @Override
+                                                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                                    boxOpsi = (RadioButton) findViewById(checkedId);
+//                                                    Toast.makeText(InspeksiKetiga.this, boxOpsi.getText(), Toast.LENGTH_SHORT).show();
+
+                                                    idOpsi = document.getId();
+//                                                    mapOpsi.add(boxOpsi.getText().toString());
+                                                    Log.d("opsiAns", mapOpsi.toString());
+                                                    //checkboxes update
+                                                    pages.document(documentId)
+                                                            .collection("pages")
+                                                            .document(idPages)
+                                                            .collection("contents")
+                                                            .document(idOpsi)
+                                                            .update("answer", boxOpsi.getText());
+
+                                                }
+                                            });
+                                            myLinearLayout.addView(rg);
+                                        }
+
+                                        else {
                                             // Type = Text
                                             final EditText Answer = new EditText(InspeksiKetiga.this);
                                             Answer.setLayoutParams(params);
@@ -740,6 +799,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 public void onFocusChange(View v, boolean hasFocus) {
 
                                                     if (hasFocus) {
+
                                                         idAn = document.getId();
                                                         String parentId = (String) document.get("parentId");
                                                         Log.d("fokus", "ya");
@@ -964,7 +1024,6 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
     }
-
 
     private void showContentSection() {
 
