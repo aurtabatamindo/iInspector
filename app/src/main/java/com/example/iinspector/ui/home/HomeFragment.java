@@ -28,9 +28,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
+
+import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
 
@@ -124,7 +127,8 @@ public class HomeFragment extends Fragment {
         bTgl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TampilTanggal();
+//                TampilTanggal();
+                monthYear();
             }
         });
 
@@ -153,6 +157,24 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
+    }
+    public void monthYear(){
+    final Calendar today = Calendar.getInstance();
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getActivity(),
+                new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) {
+                        // on date set
+                        tgl.setText((selectedMonth +1)+ "/" +selectedYear);
+                        }
+                    }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+
+        builder.setActivatedMonth(Calendar.JULY)
+                .setMinYear(1990)
+                .setActivatedYear(today.get(Calendar.YEAR))
+                .setMaxYear(2030)
+                .setTitle("Select month year")
+                .build().show();
     }
 
     public void TampilTanggal(){

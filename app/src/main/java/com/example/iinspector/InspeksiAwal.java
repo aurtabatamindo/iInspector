@@ -137,7 +137,7 @@ public class InspeksiAwal extends AppCompatActivity {
 
 
         //tgl & jam
-        String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
+        String tgl = new SimpleDateFormat("d/M/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
 
         //filterTeam
         spinner = (Spinner) findViewById(R.id.filterteam);
