@@ -56,6 +56,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -206,7 +207,7 @@ public class InspeksiAwal extends AppCompatActivity {
                     String spinertim = spinner.getSelectedItem().toString().trim();
                     String pilih = "Pilih Team";
                     String suhu = weatherData.getText().toString();
-                    String itgl = tgl;
+                    FieldValue itgl = FieldValue.serverTimestamp();
                     String alamt = alamat.getText().toString();
 
                     if (lok.isEmpty()&& spinertim.equals(pilih)){

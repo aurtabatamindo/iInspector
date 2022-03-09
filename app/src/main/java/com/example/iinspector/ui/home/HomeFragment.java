@@ -27,6 +27,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.whiteelephant.monthpicker.MonthPickerDialog;
 
@@ -84,7 +85,10 @@ public class HomeFragment extends Fragment {
         });
 
         //inspeksiAman
-        df.whereEqualTo("status","Aman").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        df.whereEqualTo("status","Aman")
+
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 allAman = task.getResult().size();
@@ -169,7 +173,7 @@ public class HomeFragment extends Fragment {
                         }
                     }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
 
-        builder.setActivatedMonth(Calendar.JULY)
+        builder.setActivatedMonth(today.get(Calendar.MONTH))
                 .setMinYear(1990)
                 .setActivatedYear(today.get(Calendar.YEAR))
                 .setMaxYear(2030)
