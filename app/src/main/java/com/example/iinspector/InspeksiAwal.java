@@ -138,7 +138,8 @@ public class InspeksiAwal extends AppCompatActivity {
 
 
         //tgl & jam
-        String tgl = new SimpleDateFormat("d/M/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
+        String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
+        String month = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
 
         //filterTeam
         spinner = (Spinner) findViewById(R.id.filterteam);
@@ -228,6 +229,7 @@ public class InspeksiAwal extends AppCompatActivity {
                                         "templateTeam",spinertim,
                                         "templateTemperature",suhu,
                                         "templateDate",itgl,
+                                        "templateMonth",month,
                                         "templateAddress",alamt)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -262,7 +264,7 @@ public class InspeksiAwal extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-//                                String author = (String) task.getResult().get("author");
+                                //                                String author = (String) task.getResult().get("author");
 //                                String authorId = (String) task.getResult().get("authorId");
 //                                String templateAddress = (String) task.getResult().get("templateAddress");
 //                                String templateDate = (String) task.getResult().get("templateDate");

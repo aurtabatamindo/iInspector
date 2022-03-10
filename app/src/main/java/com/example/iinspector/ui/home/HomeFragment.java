@@ -70,8 +70,10 @@ public class HomeFragment extends Fragment {
         carddua = root.findViewById(R.id.carddua);
         cardtiga = root.findViewById(R.id.cardtiga);
 
+
         //allInspeksi
-        df.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        df.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 allInspeksi = task.getResult().size();
@@ -86,7 +88,6 @@ public class HomeFragment extends Fragment {
 
         //inspeksiAman
         df.whereEqualTo("status","Aman")
-
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -168,8 +169,66 @@ public class HomeFragment extends Fragment {
                 new MonthPickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) {
+                        pieChart.clearChart();
                         // on date set
                         tgl.setText((selectedMonth +1)+ "/" +selectedYear);
+
+                        //all
+                        df.whereEqualTo("templateMonth",tgl.getText())
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        allInspeksi = task.getResult().size();
+                                        tvR.setText(String.valueOf(allInspeksi));
+
+                                        pieChart.addPieSlice(
+                                                new PieModel(
+                                                        "R",
+                                                        Integer.parseInt(tvR.getText().toString()),
+                                                        Color.parseColor("#29B6F6")));
+
+
+
+                                    }
+                                });
+                        //inspeksiAman
+                        df.whereEqualTo("status","Aman")
+                                .whereEqualTo("templateMonth",tgl.getText())
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        allAman = task.getResult().size();
+                                        tvPython.setText(String.valueOf(allAman));
+
+
+                                        pieChart.addPieSlice(
+                                                new PieModel(
+                                                        "Python",
+                                                        Integer.parseInt(tvPython.getText().toString()),
+                                                        Color.parseColor("#66BB6A")));
+                                    }
+                                });
+
+                        //inspeksiTidakAman
+                        df.whereEqualTo("status","Tidak Aman")
+                                .whereEqualTo("templateMonth",tgl.getText())
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                allTidakAman = task.getResult().size();
+                                tvCPP.setText(String.valueOf(allTidakAman));
+
+
+                                pieChart.addPieSlice(
+                                        new PieModel(
+                                                "C++",
+                                                Integer.parseInt(tvCPP.getText().toString()),
+                                                Color.parseColor("#EF5350")));
+                            }
+                        });
+                        pieChart.startAnimation();
                         }
                     }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
 

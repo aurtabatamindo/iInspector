@@ -228,16 +228,19 @@ public class PlaceholderFragment extends Fragment {
                         if (spinergroup.equals(semua)){
                             queryDone = FirebaseFirestore.getInstance()
                                     .collection("inspections")
+                                    .orderBy("templateDate",Query.Direction.DESCENDING)
                                     .orderBy("templateTitle");
 
                         }else if (spinergroup.equals(wsh)){
                             queryDone = FirebaseFirestore.getInstance()
                                     .collection("inspections")
+                                    .orderBy("templateDate",Query.Direction.DESCENDING)
                                     .whereEqualTo("templateGroup",wsh);
 
                         }else if (spinergroup.equals(fsd)){
                             queryDone = FirebaseFirestore.getInstance()
                                     .collection("inspections")
+                                    .orderBy("templateDate",Query.Direction.DESCENDING)
                                     .whereEqualTo("templateGroup",fsd);
 
                         }
