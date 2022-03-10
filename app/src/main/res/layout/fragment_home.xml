@@ -95,6 +95,7 @@
             android:layout_marginTop="70dp"
             android:layout_marginLeft="10dp"/>
         <TextView
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1%"
@@ -103,6 +104,7 @@
             android:textColor="@color/CPP"/>
 
         <TextView
+            android:id="@+id/statusAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Turun 30 hari terakhir"
@@ -164,6 +166,7 @@
             android:textColor="@color/Python"/>
 
         <TextView
+            android:id="@+id/statusAman"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Naik 30 hari terakhir"
@@ -225,6 +228,7 @@
             android:textColor="@color/CPP"/>
 
         <TextView
+            android:id="@+id/statusTidakAman"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Turun 30 hari terakhir"

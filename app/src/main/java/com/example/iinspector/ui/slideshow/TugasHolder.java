@@ -29,19 +29,6 @@ public class TugasHolder extends RecyclerView.ViewHolder{
         textView.setText(deskripsi);
     }
 
-//    void setTgroup(String group) {
-//        TextView textView1 = view.findViewById(R.id.Tgroup1);
-//        textView1.setText(group);
-//
-//        TextView textView2 = view.findViewById(R.id.Tgroup2);
-//        textView1.setText(group);
-//
-//        if (group.equals("FSD")) {
-//            textView1.setVisibility(View.INVISIBLE);
-//        }else{
-//            textView2.setVisibility(View.INVISIBLE);
-//        }
-//    }
 
     void setTitle(String titleTugas) {
         TextView textView = view.findViewById(R.id.judul);

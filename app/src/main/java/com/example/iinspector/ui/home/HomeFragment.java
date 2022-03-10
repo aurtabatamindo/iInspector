@@ -34,7 +34,10 @@ import com.whiteelephant.monthpicker.MonthPickerDialog;
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
@@ -70,9 +73,12 @@ public class HomeFragment extends Fragment {
         carddua = root.findViewById(R.id.carddua);
         cardtiga = root.findViewById(R.id.cardtiga);
 
+        String month = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
+        tgl.setText(month);
 
         //allInspeksi
-        df.get()
+        df.whereEqualTo("templateMonth",tgl.getText())
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -87,7 +93,8 @@ public class HomeFragment extends Fragment {
         });
 
         //inspeksiAman
-        df.whereEqualTo("status","Aman")
+        df.whereEqualTo("templateMonth",tgl.getText())
+                .whereEqualTo("status","Aman")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -104,7 +111,10 @@ public class HomeFragment extends Fragment {
         });
 
         //inspeksiTidakAman
-        df.whereEqualTo("status","Tidak Aman").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        df.whereEqualTo("templateMonth",tgl.getText())
+                .whereEqualTo("status","Tidak Aman")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 allTidakAman = task.getResult().size();
@@ -141,6 +151,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent detailsatu = new Intent(getActivity(), InspeksiHasil.class);
+                detailsatu.putExtra("month",tgl.getText());
                 startActivity(detailsatu);
             }
         });
@@ -149,6 +160,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent detaildua = new Intent(getActivity(), InspeksiHasil.class);
+                detaildua.putExtra("month",tgl.getText());
                 detaildua.putExtra("status", "Aman");
                 startActivity(detaildua);
             }
@@ -157,6 +169,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent detailtiga = new Intent(getActivity(), InspeksiHasil.class);
+                detailtiga.putExtra("month",tgl.getText());
                 detailtiga.putExtra("status", "Tidak Aman");
                 startActivity(detailtiga);
             }

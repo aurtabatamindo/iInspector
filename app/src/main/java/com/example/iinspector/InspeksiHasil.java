@@ -28,7 +28,7 @@ import com.google.firebase.firestore.Query;
 public class InspeksiHasil extends AppCompatActivity {
 
 
-    String status;
+    String status,month;
     RecyclerView recyclerView;
     FirestoreRecyclerAdapter<GetDataHasil, HasilHolder> adaptercard;
     Query query;
@@ -45,16 +45,20 @@ public class InspeksiHasil extends AppCompatActivity {
 //        spinner.setAdapter(adapter);
 
         status = getIntent().getStringExtra("status");
+        month = getIntent().getStringExtra("month");
+
         recyclerView = findViewById(R.id.recycler_ViewDetail);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (status == null){
             query = FirebaseFirestore.getInstance()
                     .collection("inspections")
+                    .whereEqualTo("templateMonth",month)
                     .orderBy("status");
         }else{
             query = FirebaseFirestore.getInstance()
                     .collection("inspections")
+                    .whereEqualTo("templateMonth",month)
                     .whereEqualTo("status",status);
         }
 

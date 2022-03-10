@@ -1,7 +1,9 @@
 package com.example.iinspector.ui.slideshow;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,16 +40,8 @@ public class SlideshowFragment extends Fragment {
 
     private SlideshowViewModel slideshowViewModel;
 
-//        //hardCardview
-//    RecyclerView.Adapter recyclerViewAdapter;
-//    RecyclerView.LayoutManager recylerViewLayoutManager;
-//    String[] subjects = {
-//            "Inspeksi", "Inspeksi", "Inspeksi", "Inspeksi",
-//            "Inspeksi", "Inspeksi"
-//    };
-//    Context context;
-//    RecyclerView recyclerView;
 
+    String documentClickId;
     Button btnlanjut;
     //hardCardview
     Context context;
@@ -64,50 +58,6 @@ public class SlideshowFragment extends Fragment {
                 new ViewModelProvider(this).get(SlideshowViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
 
-//        //hardCardview
-//        context = getContext();
-//        recyclerView = root.findViewById(R.id.recycler_View);
-//        recylerViewLayoutManager = new LinearLayoutManager(context);
-//        recyclerView.setLayoutManager(recylerViewLayoutManager);
-//        recyclerViewAdapter = new AdapterRecyclerViewTugas(context, subjects);
-//        recyclerView.setAdapter(recyclerViewAdapter);
-
-//        btnlanjut = root.findViewById(R.id.btnlanjut);
-//        btnlanjut.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), InspeksiAwal.class);
-//                startActivity(intent);
-//            }
-//        });
-//        //click
-//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-//            @Override
-//            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//                Intent intent = new Intent(getActivity(), InspeksiAwal.class);
-//                startActivity(intent);
-//                return false;
-//            }
-//
-//            @Override
-//            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//
-//
-//            }
-//
-//            @Override
-//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-//
-//            }
-//        });
-
-
-//                context = getContext();
-//                recyclerView = rootView.findViewById(R.id.recycler_ViewDone);
-//                recylerViewLayoutManager = new LinearLayoutManager(context);
-//                recyclerView.setLayoutManager(recylerViewLayoutManager);
-//                recyclerViewAdapter = new AdapterRecyclerViewdone(context, subjects);
-//                recyclerView.setAdapter(recyclerViewAdapter);
 
         recyclerView = root.findViewById(R.id.recycler_ViewTugas);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -131,12 +81,9 @@ public class SlideshowFragment extends Fragment {
                 holder.setOnClickListener(new TugasHolder.ClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-//                        documentClickId = getSnapshots().getSnapshot(position).getId();
-//                        Log.d("getclickdoc", documentClickId);
-//
-//                        Intent intent = new Intent(getActivity(), DoneDetail.class);
-//                        intent.putExtra("doc",documentClickId);
-//                        startActivity(intent);
+                        documentClickId = getSnapshots().getSnapshot(position).getId();
+                        Log.d("getclickdoc", documentClickId);
+
                     }
                 });
 
@@ -154,4 +101,5 @@ public class SlideshowFragment extends Fragment {
 
         return root;
     }
+   
 }
