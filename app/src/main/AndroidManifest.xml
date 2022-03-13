@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.iinspector" >
+    package="com.example.iinspector">
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -19,14 +19,17 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.IInspector" >
+        android:theme="@style/Theme.IInspector">
+        <activity
+            android:name=".IsiTugas"
+            android:exported="true" />
         <activity
             android:name=".ui.main.DoneDetail"
             android:exported="false" />
         <activity
             android:name=".InspeksiKetiga"
             android:exported="false" />
-        <activity android:name=".test" >
+        <activity android:name=".test">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -54,7 +57,7 @@
             android:theme="@style/Theme.IInspector.NoActionBar" />
         <activity
             android:name=".Splash"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -70,7 +73,7 @@
         <service
             android:name=".SendNotificationPack.MyFireBaseMessagingService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -78,7 +81,7 @@
         <service
             android:name=".SendNotificationPack.MyFirebaseIdService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

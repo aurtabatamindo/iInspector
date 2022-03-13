@@ -31,9 +31,9 @@
 
     <string name="title_activity_login">login</string>
 
-    <item type="id" name="id" />
-    <item type="id" name="parentContentId" />
+    <item name="id" type="id" />
+    <item name="parentContentId" type="id" />
 
-    <item type="id" name="idClick" />
-    <item type="id" name="parentSection" />
+    <item name="idClick" type="id" />
+    <item name="parentSection" type="id" />
 </resources>

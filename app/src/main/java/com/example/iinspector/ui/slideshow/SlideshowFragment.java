@@ -1,36 +1,23 @@
 package com.example.iinspector.ui.slideshow;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
-import com.example.iinspector.ui.main.AdapterRecyclerView;
-import com.example.iinspector.ui.main.DoneDetail;
-import com.example.iinspector.ui.main.DoneHolder;
-import com.example.iinspector.ui.main.GetDataDone;
-import com.example.iinspector.ui.main.GetDataTodo;
-import com.example.iinspector.ui.main.TodoHolder;
+import com.example.iinspector.IsiTugas;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,6 +27,11 @@ public class SlideshowFragment extends Fragment {
 
     private SlideshowViewModel slideshowViewModel;
 
+    //camera
+    private static final int CAMERA_REQUEST = 1888;
+    private ImageView imageView;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    String sPhoto;
 
     String documentClickId;
     Button btnlanjut;
@@ -84,6 +76,10 @@ public class SlideshowFragment extends Fragment {
                         documentClickId = getSnapshots().getSnapshot(position).getId();
                         Log.d("getclickdoc", documentClickId);
 
+                        Intent keIsiTugas = new Intent(getActivity(), IsiTugas.class);
+                        keIsiTugas.putExtra("clickedId",documentClickId);
+                        startActivity(keIsiTugas);
+
                     }
                 });
 
@@ -101,5 +97,6 @@ public class SlideshowFragment extends Fragment {
 
         return root;
     }
-   
+
+
 }

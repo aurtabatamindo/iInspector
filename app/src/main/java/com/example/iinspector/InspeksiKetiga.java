@@ -1739,68 +1739,38 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                     public void onClick(DialogInterface dialog, int which) {
-////                        //update
-//                        pages.document(documentId)
-//                                .collection("pages")
-//                                .document(idPages)
-//                                .collection("contents")
-//                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                if (task.isSuccessful()) {
-//
-//                                    for (QueryDocumentSnapshot document : task.getResult()) {
-//
-//                                        if (document != null && document.exists()) {
-//                                            df.document(idtemplate)
-//                                                    .collection("pages")
-//                                                    .document(idPages)
-//                                                    .collection("contents")
-//                                                    .add(document).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-//                                                @Override
-//                                                public void onComplete(@NonNull Task<DocumentReference> task) {
-//                                                    Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
-
-                                                    //uploadTtd
-                                                    if (ContextCompat.checkSelfPermission(
-                                                            getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                                    ) != PackageManager.PERMISSION_GRANTED) {
-                                                        ActivityCompat.requestPermissions(InspeksiKetiga.this,
-                                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                                                REQUEST_CODE_STORAGE_PERMISSION);
-                                                    } else {
-                                                        Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
-
-                                                        if (addJpgSignatureToGallery(signatureBitmap)) {
-                                                            Log.d("ttd", "masuknih");
-                                                            UploadSignatureToCloudStore(signatureBitmap);
-
-                                                            //updatestatus
-                                                            if (status == null) {
-                                                                pages.document(documentId)
-                                                                        .update("status", "Aman",
-                                                                                "signature", ttd);
-                                                            }else {
-                                                                pages.document(documentId)
-                                                                        .update("status", "Tidak Aman",
-                                                                                "signature", ttd);
-                                                            }
-                                                            Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
-                                                            startActivity(selesai);
-                                                            finish();
-                                                        }
-                                                    }
 
 
-//                                                }
-//                                            });
-//
-//
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        });
+                        //uploadTtd
+                        if (ContextCompat.checkSelfPermission(
+                                getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(InspeksiKetiga.this,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    REQUEST_CODE_STORAGE_PERMISSION);
+                        } else {
+                            Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
+
+                            if (addJpgSignatureToGallery(signatureBitmap)) {
+                                Log.d("ttd", "masuknih");
+                                UploadSignatureToCloudStore(signatureBitmap);
+
+                                //updatestatus
+                                if (status == null) {
+                                    pages.document(documentId)
+                                            .update("status", "Aman",
+                                                    "signature", ttd);
+                                }else {
+                                    pages.document(documentId)
+                                            .update("status", "Tidak Aman",
+                                                    "signature", ttd);
+                                }
+                                Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
+                                startActivity(selesai);
+                                finish();
+                            }
+                        }
+
 
 
                     }
@@ -1882,9 +1852,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        if(result){
-//            includesForUploadFiles(namefile);
-//        }
+
         return result;
     }
 
