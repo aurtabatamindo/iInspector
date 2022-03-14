@@ -4,14 +4,15 @@ public class GetDataTugas {
     private String deskripsi;
     private String teamTugas;
     private String titleTugas;
+    private String statusTugas;
 
 
-    public GetDataTugas(String deskripsi, String teamTugas , String titleTugas ) {
+    public GetDataTugas(String deskripsi, String teamTugas , String titleTugas, String statusTugas ) {
 
         this.deskripsi = deskripsi;
         this.teamTugas = teamTugas;
         this.titleTugas = titleTugas;
-
+        this.statusTugas = statusTugas;
 
 
     }
@@ -43,5 +44,13 @@ public class GetDataTugas {
 
     public void setTitleTugas(String titleTugas) {
         this.titleTugas = titleTugas;
+    }
+
+    public String getStatusTugas() {
+        return statusTugas;
+    }
+
+    public void setStatusTugas(String statusTugas) {
+        this.statusTugas = statusTugas;
     }
 }

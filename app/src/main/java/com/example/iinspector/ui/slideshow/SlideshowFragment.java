@@ -20,6 +20,7 @@ import com.example.iinspector.R;
 import com.example.iinspector.IsiTugas;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -56,6 +57,7 @@ public class SlideshowFragment extends Fragment {
 
         Query query = FirebaseFirestore.getInstance()
                 .collection("tugasTemplate")
+//                .orderBy("templateDate",Query.Direction.DESCENDING)
                 .orderBy("titleTugas");
 
         FirestoreRecyclerOptions<GetDataTugas> options = new FirestoreRecyclerOptions.Builder<GetDataTugas>()
@@ -68,7 +70,7 @@ public class SlideshowFragment extends Fragment {
                 holder.setTitle((getDataTugas.getTitleTugas()));
                 holder.setDesk(getDataTugas.getDeskripsi());
                 holder.setTeam("Untuk : "+ getDataTugas.getTeamTugas());
-
+                holder.setStatus(getDataTugas.getStatusTugas());
 
                 holder.setOnClickListener(new TugasHolder.ClickListener() {
                     @Override
@@ -76,9 +78,21 @@ public class SlideshowFragment extends Fragment {
                         documentClickId = getSnapshots().getSnapshot(position).getId();
                         Log.d("getclickdoc", documentClickId);
 
-                        Intent keIsiTugas = new Intent(getActivity(), IsiTugas.class);
-                        keIsiTugas.putExtra("clickedId",documentClickId);
-                        startActivity(keIsiTugas);
+
+                        if (getSnapshots().getSnapshot(position).get("statusTugas") == null){
+                            Intent keIsiTugas = new Intent(getActivity(), IsiTugas.class);
+                            keIsiTugas.putExtra("clickedId",documentClickId);
+                            startActivity(keIsiTugas);
+                        }else{
+                            Snackbar.make(root.findViewById(R.id.slideshow),"Tugas yang anda pilih sudah selesai",Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("OK", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                        }
+                                    }).show();
+                        }
+
+
 
                     }
                 });

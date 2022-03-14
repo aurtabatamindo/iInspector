@@ -1,5 +1,6 @@
 package com.example.iinspector.ui.slideshow;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,6 +41,16 @@ public class TugasHolder extends RecyclerView.ViewHolder{
         textView.setText(teamTugas);
     }
 
+    void setStatus(String status){
+        TextView textView = view.findViewById(R.id.status);
+        textView.setText(status);
+        if (status == null){
+            textView.setText("Belum Selesai");
+            textView.setTextColor(Color.RED);
+        }else if (status.equals("Selesai")){
+            textView.setTextColor(Color.GREEN);
+        }
+    }
 
     private TugasHolder.ClickListener mClickListener;
 

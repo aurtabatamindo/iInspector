@@ -175,7 +175,7 @@ public class IsiTugas extends AppCompatActivity {
             Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
             foto.setImageBitmap(photoBitmap);
             Log.d("testPhoto",photoBitmap.toString());
-
+            UploadPhotoToCloudStore(photoBitmap);
         }
     }
 
@@ -285,8 +285,11 @@ public class IsiTugas extends AppCompatActivity {
                                 Log.d("ttd", "masuknih");
                                 UploadSignatureToCloudStore(signatureBitmap);
 
+
                                 tugas.document(clickedId)
-                                        .update("statusTugas","selesai");
+                                        .update("statusTugas","Selesai",
+                                                "signatureTugas",ttd,
+                                                "photo",sPhoto);
 
                                 Intent selesai = new Intent(IsiTugas.this, InspeksiSelesai.class);
                                 startActivity(selesai);
