@@ -43,7 +43,9 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     // Create the object of TextView and PieChart class
-    TextView tvR, tvPython, tvCPP , tgl;
+    TextView tvR, tvPython, tvCPP , tgl,persenAll,persenAman,persenTidakAman;
+    TextView allnaik,allturun,amanNaik,amanTurun,tidakamanNaik,tidakamanTurun;
+
     PieChart pieChart;
     Button bTgl;
     CardView cardsatu,carddua,cardtiga;
@@ -72,6 +74,16 @@ public class HomeFragment extends Fragment {
         cardsatu = root.findViewById(R.id.cardsatu);
         carddua = root.findViewById(R.id.carddua);
         cardtiga = root.findViewById(R.id.cardtiga);
+        persenAll = root.findViewById(R.id.persenAll);
+        persenAman = root.findViewById(R.id.persenAman);
+        persenTidakAman = root.findViewById(R.id.persenTidakAman);
+
+        allnaik = root.findViewById(R.id.allnaik);
+        allturun = root.findViewById(R.id.allTurun);
+        amanNaik = root.findViewById(R.id.amanNaik);
+        amanTurun = root.findViewById(R.id.amanTurun);
+        tidakamanNaik = root.findViewById(R.id.tidakamanNaik);
+        tidakamanTurun = root.findViewById(R.id.tidakamanTurun);
 
         String month = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
         tgl.setText(month);
@@ -89,6 +101,44 @@ public class HomeFragment extends Fragment {
                                 "R",
                                 Integer.parseInt(tvR.getText().toString()),
                                 Color.parseColor("#29B6F6")));
+
+                int jAkhir = task.getResult().size();
+
+                int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                String kurang = bulanKurang +"/"+ month.substring(2,6);
+                Log.d("limitstring",kurang);
+
+                df.whereEqualTo("templateMonth",kurang)
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int jAwal = task.getResult().size();
+                        int jkurang = jAkhir - jAwal;
+                        int jkurangAwal = jkurang - jAwal;
+                        int jumlah = jkurangAwal * 100;
+
+                        if (jumlah < 0) {
+                            persenAll.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                            persenAll.setTextColor(Color.LTGRAY);
+                            allnaik.setVisibility(View.INVISIBLE);
+                            allturun.setVisibility(View.VISIBLE);
+
+                        }else if (jumlah == 0){
+                            persenAll.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                            persenAll.setTextColor(Color.LTGRAY);
+                            allnaik.setVisibility(View.VISIBLE);
+                            allturun.setVisibility(View.VISIBLE);
+                        }else{
+                            persenAll.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                            persenAll.setTextColor(Color.LTGRAY);
+                            allnaik.setVisibility(View.VISIBLE);
+                            allturun.setVisibility(View.INVISIBLE);
+                        }
+
+                        Log.d("getjumlah",String.valueOf(jumlah));
+
+                    }
+                });
             }
         });
 
@@ -107,6 +157,44 @@ public class HomeFragment extends Fragment {
                                 "Python",
                                 Integer.parseInt(tvPython.getText().toString()),
                                 Color.parseColor("#66BB6A")));
+
+                int jAkhir = task.getResult().size();
+
+                int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                String kurang = bulanKurang +"/"+ month.substring(2,6);
+                Log.d("limitstring",kurang);
+
+                df.whereEqualTo("templateMonth",kurang)
+                        .whereEqualTo("status","Aman")
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int jAwal = task.getResult().size();
+                        int jkurang = jAkhir - jAwal;
+                        int jkurangAwal = jkurang - jAwal;
+                        int jumlah = jkurangAwal * 100;
+
+                        if (jumlah < 0) {
+                            persenAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                            persenAman.setTextColor(Color.LTGRAY);
+                            amanNaik.setVisibility(View.INVISIBLE);
+                            amanTurun.setVisibility(View.VISIBLE);
+
+                        }else if (jumlah == 0){
+                            persenAman.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                            persenAman.setTextColor(Color.LTGRAY);
+                            amanNaik.setVisibility(View.VISIBLE);
+                            amanTurun.setVisibility(View.VISIBLE);
+                        }else{
+                            persenAman.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                            persenAman.setTextColor(Color.LTGRAY);
+                            amanNaik.setVisibility(View.VISIBLE);
+                            amanTurun.setVisibility(View.INVISIBLE);
+                        }
+
+                    }
+                });
+
             }
         });
 
@@ -125,15 +213,48 @@ public class HomeFragment extends Fragment {
                                 "C++",
                                 Integer.parseInt(tvCPP.getText().toString()),
                                 Color.parseColor("#EF5350")));
+
+                int jAkhir = task.getResult().size();
+
+                int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                String kurang = bulanKurang +"/"+ month.substring(2,6);
+                Log.d("limitstring",kurang);
+
+                df.whereEqualTo("status","Tidak Aman")
+                        .whereEqualTo("templateMonth",kurang)
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int jAwal = task.getResult().size();
+                        int jkurang = jAkhir - jAwal;
+                        int jkurangAwal = jkurang - jAwal;
+                        int jumlah = jkurangAwal * 100;
+
+                        if (jumlah < 0) {
+                            persenTidakAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                            persenTidakAman.setTextColor(Color.LTGRAY);
+                            tidakamanNaik.setVisibility(View.INVISIBLE);
+                            tidakamanTurun.setVisibility(View.VISIBLE);
+
+                        }else if (jumlah == 0){
+                            persenTidakAman.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                            persenTidakAman.setTextColor(Color.LTGRAY);
+                            tidakamanNaik.setVisibility(View.VISIBLE);
+                            tidakamanTurun.setVisibility(View.VISIBLE);
+                        }else{
+                            persenTidakAman.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                            persenTidakAman.setTextColor(Color.LTGRAY);
+                            tidakamanNaik.setVisibility(View.VISIBLE);
+                            tidakamanTurun.setVisibility(View.INVISIBLE);
+                        }
+
+                        Log.d("getjumlah",String.valueOf(jumlah));
+
+                    }
+                });
+
             }
         });
-
-//        tvR.setText(Integer.toString(40));
-//        tvPython.setText(Integer.toString(2));
-//        tvCPP.setText(Integer.toString(2));
-
-
-
 
 
         // To animate the pie chart
@@ -186,6 +307,8 @@ public class HomeFragment extends Fragment {
                         // on date set
                         tgl.setText((selectedMonth +1)+ "/" +selectedYear);
 
+                        String month = tgl.getText().toString();
+
                         //all
                         df.whereEqualTo("templateMonth",tgl.getText())
                                 .get()
@@ -201,7 +324,41 @@ public class HomeFragment extends Fragment {
                                                         Integer.parseInt(tvR.getText().toString()),
                                                         Color.parseColor("#29B6F6")));
 
+                                        int jAkhir = task.getResult().size();
 
+                                        int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                                        String kurang = bulanKurang +"/"+ month.substring(2,6);
+                                        Log.d("limitstring",kurang);
+
+                                        df.whereEqualTo("templateMonth",kurang)
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                int jAwal = task.getResult().size();
+                                                int jkurang = jAkhir - jAwal;
+                                                int jkurangAwal = jkurang - jAwal;
+                                                int jumlah = jkurangAwal * 100;
+
+                                                if (jumlah < 0) {
+                                                    persenAll.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                                                    persenAll.setTextColor(Color.LTGRAY);
+                                                    allnaik.setVisibility(View.INVISIBLE);
+                                                    allturun.setVisibility(View.VISIBLE);
+
+                                                }else if (jumlah == 0){
+                                                    persenAll.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                                                    persenAll.setTextColor(Color.LTGRAY);
+                                                    allnaik.setVisibility(View.VISIBLE);
+                                                    allturun.setVisibility(View.VISIBLE);
+                                                }else{
+                                                    persenAll.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                                                    persenAll.setTextColor(Color.LTGRAY);
+                                                    allnaik.setVisibility(View.VISIBLE);
+                                                    allturun.setVisibility(View.INVISIBLE);
+                                                }
+
+                                            }
+                                        });
 
                                     }
                                 });
@@ -221,6 +378,44 @@ public class HomeFragment extends Fragment {
                                                         "Python",
                                                         Integer.parseInt(tvPython.getText().toString()),
                                                         Color.parseColor("#66BB6A")));
+
+                                        int jAkhir = task.getResult().size();
+
+                                        int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                                        String kurang = bulanKurang +"/"+ month.substring(2,6);
+                                        Log.d("limitstring",kurang);
+
+                                        df.whereEqualTo("status","Aman")
+                                                .whereEqualTo("templateMonth",kurang)
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                int jAwal = task.getResult().size();
+                                                int jkurang = jAkhir - jAwal;
+                                                int jkurangAwal = jkurang - jAwal;
+                                                int jumlah = jkurangAwal * 100;
+
+                                                if (jumlah < 0) {
+                                                    persenAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                                                    persenAman.setTextColor(Color.LTGRAY);
+                                                    amanNaik.setVisibility(View.INVISIBLE);
+                                                    amanTurun.setVisibility(View.VISIBLE);
+
+                                                }else if (jumlah == 0){
+                                                    persenAman.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                                                    persenAman.setTextColor(Color.LTGRAY);
+                                                    amanNaik.setVisibility(View.VISIBLE);
+                                                    amanTurun.setVisibility(View.VISIBLE);
+                                                }else{
+                                                    persenAman.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                                                    persenAman.setTextColor(Color.LTGRAY);
+                                                    amanNaik.setVisibility(View.VISIBLE);
+                                                    amanTurun.setVisibility(View.INVISIBLE);
+                                                }
+
+                                            }
+                                        });
+
                                     }
                                 });
 
@@ -239,6 +434,43 @@ public class HomeFragment extends Fragment {
                                                 "C++",
                                                 Integer.parseInt(tvCPP.getText().toString()),
                                                 Color.parseColor("#EF5350")));
+
+                                int jAkhir = task.getResult().size();
+
+                                int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                                String kurang = bulanKurang +"/"+ month.substring(2,6);
+                                Log.d("limitstring",kurang);
+
+                                df.whereEqualTo("status","Tidak Aman")
+                                        .whereEqualTo("templateMonth",kurang)
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        int jAwal = task.getResult().size();
+                                        int jkurang = jAkhir - jAwal;
+                                        int jkurangAwal = jkurang - jAwal;
+                                        int jumlah = jkurangAwal * 100;
+
+                                        if (jumlah < 0) {
+                                            persenTidakAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                                            persenTidakAman.setTextColor(Color.LTGRAY);
+                                            tidakamanNaik.setVisibility(View.INVISIBLE);
+                                            tidakamanTurun.setVisibility(View.VISIBLE);
+
+                                        }else if (jumlah == 0){
+                                            persenTidakAman.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                                            persenTidakAman.setTextColor(Color.LTGRAY);
+                                            tidakamanNaik.setVisibility(View.VISIBLE);
+                                            tidakamanTurun.setVisibility(View.VISIBLE);
+                                        }else{
+                                            persenTidakAman.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                                            persenTidakAman.setTextColor(Color.LTGRAY);
+                                            tidakamanNaik.setVisibility(View.VISIBLE);
+                                            tidakamanTurun.setVisibility(View.INVISIBLE);
+                                        }
+
+                                    }
+                                });
                             }
                         });
                         pieChart.startAnimation();

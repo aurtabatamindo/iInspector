@@ -89,28 +89,38 @@
             android:textColor="@color/text_dark" />
 
         <TextView
+            android:id="@+id/allTurun"
             android:layout_width="wrap_content"
             android:layout_height="19dp"
             android:background="@drawable/turun_icon"
             android:layout_marginTop="70dp"
             android:layout_marginLeft="10dp"/>
-        <TextView
 
+        <TextView
+            android:id="@+id/allnaik"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            android:background="@drawable/naik_icon"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/persenAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1%"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:textColor="@color/CPP"/>
 
-        <TextView
-            android:id="@+id/statusAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Turun 30 hari terakhir"
-            android:textColor="@color/text_abu"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="70dp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/statusAll"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Turun 30 hari terakhir"-->
+<!--            android:textColor="@color/text_abu"-->
+<!--            android:layout_marginLeft="70dp"-->
+<!--            android:layout_marginTop="70dp"/>-->
 
         <TextView
             android:layout_width="50dp"
@@ -149,30 +159,42 @@
             android:layout_marginTop="35dp"
             android:textStyle="bold"
             android:textSize="22dp"
-
             android:textColor="@color/text_dark" />
+
         <TextView
+            android:id="@+id/amanNaik"
             android:layout_width="wrap_content"
             android:layout_height="19dp"
             android:background="@drawable/naik_icon"
             android:layout_marginTop="70dp"
             android:layout_marginLeft="10dp"/>
+
         <TextView
+            android:id="@+id/amanTurun"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            android:background="@drawable/turun_icon"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="10dp"/>
+
+
+        <TextView
+            android:id="@+id/persenAman"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6%"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:textColor="@color/Python"/>
 
-        <TextView
-            android:id="@+id/statusAman"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Naik 30 hari terakhir"
-            android:textColor="@color/text_abu"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="70dp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/statusAman"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Naik 30 hari terakhir"-->
+<!--            android:textColor="@color/text_abu"-->
+<!--            android:layout_marginLeft="70dp"-->
+<!--            android:layout_marginTop="70dp"/>-->
 
         <TextView
             android:layout_width="50dp"
@@ -211,30 +233,41 @@
             android:layout_marginTop="35dp"
             android:textStyle="bold"
             android:textSize="22dp"
-
             android:textColor="@color/text_dark" />
+
         <TextView
+            android:id="@+id/tidakamanTurun"
             android:layout_width="wrap_content"
             android:layout_height="19dp"
             android:background="@drawable/turun_icon"
             android:layout_marginTop="70dp"
             android:layout_marginLeft="10dp"/>
+
         <TextView
+            android:id="@+id/tidakamanNaik"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            android:background="@drawable/naik_icon"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/persenTidakAman"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="9%"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
             android:textColor="@color/CPP"/>
 
-        <TextView
-            android:id="@+id/statusTidakAman"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Turun 30 hari terakhir"
-            android:textColor="@color/text_abu"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="70dp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/statusTidakAman"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Turun 30 hari terakhir"-->
+<!--            android:textColor="@color/text_abu"-->
+<!--            android:layout_marginLeft="70dp"-->
+<!--            android:layout_marginTop="70dp"/>-->
 
         <TextView
             android:layout_width="50dp"
