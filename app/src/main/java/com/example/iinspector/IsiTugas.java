@@ -312,4 +312,10 @@ public class IsiTugas extends AppCompatActivity {
         alertDialog.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent kembali = new Intent(IsiTugas.this,Side.class);
+        startActivity(kembali);
+    }
 }

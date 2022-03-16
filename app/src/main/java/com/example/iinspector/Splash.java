@@ -19,8 +19,14 @@ public class Splash extends AppCompatActivity {
 
                 Intent home=new Intent(Splash.this,Login.class);
                 startActivity(home);
+                onBackPressed();
 
             }
         },waktu_loading);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

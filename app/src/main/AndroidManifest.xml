@@ -42,7 +42,7 @@
             android:name=".Login"
             android:exported="false"
             android:label="@string/title_activity_login"
-            android:noHistory="true"
+
             android:resizeableActivity="true"
             android:theme="@style/Theme.IInspector.NoActionBar"
             tools:targetApi="24" />
@@ -53,11 +53,10 @@
         <activity
             android:name=".Side"
             android:label="@string/title_activity_side"
-            android:noHistory="true"
             android:theme="@style/Theme.IInspector.NoActionBar" />
         <activity
             android:name=".Splash"
-            android:noHistory="true">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

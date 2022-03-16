@@ -50,46 +50,6 @@ public class GalleryFragment extends Fragment {
         TabLayout tabs = root.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-//        //spiner
-//        Spinner spinner = (Spinner) root.findViewById(R.id.sfilter);
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-//                R.array.filtergroup, android.R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(adapter);
-
-
-//        recyclerView = root.findViewById(R.id.recycler_Viewgallery);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-//
-//        Query query = rootRef.collection("templates")
-//                .whereEqualTo("uid",currentUser.getUid());
-//
-//        FirestoreRecyclerOptions<GetDataJadwal> options = new FirestoreRecyclerOptions.Builder<GetDataJadwal>()
-//                .setQuery(query, GetDataJadwal.class)
-//                .build();
-//
-//        adaptercard = new FirestoreRecyclerAdapter<GetDataJadwal, GalleryHolder>(options) {
-//            @Override
-//            protected void onBindViewHolder(@NonNull GalleryHolder holder, int position, @NonNull GetDataJadwal getDataJadwal) {
-//                holder.setTitle(getDataJadwal.getTemplateTitle());
-//                holder.setTgroup(getDataJadwal.getGroup());
-//
-//            }
-//
-//            @NonNull
-//            @Override
-//            public GalleryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
-//                return new GalleryHolder(view);
-//            }
-//        };
-//
-//
-//        recyclerView.setAdapter(adaptercard);
         return root;
     }
 

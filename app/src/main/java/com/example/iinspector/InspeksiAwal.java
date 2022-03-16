@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -114,8 +115,6 @@ public class InspeksiAwal extends AppCompatActivity {
     //SpinerTeam
     Spinner spinner;
 
-
-
     //cloudfirebase
     FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
@@ -123,12 +122,29 @@ public class InspeksiAwal extends AppCompatActivity {
     String alm;
     String idtemplate;
     String documentId;
+
+    private int waktu_loading = 10000;
+    ProgressDialog progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
 
+        //loading
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Memproses Data...");
+        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress.show();
 
+        //loading
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progress.dismiss();
+            }
+        },waktu_loading);
 
         //putextra
         documentId = getIntent().getStringExtra("doc");
@@ -264,36 +280,6 @@ public class InspeksiAwal extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                //                                String author = (String) task.getResult().get("author");
-//                                String authorId = (String) task.getResult().get("authorId");
-//                                String templateAddress = (String) task.getResult().get("templateAddress");
-//                                String templateDate = (String) task.getResult().get("templateDate");
-//                                String templateDescription = (String) task.getResult().get("templateDescription");
-//                                String templateGroup = (String) task.getResult().get("templateGroup");
-//                                String templateLocation = (String) task.getResult().get("templateLocation");
-//                                String templateTeam = (String) task.getResult().get("templateTeam");
-//                                String templateTemperature = (String) task.getResult().get("templateTemperature");
-//                                String templateTitle = (String) task.getResult().get("templateTitle");
-//
-//                                Map<String, Object> dataTemplate = new HashMap<>();
-//                                        dataTemplate.put("author",author);
-//                                        dataTemplate.put("authorId",authorId);
-//                                        dataTemplate.put("templateAddress",templateAddress);
-//                                        dataTemplate.put("templateDate",templateDate);
-//                                        dataTemplate.put("templateDescription",templateDescription);
-//                                        dataTemplate.put("templateGroup",templateGroup);
-//                                        dataTemplate.put("templateLocation",templateLocation);
-//                                        dataTemplate.put("templateTeam",templateTeam);
-//                                        dataTemplate.put("templateTemperature",templateTemperature);
-//                                        dataTemplate.put("templateTitle",templateTitle);
-//
-//                                DocumentReference ref = dbs.collection("hasiltemplatestes").document();
-//                                idtemplate = ref.getId();
-//                                dbs.collection("hasiltemplatestes")
-//                                        .document(idtemplate)
-//                                        .set(dataTemplate);
-//
-//                                Log.d("idtemplate", idtemplate);
                                 Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKetiga.class);
                                 lanjut.putExtra("doc", documentId);
                                 lanjut.putExtra("idtem", idtemplate);
@@ -307,28 +293,6 @@ public class InspeksiAwal extends AppCompatActivity {
             }
         });
 
-
-//        tambah3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tambahcatatan();
-//            }
-//        });
-//
-//
-//        foto3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ambilfoto();
-//            }
-//        });
-//
-//        atindakan3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tindakan();
-//            }
-//        });
     }
 
 
