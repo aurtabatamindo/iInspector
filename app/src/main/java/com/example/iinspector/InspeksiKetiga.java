@@ -255,6 +255,11 @@ public class InspeksiKetiga extends AppCompatActivity {
         //Button
         buttonberiktunya();
 
+//        buttonkembali();
+    }
+
+    private void buttonkembali() {
+        showtitle();
     }
 
     private void halaman() {

@@ -47,6 +47,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -138,13 +139,14 @@ public class InspeksiAwal extends AppCompatActivity {
         progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
         progress.show();
 
-        //loading
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                progress.dismiss();
-            }
-        },waktu_loading);
+//        //loading
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                progress.dismiss();
+//            }
+//        },waktu_loading);
+
 
         //putextra
         documentId = getIntent().getStringExtra("doc");
@@ -206,16 +208,13 @@ public class InspeksiAwal extends AppCompatActivity {
         fontUtils.applyFontToView(weatherData, typeface);
         getCurrentData();
 
-        //gettile
-        dbs.collection("inspections")
-                .document(documentId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                String title = (String) task.getResult().get("templateTitle");
-                titleInspegsi.setText(title);
-            }
-        });
+
+
+//        String title = titleInspegsi.getText().toString();
+//        if (title.isEmpty()){
+            setTtitle();
+//            return;
+//        }
 
         lanjutkan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,6 +294,31 @@ public class InspeksiAwal extends AppCompatActivity {
 
     }
 
+
+    private void setTtitle() {
+
+        //gettile
+        dbs.collection("inspections")
+                .document(documentId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isComplete()) {
+
+                    String title = (String) task.getResult().get("templateTitle");
+                    if (title == null){
+                        Log.d("inigagal","yes");
+                        setTtitle();
+                    }else{
+                        titleInspegsi.setText(title);
+                        progress.dismiss();
+                    }
+
+                }
+            }
+
+        });
+    }
 
     private void getlokasi() {
         LocationRequest locationRequest = new LocationRequest();
