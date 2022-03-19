@@ -23,10 +23,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Android Manager"
+        android:text="inspector"
         android:textSize="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     <TextView
+        android:id="@+id/silogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="WSH"/>

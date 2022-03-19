@@ -52,6 +52,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -114,7 +115,8 @@ public class InspeksiAwal extends AppCompatActivity {
     private ResultReceiver resultReceiver;
 
     //SpinerTeam
-    Spinner spinner;
+//    Spinner spinner;
+    TextView spinner;
 
     //cloudfirebase
     FirebaseFirestore dbs = FirebaseFirestore.getInstance();
@@ -126,6 +128,9 @@ public class InspeksiAwal extends AppCompatActivity {
 
     private int waktu_loading = 10000;
     ProgressDialog progress;
+
+
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,12 +164,16 @@ public class InspeksiAwal extends AppCompatActivity {
         String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
         String month = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
 
-        //filterTeam
-        spinner = (Spinner) findViewById(R.id.filterteam);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.filterteam, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+//        //filterTeam
+//        spinner = (Spinner) findViewById(R.id.filterteam);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//                R.array.filterteam, android.R.layout.simple_spinner_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(adapter);
+        mAuth = FirebaseAuth.getInstance();
+        spinner = findViewById(R.id.filterteam);
+        spinner.setText(mAuth.getCurrentUser().getEmail());
+
 //        spinner.getBackground().setColorFilter(Color.parseColor("#C0C2D1"), PorterDuff.Mode.SRC_ATOP);
 
         //getlocation plus adress
@@ -220,7 +229,8 @@ public class InspeksiAwal extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                     String lok = lokasi.getText().toString().trim();
-                    String spinertim = spinner.getSelectedItem().toString().trim();
+//                    String spinertim = spinner.getSelectedItem().toString().trim();
+                    String spinertim = spinner.getText().toString();
                     String pilih = "Pilih Team";
                     String suhu = weatherData.getText().toString();
                     FieldValue itgl = FieldValue.serverTimestamp();

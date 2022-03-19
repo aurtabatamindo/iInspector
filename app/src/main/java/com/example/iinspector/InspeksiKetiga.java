@@ -163,11 +163,13 @@ public class InspeksiKetiga extends AppCompatActivity {
     //idDocSection
     String idDocSection;
 
+    //idPagesBefore
+    String idPagesBefore;
 
     String parentSection;
     //documenttest
     boolean documentTest;
-
+    int hasil;
     //answer
     List<EditText> allAnswer = new ArrayList<EditText>();
     List<String> sizeAnswer = new ArrayList<String>();
@@ -219,6 +221,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     DocumentSnapshot lastvisible;
 
+
     String inSection;
 
     String statusTindakan;
@@ -226,11 +229,12 @@ public class InspeksiKetiga extends AppCompatActivity {
     RadioButton boxOpsi;
     RadioButton boxOpsiSec;
 
+    TextView kembali,panah;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_ketiga);
-
 
 
         //idDocument
@@ -255,12 +259,21 @@ public class InspeksiKetiga extends AppCompatActivity {
         //Button
         buttonberiktunya();
 
-//        buttonkembali();
+        //kembali
+        kembali = findViewById(R.id.kembali);
+        panah = findViewById(R.id.panahback);
+        buttonkembali();
+
+        if (idPagesBefore == null){
+            kembali.setVisibility(View.INVISIBLE);
+            panah.setVisibility(View.INVISIBLE);
+        }else{
+            kembali.setVisibility(View.INVISIBLE);
+            panah.setVisibility(View.INVISIBLE);
+        }
     }
 
-    private void buttonkembali() {
-        showtitle();
-    }
+
 
     private void halaman() {
         //getjumlahpage
@@ -1206,7 +1219,7 @@ public class InspeksiKetiga extends AppCompatActivity {
             public void onClick(View v) {
                 int angkaawal = Integer.parseInt(nPage.getText().toString());
                 int tambah = 1;
-                int hasil = angkaawal + tambah;
+                hasil = angkaawal + tambah;
 
 
                 int jsize = Integer.parseInt(jPage.getText().toString());
@@ -1219,49 +1232,19 @@ public class InspeksiKetiga extends AppCompatActivity {
                 Log.d("jsizeAnswer", String.valueOf(jsizeAnswer) + " sizeAnswer : " + jsizeinAnswer);
 
 
-////                        String getAnswer = String.valueOf(Answer.getText());
-//                        if (jsizeinAnswer < jsizeAnswer){
-//                            Snackbar.make(findViewById(R.id.inspeksiketiga),"Pertanyaan Belum di isi semua bos !",Snackbar.LENGTH_INDEFINITE)
-//                                    .setAction("OK", new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//
-//                                        }
-//                                    }).show();
-//                        }else{
-
                 if (jpage >= jsize) {
                     ttd();
                     nPage.setText(String.valueOf(sizeawal));
 
                 } else {
-//                    //update
-//                    pages.document(documentId)
-//                            .collection("pages")
-//                            .document(idPages)
-//                            .collection("contents")
-//                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            if (task.isSuccessful()) {
-//
-//                                for (QueryDocumentSnapshot document : task.getResult()) {
-//
-//                                    if (document != null && document.exists()) {
-//                                        df.document(idtemplate)
-//                                                .collection("pages")
-//                                                .document(idPages)
-//                                                .collection("contents")
-//                                                .add(document);
-//
-//                                        Log.d("update :", "udah" + " idtemplate : " + idtemplate + " idpages : " + idPages);
-//
-//                                        nPage.setText(String.valueOf(hasil));
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    });
+                    idPagesBefore = idPages;
+                    if (idPagesBefore == null){
+                        kembali.setVisibility(View.INVISIBLE);
+                        panah.setVisibility(View.INVISIBLE);
+                    }else{
+                        kembali.setVisibility(View.INVISIBLE);
+                        panah.setVisibility(View.INVISIBLE);
+                    }
 
                     nPage.setText(String.valueOf(hasil));
                     //nextPage
@@ -1296,6 +1279,32 @@ public class InspeksiKetiga extends AppCompatActivity {
         });
     }
 
+    private void buttonkembali() {
+        kembali.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //                myLinearLayout.removeAllViews();
+//                nPage.setText(String.valueOf(Integer.valueOf(hasil - 1)));
+//                pages.document(documentId)
+//                        .collection("pages")
+//                        .document(idPagesBefore)
+//                        .get()
+//                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                String title = (String) task.getResult().get("pageTitle");
+//                                qtitle.setText(title);
+//                                idPages = task.getResult().getId();
+//                                Log.d("testgettask", idPages);
+//
+//                                showcontent();
+//                            }
+//                        });
+
+            }
+        });
+
+    }
     private void actionPopup() {
         //popup menu
         final PopupMenu popupMenu = new PopupMenu(InspeksiKetiga.this, Description);

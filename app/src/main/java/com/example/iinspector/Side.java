@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -24,15 +25,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class Side extends AppCompatActivity {
-
+    FirebaseAuth mAuth;
+    TextView silogin;
     private AppBarConfiguration mAppBarConfiguration;
     DatabaseReference token;
+    View headView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_side);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -46,6 +50,11 @@ public class Side extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        headView = navigationView.getHeaderView(0);
+        mAuth = FirebaseAuth.getInstance();
+        silogin = (TextView) headView.findViewById(R.id.silogin);
+        silogin.setText(mAuth.getCurrentUser().getEmail());
     }
 
     @Override
