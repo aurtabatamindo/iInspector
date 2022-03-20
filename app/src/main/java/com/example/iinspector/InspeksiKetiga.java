@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -230,12 +231,19 @@ public class InspeksiKetiga extends AppCompatActivity {
     RadioButton boxOpsiSec;
 
     TextView kembali,panah;
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_ketiga);
 
+        //loading
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Memproses Data...");
+        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress.show();
 
         //idDocument
         documentId = getIntent().getStringExtra("doc");
@@ -346,7 +354,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 if (document != null && document.exists()) {
                                     desc = (String) document.get("description");
                                     String type = (String) document.get("type");
-        
+
+
                                     if (type.equals("section")) {
         
                                         HashMap<String, Object> contentArray = new HashMap<>();
@@ -417,6 +426,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                             myLinearLayout.addView(Section);
 
                                                             ArrayList<Map> isi = (ArrayList<Map>) tempatTerakhir.get(i).get("childContents");
+
                                                             for (int a = 0; a < isi.size(); a++) {
                                                                 String descIsi = isi.get(a).get("description").toString();
 
@@ -526,7 +536,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                         boxOpsiSec.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                                                                         boxOpsiSec.setButtonDrawable(new StateListDrawable()); //remove circle
 
-                                                                        rgs.addView(boxOpsiSec);
+                                                                        if (nameSection != null){
+                                                                            progress.dismiss();
+                                                                            rgs.addView(boxOpsiSec);
+                                                                        }
 
 //                                                                        boxOpsiSec.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //                                                                            @Override
@@ -606,8 +619,17 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                     rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                                                         @Override
                                                                         public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                                                            boxOpsiSec.setBackgroundColor(Color.parseColor("#F1F1F1"));
-                                                                            boxOpsiSec.setTextColor(Color.parseColor("#767676"));
+                                                                            if (boxOpsiSec.isChecked()){
+                                                                                String bgcolorSection = boxOpsiSec.getTag(R.id.idColorSection).toString();
+                                                                                Log.d("checkColorSection",bgcolorSection);
+                                                                                boxOpsiSec = (RadioButton) findViewById(checkedId);
+                                                                                boxOpsiSec.setBackgroundColor(Color.parseColor(bgcolorSection));
+                                                                                boxOpsiSec.setTextColor(Color.WHITE);
+                                                                            }else{
+                                                                                boxOpsiSec.setBackgroundColor(Color.parseColor("#F1F1F1"));
+                                                                                boxOpsiSec.setTextColor(Color.parseColor("#767676"));
+                                                                            }
+
                                                                             boxOpsiSec = (RadioButton) findViewById(checkedId);
 
                                                                             if (boxOpsiSec.isChecked()){
@@ -822,22 +844,28 @@ public class InspeksiKetiga extends AppCompatActivity {
                                             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                                 @Override
                                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                                    boxOpsi.setBackgroundColor(Color.parseColor("#F1F1F1"));
-                                                    boxOpsi.setTextColor(Color.parseColor("#767676"));
+
+                                                    if (boxOpsi.isChecked()){
+                                                        String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
+                                                        Log.d("checkColor",bgcolor);
+                                                        boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
+                                                        boxOpsi.setTextColor(Color.WHITE);
+                                                    }else{
+                                                        boxOpsi.setBackgroundColor(Color.parseColor("#F1F1F1"));
+                                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
+                                                    }
+
                                                     boxOpsi = (RadioButton) findViewById(checkedId);
 //                                                    Toast.makeText(InspeksiKetiga.this, boxOpsi.getText(), Toast.LENGTH_SHORT).show();
 
                                                     if (boxOpsi.isChecked()){
                                                         String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
                                                         Log.d("checkColor",bgcolor);
-                                                        boxOpsi = (RadioButton) findViewById(checkedId);
                                                         boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
                                                         boxOpsi.setTextColor(Color.WHITE);
                                                     }
 
-
                                                     idOpsi = document.getId();
-//                                                    mapOpsi.add(boxOpsi.getText().toString());
                                                     Log.d("opsiAns", mapOpsi.toString());
                                                     //checkboxes update
                                                     pages.document(documentId)
