@@ -243,7 +243,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         progress.setTitle("Loading");
         progress.setMessage("Memproses Data...");
         progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
-        progress.show();
+//        progress.show();
 
         //idDocument
         documentId = getIntent().getStringExtra("doc");
@@ -536,11 +536,15 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                         boxOpsiSec.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                                                                         boxOpsiSec.setButtonDrawable(new StateListDrawable()); //remove circle
 
-                                                                        if (nameSection != null){
-                                                                            progress.dismiss();
-                                                                            rgs.addView(boxOpsiSec);
-                                                                        }
-
+//                                                                        if (nameSection != null){
+//                                                                            progress.dismiss();
+//                                                                            rgs.addView(boxOpsiSec);
+//                                                                        }else{
+//                                                                            myLinearLayout.removeAllViews();
+//                                                                            Log.d("checkterus","terus");
+//                                                                            showtitle();
+//                                                                        }
+                                                                        rgs.addView(boxOpsiSec);
 //                                                                        boxOpsiSec.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //                                                                            @Override
 //                                                                            public void onFocusChange(View v, boolean hasFocus) {
