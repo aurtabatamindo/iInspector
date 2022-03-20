@@ -36,4 +36,8 @@
 
     <item name="idClick" type="id" />
     <item name="parentSection" type="id" />
+
+    <item name="idColor" type="id" />
+    <item name="idColorSection" type="id" />
+
 </resources>

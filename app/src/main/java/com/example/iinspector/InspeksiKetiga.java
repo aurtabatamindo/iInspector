@@ -494,20 +494,31 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                 myLinearLayout.addView(DescriptionSection);
 
                                                                 if (typeResponse.equals("multiple-choices")) {
+
                                                                     ArrayList opsi = (ArrayList) maptype.get("option");
                                                                     Log.d("iniOpsi", opsi.toString());
+
+                                                                    //get Map optionObj
+                                                                    Map mapOptionObj= (Map) maptype.get("optionObj");
+                                                                    Log.d("optionObj", mapOptionObj.toString());
+
+                                                                    List<Map<String, Object>> choicesSection = (List<Map<String, Object>>) mapOptionObj.get("choices");
+                                                                    Log.d("choicesSec", choicesSection.toString());
 
                                                                     //MapOpsiSection
                                                                     ArrayList<String> mapOpsiSection = new ArrayList<String>();
                                                                     RadioGroup rgs = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
                                                                     rgs.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
 
-                                                                    for (int b = 0; b < opsi.size(); b++) {
+                                                                    for (int b = 0; b < choicesSection.size(); b++) {
+                                                                        String nameSection = (String) choicesSection.get(b).get("name");
+
                                                                         // Type = checkboxes
                                                                         boxOpsiSec = new RadioButton(InspeksiKetiga.this);
                                                                         boxOpsiSec.setLayoutParams(params5);
                                                                         boxOpsiSec.setId(View.generateViewId());
-                                                                        boxOpsiSec.setText(opsi.get(b).toString());
+                                                                        boxOpsiSec.setText(nameSection);
+                                                                        boxOpsiSec.setTag(R.id.idColorSection,choicesSection.get(b).get("bgColor"));
                                                                         boxOpsiSec.setTag(R.id.idClick, isi.get(a).get("id"));
                                                                         boxOpsiSec.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
                                                                         boxOpsiSec.setBackgroundColor(Color.parseColor("#F1F1F1"));
@@ -598,12 +609,12 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                             boxOpsiSec.setBackgroundColor(Color.parseColor("#F1F1F1"));
                                                                             boxOpsiSec.setTextColor(Color.parseColor("#767676"));
                                                                             boxOpsiSec = (RadioButton) findViewById(checkedId);
-//                                                                          Toast.makeText(InspeksiKetiga.this, boxOpsi.getText(), Toast.LENGTH_SHORT).show();
 
                                                                             if (boxOpsiSec.isChecked()){
-                                                                                String bgcolor = "#66BB6A";
+                                                                                String bgcolorSection = boxOpsiSec.getTag(R.id.idColorSection).toString();
+                                                                                Log.d("checkColorSection",bgcolorSection);
                                                                                 boxOpsiSec = (RadioButton) findViewById(checkedId);
-                                                                                boxOpsiSec.setBackgroundColor(Color.parseColor(bgcolor));
+                                                                                boxOpsiSec.setBackgroundColor(Color.parseColor(bgcolorSection));
                                                                                 boxOpsiSec.setTextColor(Color.WHITE);
                                                                             }
                                                                             idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
@@ -678,6 +689,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         String typeResponse = String.valueOf(maptype.get("type"));
                                         Log.d("getTypeResponse", typeResponse);
 
+
+
                                         Description = new TextView(InspeksiKetiga.this);
                                         Description.setBackgroundResource(R.drawable.cardpertanyaan);
                                         Description.setTextSize(11);
@@ -700,22 +713,35 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         myLinearLayout.addView(Description);
 
                                         if (typeResponse.equals("multiple-choices")) {
+
                                             ArrayList opsi = (ArrayList) maptype.get("option");
                                             Log.d("iniOpsi", opsi.toString());
 
                                             //MapOpsi
                                             ArrayList<String> mapOpsi = new ArrayList<String>();
 
+                                            //get Map optionObj
+                                            Map mapOptionObj= (Map) maptype.get("optionObj");
+                                            Log.d("optionObj", mapOptionObj.toString());
+
+                                            List<Map<String, Object>> choices = (List<Map<String, Object>>) mapOptionObj.get("choices");
+                                            Log.d("choices", choices.toString());
+
+
 
                                             RadioGroup rg = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
                                             rg.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
 
-                                            for (int i = 0; i < opsi.size(); i++) {
+                                            for (int i = 0; i < choices.size(); i++) {
+
+                                                String name = (String) choices.get(i).get("name");
+
                                                 // Type = checkboxes
                                                 boxOpsi = new RadioButton(InspeksiKetiga.this);
-                                                boxOpsi.setText(opsi.get(i).toString());
+                                                boxOpsi.setText(name);
                                                 boxOpsi.setId(View.generateViewId());
                                                 boxOpsi.setLayoutParams(params4);
+                                                boxOpsi.setTag(R.id.idColor,choices.get(i).get("bgColor"));
                                                 boxOpsi.setBackgroundColor(Color.parseColor("#F1F1F1"));
                                                 boxOpsi.setTextColor(Color.parseColor("#767676"));
                                                 boxOpsi.setButtonDrawable(new StateListDrawable()); //remove circle
@@ -802,7 +828,8 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                    Toast.makeText(InspeksiKetiga.this, boxOpsi.getText(), Toast.LENGTH_SHORT).show();
 
                                                     if (boxOpsi.isChecked()){
-                                                        String bgcolor = "#66BB6A";
+                                                        String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
+                                                        Log.d("checkColor",bgcolor);
                                                         boxOpsi = (RadioButton) findViewById(checkedId);
                                                         boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
                                                         boxOpsi.setTextColor(Color.WHITE);
