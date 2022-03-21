@@ -232,7 +232,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     TextView kembali,panah;
     ProgressDialog progress;
-
+    private int waktu_loading = 4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -243,7 +243,8 @@ public class InspeksiKetiga extends AppCompatActivity {
         progress.setTitle("Loading");
         progress.setMessage("Memproses Data...");
         progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
-//        progress.show();
+        progress.show();
+
 
         //idDocument
         documentId = getIntent().getStringExtra("doc");
@@ -261,7 +262,6 @@ public class InspeksiKetiga extends AppCompatActivity {
         nPage = findViewById(R.id.nPage);
         halaman();
 
-        //Page1
         showtitle();
 
         //Button
@@ -313,7 +313,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                     qtitle.setText(title);
                     idPages = documentSnapshot.getId();
                     Log.d("testgettask", idPages);
-
                 }
                 lastvisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                 showcontent();
@@ -711,7 +710,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                                         Description = new TextView(InspeksiKetiga.this);
-                                        Description.setBackgroundResource(R.drawable.cardpertanyaan);
+                                        Description.setBackgroundResource(R.drawable.cardsection);
                                         Description.setTextSize(11);
                                         Description.setPaddingRelative(50, 25, 10, 25);
                                         Description.setTypeface(null, Typeface.ITALIC);
@@ -927,6 +926,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                         }
                                     }
+                                    progress.dismiss();
         //                            documentTest = document.exists();
         //                            //get Document
         //                            Log.d("getdoc", document.getId());
@@ -1292,6 +1292,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         berikutnya.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progress.show();
                 int angkaawal = Integer.parseInt(nPage.getText().toString());
                 int tambah = 1;
                 hasil = angkaawal + tambah;
@@ -1341,6 +1342,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                             }
                             lastvisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                             showcontent();
+                            progress.dismiss();
                         }
                     });
 
@@ -1868,6 +1870,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         alertDialog.setNegativeButton("Batal",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        progress.dismiss();
                         dialog.cancel();
                     }
                 });

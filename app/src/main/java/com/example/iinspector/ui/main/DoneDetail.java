@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,7 +66,7 @@ public class DoneDetail extends AppCompatActivity {
                 String author = (String) task.getResult().get("author");
                 String authorId = (String) task.getResult().get("authorId");
                 String templateAddress = (String) task.getResult().get("templateAddress");
-                String templateDate = (String) task.getResult().get("templateDate");
+                Timestamp templateDate = (Timestamp) task.getResult().get("templateDate");
                 String templateDescription = (String) task.getResult().get("templateDescription");
                 String templateGroup = (String) task.getResult().get("templateGroup");
                 String templateLocation = (String) task.getResult().get("templateLocation");
@@ -76,10 +77,11 @@ public class DoneDetail extends AppCompatActivity {
                 String signatureId = (String) task.getResult().get("signature");
                 Log.d("title",templateTitle);
 
+
                 title.setText("Title Inspeksi : "+"\n"+templateTitle);
                 description.setText("Description : "+"\n"+templateDescription);
                 team.setText("Team Inspeksi : "+"\n"+templateTeam +" -"+ templateGroup);
-                waktu.setText("Waktu Inspeksi : "+"\n"+templateDate);
+                waktu.setText("Waktu Inspeksi : "+"\n"+templateDate.toDate());
                 temperatur.setText("Temperatur Saat Inspeksi : "+"\n"+templateTemperature);
                 kordinat.setText("Kordinat Inspeksi : "+"\n"+templateLocation);
                 lokasi.setText("Lokasi Inspeksi : "+"\n"+templateAddress);
