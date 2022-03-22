@@ -40,4 +40,7 @@
     <item name="idColor" type="id" />
     <item name="idColorSection" type="id" />
 
+    <item name="idColorText" type="id" />
+    <item name="idColorTextSection" type="id" />
+
 </resources>

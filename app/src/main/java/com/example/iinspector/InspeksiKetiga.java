@@ -529,6 +529,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                         boxOpsiSec.setId(View.generateViewId());
                                                                         boxOpsiSec.setText(nameSection);
                                                                         boxOpsiSec.setTag(R.id.idColorSection,choicesSection.get(b).get("bgColor"));
+                                                                        boxOpsiSec.setTag(R.id.idColorTextSection,choicesSection.get(b).get("textColor"));
                                                                         boxOpsiSec.setTag(R.id.idClick, isi.get(a).get("id"));
                                                                         boxOpsiSec.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
                                                                         boxOpsiSec.setBackgroundColor(Color.parseColor("#F1F1F1"));
@@ -617,10 +618,12 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                         public void onCheckedChanged(RadioGroup group, int checkedId) {
                                                                             if (boxOpsiSec.isChecked()){
                                                                                 String bgcolorSection = boxOpsiSec.getTag(R.id.idColorSection).toString();
+                                                                                String bgcolorTextSection = boxOpsiSec.getTag(R.id.idColorTextSection).toString();
+
                                                                                 Log.d("checkColorSection",bgcolorSection);
                                                                                 boxOpsiSec = (RadioButton) findViewById(checkedId);
                                                                                 boxOpsiSec.setBackgroundColor(Color.parseColor(bgcolorSection));
-                                                                                boxOpsiSec.setTextColor(Color.parseColor("#767676"));
+                                                                                boxOpsiSec.setTextColor(Color.parseColor(bgcolorTextSection));
                                                                             }else{
                                                                                 boxOpsiSec.setBackgroundColor(Color.parseColor("#F1F1F1"));
                                                                                 boxOpsiSec.setTextColor(Color.parseColor("#767676"));
@@ -630,10 +633,11 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                                             if (boxOpsiSec.isChecked()){
                                                                                 String bgcolorSection = boxOpsiSec.getTag(R.id.idColorSection).toString();
+                                                                                String bgcolorTextSection = boxOpsiSec.getTag(R.id.idColorTextSection).toString();
                                                                                 Log.d("checkColorSection",bgcolorSection);
                                                                                 boxOpsiSec = (RadioButton) findViewById(checkedId);
                                                                                 boxOpsiSec.setBackgroundColor(Color.parseColor(bgcolorSection));
-                                                                                boxOpsiSec.setTextColor(Color.parseColor("#767676"));
+                                                                                boxOpsiSec.setTextColor(Color.parseColor(bgcolorTextSection));
                                                                             }
                                                                             idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
                                                                             parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
@@ -760,6 +764,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 boxOpsi.setId(View.generateViewId());
                                                 boxOpsi.setLayoutParams(params4);
                                                 boxOpsi.setTag(R.id.idColor,choices.get(i).get("bgColor"));
+                                                boxOpsi.setTag(R.id.idColorText,choices.get(i).get("textColor"));
                                                 boxOpsi.setBackgroundColor(Color.parseColor("#F1F1F1"));
                                                 boxOpsi.setTextColor(Color.parseColor("#767676"));
                                                 boxOpsi.setButtonDrawable(new StateListDrawable()); //remove circle
@@ -837,6 +842,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                });
 
                                             }
+                                            myLinearLayout.addView(rg);
 
                                             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                                 @Override
@@ -846,9 +852,10 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                     if (boxOpsi.isChecked()){
 
                                                         String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
+                                                        String bgcolorText = boxOpsi.getTag(R.id.idColorText).toString();
                                                         Log.d("checkColor",bgcolor);
                                                         boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
-                                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
+                                                        boxOpsi.setTextColor(Color.parseColor(bgcolorText));
                                                     }else {
                                                         boxOpsi.setBackgroundColor(Color.parseColor("#F1F1F1"));
                                                         boxOpsi.setTextColor(Color.parseColor("#767676"));
@@ -858,9 +865,10 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                     if (boxOpsi.isChecked()){
                                                         String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
+                                                        String bgcolorText = boxOpsi.getTag(R.id.idColorText).toString();
                                                         Log.d("checkColor",bgcolor);
                                                         boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
-                                                        boxOpsi.setTextColor(Color.parseColor("#767676"));
+                                                        boxOpsi.setTextColor(Color.parseColor(bgcolorText));
                                                     }
 
 
@@ -876,7 +884,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                 }
                                             });
-                                            myLinearLayout.addView(rg);
+
                                         }
 
                                         else {
@@ -923,7 +931,6 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                                             myLinearLayout.addView(Answer);
-
                                         }
                                     }
                                     progress.dismiss();
