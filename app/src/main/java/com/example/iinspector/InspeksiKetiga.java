@@ -31,6 +31,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -186,6 +187,8 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     //linear
     LinearLayoutCompat myLinearLayout;
+    FrameLayout framelayout;
+    FrameLayout framelayoutSection;
 
     //String
     String desc;
@@ -218,6 +221,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     LinearLayoutCompat.LayoutParams params3;
     LinearLayoutCompat.LayoutParams params4;
     LinearLayoutCompat.LayoutParams params5;
+    LinearLayoutCompat.LayoutParams params6;
 
 
     DocumentSnapshot lastvisible;
@@ -349,6 +353,12 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                 params5 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT,100);
                                 params5.setMargins(50, 20, 50, 20);
+
+                                params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                                params2.setMargins(0, 150, 0, 30);
+
+                                params6 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                                params6.setMargins(30, 120, 30, 20);
         
                                 if (document != null && document.exists()) {
                                     desc = (String) document.get("description");
@@ -356,7 +366,12 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                                     if (type.equals("section")) {
-                                        
+
+                                        //Initializing frame layout
+                                        framelayoutSection = new FrameLayout(InspeksiKetiga.this);
+                                        framelayoutSection.setLayoutParams(params3);
+                                        framelayoutSection.setBackgroundResource(R.drawable.cardsection);
+
                                         HashMap<String, Object> contentArray = new HashMap<>();
 
                                         contentArray.put("description", document.get("description"));
@@ -442,14 +457,14 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                                 // Build Description
                                                                 final TextView DescriptionSection = new TextView(InspeksiKetiga.this);
-                                                                DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
+                                                                DescriptionSection.setBackgroundResource(R.drawable.cardsection);
                                                                 DescriptionSection.setTextSize(11);
                                                                 DescriptionSection.setPaddingRelative(50, 25, 10, 25);
                                                                 DescriptionSection.setTypeface(null, Typeface.ITALIC);
                                                                 DescriptionSection.setTextColor(Color.parseColor("#767676"));
-                                                                DescriptionSection.setLayoutParams(params);
-                                                                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
-                                                                DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+                                                                DescriptionSection.setLayoutParams(params3);
+//                                                                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+//                                                                DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                                                                 DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
                                                                 DescriptionSection.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
                                                                 DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
@@ -501,7 +516,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                     }
                                                                 });
 
-                                                                myLinearLayout.addView(DescriptionSection);
+                                                                framelayoutSection.addView(DescriptionSection);
 
                                                                 if (typeResponse.equals("multiple-choices")) {
 
@@ -519,7 +534,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                     ArrayList<String> mapOpsiSection = new ArrayList<String>();
                                                                     RadioGroup rgs = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
                                                                     rgs.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
-
+                                                                    rgs.setLayoutParams(params2);
                                                                     for (int b = 0; b < choicesSection.size(); b++) {
                                                                         String nameSection = (String) choicesSection.get(b).get("name");
 
@@ -654,12 +669,13 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                                                         }
                                                                     });
-                                                                    myLinearLayout.addView(rgs);
+                                                                    framelayoutSection.addView(rgs);
                                                                 } else {
 
                                                                     final EditText AnswerSection = new EditText(InspeksiKetiga.this);
-                                                                    AnswerSection.setLayoutParams(params);
+                                                                    AnswerSection.setLayoutParams(params6);
                                                                     AnswerSection.setTextSize(11);
+                                                                    AnswerSection.setBackgroundColor(Color.parseColor("#F1F1F1"));
                                                                     AnswerSection.setHint("Jawab disini");
                                                                     AnswerSection.setTag(R.id.id, isi.get(a).get("id"));
                                                                     AnswerSection.setTag(R.id.parentContentId, isi.get(a).get("parentContentId"));
@@ -693,16 +709,24 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                         }
                                                                     });
 
-                                                                    myLinearLayout.addView(AnswerSection);
+                                                                    framelayoutSection.addView(AnswerSection);
 
                                                                 }
                                                             }
                                                         }
+                                                    myLinearLayout.addView(framelayoutSection);
                                                         }
                                             });
+
                                     }
         
                                     else {
+                                        //Initializing frame layout
+                                        framelayout = new FrameLayout(InspeksiKetiga.this);
+                                        framelayout.setLayoutParams(params3);
+                                        framelayout.setBackgroundResource(R.drawable.cardsection);
+
+
                                         //get Map typeOfresonse
                                         Map maptype = (Map) document.get("typeOfResponse");
                                         Log.d("maptype", maptype.toString());
@@ -711,8 +735,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         String typeResponse = String.valueOf(maptype.get("type"));
                                         Log.d("getTypeResponse", typeResponse);
 
-
-
                                         Description = new TextView(InspeksiKetiga.this);
                                         Description.setBackgroundResource(R.drawable.cardsection);
                                         Description.setTextSize(11);
@@ -720,19 +742,21 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         Description.setTypeface(null, Typeface.ITALIC);
                                         Description.setTextColor(Color.parseColor("#767676"));
                                         Description.setLayoutParams(params3);
-                                        Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
-                                        Description.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
+//                                        Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+//                                        Description.setCompoundDrawablesWithIntrinsicBounds(null, null, null, img);
                                         Description.setText("Pertanyaan :" + "\n" + desc);
                                         Description.setOnTouchListener(new View.OnTouchListener() {
                                             @Override
                                             public boolean onTouch(View v, MotionEvent event) {
                                                 idDesclick = document.getId();
                                                 Log.d("idDesc", idDesclick);
+                                                //actionPopup
+                                                actionPopup();
                                                 return false;
                                             }
                                         });
 
-                                        myLinearLayout.addView(Description);
+                                        framelayout.addView(Description);
 
                                         if (typeResponse.equals("multiple-choices")) {
 
@@ -753,7 +777,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                             RadioGroup rg = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
                                             rg.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
-
+                                            rg.setLayoutParams(params2);
                                             for (int i = 0; i < choices.size(); i++) {
 
                                                 String name = (String) choices.get(i).get("name");
@@ -842,7 +866,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                });
 
                                             }
-                                            myLinearLayout.addView(rg);
+                                            framelayout.addView(rg);
 
                                             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                                 @Override
@@ -890,8 +914,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         else {
                                             // Type = Text
                                             final EditText Answer = new EditText(InspeksiKetiga.this);
-                                            Answer.setLayoutParams(params);
+                                            Answer.setLayoutParams(params6);
                                             Answer.setTextSize(11);
+                                            Answer.setBackgroundColor(Color.parseColor("#F1F1F1"));
                                             Answer.setHint("Jawab disini");
 
                                             Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -923,15 +948,10 @@ public class InspeksiKetiga extends AppCompatActivity {
 
                                             //sizeAnswer
                                             allAnswer.add(Answer);
-
-                                            //actionPopup
-                                            actionPopup();
-
                                             idContent = document.getId();
-
-
-                                            myLinearLayout.addView(Answer);
+                                            framelayout.addView(Answer);
                                         }
+                                        myLinearLayout.addView(framelayout);
                                     }
                                     progress.dismiss();
         //                            documentTest = document.exists();
@@ -1822,6 +1842,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     }
 
     void ttd() {
+        progress.dismiss();
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
         alertDialog.setTitle("Tanda Tangan");
 
