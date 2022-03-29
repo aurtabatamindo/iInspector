@@ -292,6 +292,7 @@ public class InspeksiAwal extends AppCompatActivity {
                                 Intent lanjut = new Intent(InspeksiAwal.this, InspeksiKetiga.class);
                                 lanjut.putExtra("doc", documentId);
                                 lanjut.putExtra("idtem", idtemplate);
+                                lanjut.putExtra("alamat",alamt);
                                 startActivity(lanjut);
                                 finish();
                             }

@@ -78,19 +78,22 @@ public class SlideshowFragment extends Fragment {
                         documentClickId = getSnapshots().getSnapshot(position).getId();
                         Log.d("getclickdoc", documentClickId);
 
+                        Intent keIsiTugas = new Intent(getActivity(), IsiTugas.class);
+                        keIsiTugas.putExtra("clickedId",documentClickId);
+                        startActivity(keIsiTugas);
 
-                        if (getSnapshots().getSnapshot(position).get("statusTugas") == null){
-                            Intent keIsiTugas = new Intent(getActivity(), IsiTugas.class);
-                            keIsiTugas.putExtra("clickedId",documentClickId);
-                            startActivity(keIsiTugas);
-                        }else{
-                            Snackbar.make(root.findViewById(R.id.slideshow),"Tugas yang anda pilih sudah selesai",Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("OK", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                        }
-                                    }).show();
-                        }
+//                        if (getSnapshots().getSnapshot(position).get("statusTugas") == null){
+//                            Intent keIsiTugas = new Intent(getActivity(), IsiTugas.class);
+//                            keIsiTugas.putExtra("clickedId",documentClickId);
+//                            startActivity(keIsiTugas);
+//                        }else{
+//                            Snackbar.make(root.findViewById(R.id.slideshow),"Tugas yang anda pilih sudah selesai",Snackbar.LENGTH_INDEFINITE)
+//                                    .setAction("OK", new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View v) {
+//                                        }
+//                                    }).show();
+//                        }
 
 
 

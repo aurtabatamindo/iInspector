@@ -94,10 +94,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Formattable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
@@ -152,6 +155,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     //getIntentString
     String documentId;
     String idtemplate;
+    String alamat;
 
     //idPages
     String idPages;
@@ -236,6 +240,9 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     TextView kembali,panah;
     ProgressDialog progress;
+
+    String qAction;
+
     private int waktu_loading = 4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,7 +260,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         //idDocument
         documentId = getIntent().getStringExtra("doc");
         idtemplate = getIntent().getStringExtra("idtem");
-
+        alamat = getIntent().getStringExtra("alamat");
 
         //judul
         qtitle = findViewById(R.id.qTitile);
@@ -749,6 +756,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                             @Override
                                             public boolean onTouch(View v, MotionEvent event) {
                                                 idDesclick = document.getId();
+                                                qAction = Description.getText().toString();
                                                 Log.d("idDesc", idDesclick);
                                                 //actionPopup
                                                 actionPopup();
@@ -1548,7 +1556,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         dialog.setPositiveButton("Tambah",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        FieldValue itgl = FieldValue.serverTimestamp();
                         String title = eTitle.getText().toString();
                         String deskripsi = eDeskripsi.getText().toString();
                         String team = eTeam.getText().toString();
@@ -1561,6 +1569,9 @@ public class InspeksiKetiga extends AppCompatActivity {
                         tugasTemplate.put("pagesId",idPages);
                         tugasTemplate.put("questionId",idDesclick);
                         tugasTemplate.put("status",statusTindakan);
+                        tugasTemplate.put("questionAnswer",qAction);
+                        tugasTemplate.put("timeInspection",itgl);
+                        tugasTemplate.put("alamat",alamat);
 
                         if (title.isEmpty() && deskripsi.isEmpty() && team.isEmpty()){
                             Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();

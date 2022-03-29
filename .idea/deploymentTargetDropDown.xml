@@ -6,12 +6,12 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\ssd-dev1\.android\avd\Samsung_Galaxy_M11_API_28_7.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="159e1064" />
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-03-28T08:12:48.526457500Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-03-29T09:04:38.812275100Z" />
   </component>
 </project>

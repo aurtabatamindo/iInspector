@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,8 +33,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,7 +57,7 @@ public class IsiTugas extends AppCompatActivity {
     //collection templates
     CollectionReference tugas = db.collection("tugasTemplate");
 
-    TextView title,desc;
+    TextView title,desc,tgl,pertanyaan,alamat;
     ImageView foto;
     Button selesai;
     String sPhoto,ttd;
@@ -72,6 +76,8 @@ public class IsiTugas extends AppCompatActivity {
     SignatureView mSignaturePad;
     private static final int REQUEST_PERMISSIONS = 20;
 
+    String jawaban;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,14 +88,53 @@ public class IsiTugas extends AppCompatActivity {
         desc = findViewById(R.id.descT);
         foto = findViewById(R.id.gambar1);
         selesai = findViewById(R.id.selesai);
+        tgl = findViewById(R.id.tglInspec);
+        pertanyaan = findViewById(R.id.qAction);
+        alamat = findViewById(R.id.lokasiInspec);
+
         tugas.document(clickedId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()){
-                       title.setText("Title :" + "\n"+task.getResult().get("titleTugas").toString());
-                       desc.setText("Deskripsi :" + "\n"+task.getResult().get("deskripsi").toString());
+                        Timestamp templateDate = (Timestamp) task.getResult().get("timeInspection");
+                        String photo = (String) task.getResult().get("photo");
+
+                        if (task.getResult().get("statusTugas") == null){
+                            selesai.setVisibility(View.VISIBLE);
+                        }else{
+                            selesai.setVisibility(View.INVISIBLE);
+                        }
+                           title.setText("Title :" + "\n"+task.getResult().get("titleTugas").toString());
+                           desc.setText("Deskripsi :" + "\n"+task.getResult().get("deskripsi").toString());
+                           tgl.setText("Tanggal Inspeksi :" + "\n"+templateDate.toDate());
+                           pertanyaan.setText(task.getResult().get("questionAnswer").toString());
+                           alamat.setText("Lokasi :" + "\n"+task.getResult().get("alamat").toString());
+
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                        StorageReference photoReference= storageReference.child("Photo/"+photo);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                foto.setBackgroundResource(android.R.color.transparent);
+                                foto.setImageBitmap(bmp);
+                                foto.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                    }
+                                });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                Toast.makeText(getApplicationContext(), "Klik untuk mengambil foto ", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                     }
                     }
                 });
@@ -104,7 +149,7 @@ public class IsiTugas extends AppCompatActivity {
         selesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ttd();
+                tambahcatatan();
             }
         });
     }
@@ -252,6 +297,34 @@ public class IsiTugas extends AppCompatActivity {
         });
     }
 
+    void tambahcatatan() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(IsiTugas.this);
+        alertDialog.setTitle("Berikan Catatan");
+
+        final EditText catatan = new EditText(IsiTugas.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        catatan.setLayoutParams(lp);
+        alertDialog.setView(catatan);
+
+        alertDialog.setPositiveButton("Berikutnya",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        jawaban = catatan.getText().toString();
+                        ttd();
+                    }
+                });
+
+        alertDialog.setNegativeButton("Batal",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
 
     void ttd() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(IsiTugas.this);
@@ -284,12 +357,14 @@ public class IsiTugas extends AppCompatActivity {
                             if (addJpgSignatureToGallery(signatureBitmap)) {
                                 Log.d("ttd", "masuknih");
                                 UploadSignatureToCloudStore(signatureBitmap);
-
+                                FieldValue itgl = FieldValue.serverTimestamp();
 
                                 tugas.document(clickedId)
                                         .update("statusTugas","Selesai",
                                                 "signatureTugas",ttd,
-                                                "photo",sPhoto);
+                                                "photo",sPhoto,
+                                                "catatan",jawaban,
+                                                "waktuSelesai",itgl);
 
                                 Intent selesai = new Intent(IsiTugas.this, InspeksiSelesai.class);
                                 startActivity(selesai);
