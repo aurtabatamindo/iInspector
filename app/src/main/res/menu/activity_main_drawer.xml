@@ -18,7 +18,7 @@
             android:title="@string/menu_tugas" />
         <item
             android:id="@+id/nav_loogsheet"
-            android:icon="@drawable/loogsheet_icon"
+            android:icon="@drawable/logsheet2_icon"
             android:title="@string/menu_logsheet" />
     </group>
 </menu>
