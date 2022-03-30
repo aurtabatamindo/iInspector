@@ -11,6 +11,8 @@
     <string name="menu_dahsboard">Dashboard</string>
     <string name="menu_inspeksi">Inspeksi</string>
     <string name="menu_tugas">Tugas</string>
+    <string name="menu_logsheet">Log Sheet</string>
+
     <string name="title_activity_tab_inspeksi">tabInspeksi</string>
     <string name="tab_text_1">TODO</string>
     <string name="tab_text_2">DONE</string>
@@ -42,5 +44,7 @@
 
     <item name="idColorText" type="id" />
     <item name="idColorTextSection" type="id" />
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
