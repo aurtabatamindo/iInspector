@@ -16,8 +16,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.iinspector.Induction;
 import com.example.iinspector.InspeksiHasil;
 import com.example.iinspector.R;
+import com.example.iinspector.Toolbox;
+import com.example.iinspector.Training;
 import com.example.iinspector.ui.home.DatePickerFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,13 +40,40 @@ import java.util.Locale;
 public class LoogSheetFragment extends Fragment {
 
     private LoogSheetViewModel loogSheetViewModel;
-
+    CardView induction,toolbox,training;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         loogSheetViewModel = new ViewModelProvider(this).get(LoogSheetViewModel.class);
         View root = inflater.inflate(R.layout.fragment_loogsheet, container, false);
 
+        induction = root.findViewById(R.id.induction);
+        toolbox = root.findViewById(R.id.toolbox);
+        training = root.findViewById(R.id.training);
+
+        induction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Induction.class);
+                startActivity(intent);
+            }
+        });
+
+        toolbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Toolbox.class);
+                startActivity(intent);
+            }
+        });
+
+        training.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Training.class);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }

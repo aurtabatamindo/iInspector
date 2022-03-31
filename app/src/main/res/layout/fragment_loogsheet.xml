@@ -15,7 +15,7 @@
         android:layout_height="100dp"
         android:elevation="10dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         app:cardBackgroundColor="#e8f5e9"
         app:cardCornerRadius="10dp"
         tools:layout_editor_absoluteY="20dp">
@@ -55,7 +55,7 @@
         android:layout_width="300dp"
         android:layout_height="100dp"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="50dp"
         android:elevation="10dp"
         app:cardBackgroundColor="#e8f5e9"
         app:cardCornerRadius="10dp"
