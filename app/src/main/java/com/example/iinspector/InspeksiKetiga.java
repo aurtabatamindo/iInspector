@@ -56,6 +56,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.iinspector.SendNotificationPack.APIService;
+import com.example.iinspector.SendNotificationPack.Client;
 import com.example.iinspector.SendNotificationPack.Data;
 import com.example.iinspector.SendNotificationPack.MyResponse;
 import com.example.iinspector.SendNotificationPack.NotificationSender;
@@ -248,6 +249,9 @@ public class InspeksiKetiga extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_ketiga);
+
+        //notifservice
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         //loading
         progress = new ProgressDialog(this);
@@ -1548,6 +1552,7 @@ public class InspeksiKetiga extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     statusTindakan = "hight";
+                    Log.d("teststatus","hight");
                 }
 
             }
@@ -1587,7 +1592,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (status == "hight"){
+                                    if (statusTindakan == "hight"){
                                         FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1660,6 +1665,7 @@ public class InspeksiKetiga extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     statusTindakan = "hight";
+                    Log.d("teststatus","hight");
                 }
 
             }
@@ -1697,7 +1703,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (status == "hight"){
+                                    if (statusTindakan == "hight"){
                                         FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1766,7 +1772,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         JavaMailAPI javaMailAPI = new JavaMailAPI(InspeksiKetiga.this, mEmail, mSubject, mMessage);
         javaMailAPI.execute();
 
-        Snackbar.make(findViewById(R.id.inspeksiawal),"Berhasil Mengirim Tindakan",Snackbar.LENGTH_LONG).show();
+//        Snackbar.make(findViewById(R.id.inspeksiawal),"Berhasil Mengirim Tindakan",Snackbar.LENGTH_LONG).show();
     }
 
     void tambahcatatan() {

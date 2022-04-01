@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.iinspector.InspeksiAwal;
 import com.example.iinspector.R;
+import com.example.iinspector.Side;
 import com.example.iinspector.ui.gallery.GalleryFragment;
 import com.example.iinspector.ui.slideshow.SlideshowFragment;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -42,7 +43,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         title=remoteMessage.getData().get("Title");
         message=remoteMessage.getData().get("Message");
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(this, InspeksiAwal.class);
+        Intent intent = new Intent(this, Side.class);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(id, "123", importance);//Generating channel
