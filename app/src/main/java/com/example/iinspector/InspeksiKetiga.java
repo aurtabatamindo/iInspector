@@ -746,7 +746,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         String typeResponse = String.valueOf(maptype.get("type"));
                                         Log.d("getTypeResponse", typeResponse);
 
-                                        Description = new TextView(InspeksiKetiga.this);
+                                        TextView Description = new TextView(InspeksiKetiga.this);
                                         Description.setBackgroundResource(R.drawable.cardpertanyaan);
                                         Description.setTextSize(11);
                                         Description.setPaddingRelative(50, 25, 10, 25);
@@ -762,8 +762,50 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 idDesclick = document.getId();
                                                 qAction = Description.getText().toString();
                                                 Log.d("idDesc", idDesclick);
-                                                //actionPopup
-                                                actionPopup();
+
+                                                //popup menu
+                                                final PopupMenu popupMenu = new PopupMenu(InspeksiKetiga.this, Description);
+                                                //add menu items in popup menu
+                                                popupMenu.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+                                                popupMenu.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+                                                popupMenu.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+
+                                                //handle menu item clicks
+                                                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                                    @Override
+                                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                                        //get id of the clicked item
+                                                        int id = menuItem.getItemId();
+                                                        //handle clicks
+                                                        if (id == 0) {
+                                                            tambahcatatan();
+                                                            //Copy clicked
+                                                            //set text
+                                                            //selectedTv.setText("Copy clicked");
+                                                        } else if (id == 1) {
+                                                            ambilfoto();
+                                                            //Share clicked
+                                                            //set text
+                                                            // selectedTv.setText("Share clicked");
+                                                        } else if (id == 2) {
+                                                            tindakan();
+                                                            //Save clicked
+                                                            //set text
+                                                            //selectedTv.setText("Save clicked");
+                                                        }
+
+                                                        return false;
+                                                    }
+                                                });
+                                                //handle button click, show popup menu
+                                                Description.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        popupMenu.show();
+
+                                                    }
+                                                });
+
                                                 return false;
                                             }
                                         });
@@ -1423,6 +1465,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     }
     private void actionPopup() {
+        Log.d("inPopup","yes");
         //popup menu
         final PopupMenu popupMenu = new PopupMenu(InspeksiKetiga.this, Description);
         //add menu items in popup menu
