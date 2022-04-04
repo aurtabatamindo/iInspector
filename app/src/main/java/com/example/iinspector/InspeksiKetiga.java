@@ -244,6 +244,8 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     String qAction;
 
+    ArrayList<Map> isi;
+
     private int waktu_loading = 6000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,7 +260,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         progress.setTitle("Loading");
         progress.setMessage("Memproses Data...");
         progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
-        progress.show();
+//        progress.show();
 
 
         //idDocument
@@ -277,7 +279,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         nPage = findViewById(R.id.nPage);
         halaman();
 
-//        showtitle();
+        showtitle();
 
         //Button
         buttonberiktunya();
@@ -377,6 +379,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                                     if (type.equals("section")) {
+//                                        progress.show();
 
                                         HashMap<String, Object> contentArray = new HashMap<>();
 
@@ -388,7 +391,9 @@ public class InspeksiKetiga extends AppCompatActivity {
 
 
                                         ArrayList <Map> tempatTerakhir = new ArrayList<Map>();
+
                                         ArrayList childContent = new ArrayList();
+
                                         idDocSection = document.getId();
                                         pages
                                             .document(documentId)
@@ -404,169 +409,181 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                                                Map<String, Object> childContentObj = new HashMap<>();
-                                                                childContentObj.put("id", document.getId());
-                                                                childContentObj.put("parentContentId", document.getString("parentContentId"));
-                                                                childContentObj.put("type", document.getString("type"));
-                                                                childContentObj.put("description", document.getString("description"));
-                                                                childContentObj.put("typeOfResponse", document.get("typeOfResponse"));
-                                                                childContent.add(childContentObj);
-
-                                                            }
+                                                            Map<String, Object> childContentObj = new HashMap<>();
+                                                            childContentObj.put("id", document.getId());
+                                                            childContentObj.put("parentContentId", document.getString("parentContentId"));
+                                                            childContentObj.put("type", document.getString("type"));
+                                                            childContentObj.put("description", document.getString("description"));
+                                                            childContentObj.put("typeOfResponse", document.get("typeOfResponse"));
+                                                            childContent.add(childContentObj);
 
                                                         }
 
+                                                   }
                                                         contentArray.put("childContents", childContent);
                                                         Log.d("asu1", contentArray.toString());
                                                         tempatTerakhir.remove(contentArray);
                                                         tempatTerakhir.add(contentArray);
                                                         Log.d("asu2", tempatTerakhir.toString());
 
+//                                                        if (childContent.isEmpty()){
+//                                                            Log.d("tidakTampil","Yes");
+//                                                            getAgain();
+//
+//                                                            contentArray.put("childContents", childContent);
+//                                                            Log.d("asu1", contentArray.toString());
+//                                                            tempatTerakhir.remove(contentArray);
+//                                                            tempatTerakhir.add(contentArray);
+//                                                            Log.d("asu2", tempatTerakhir.toString());
+//                                                        }else {
+                                                            progress.dismiss();
 
-                                                        int sizeTempatTerakhir = tempatTerakhir.size() ;
-                                                        for (int i = 0; i <sizeTempatTerakhir ; i++) {
+                                                            int sizeTempatTerakhir = tempatTerakhir.size();
+                                                            for (int i = 0; i < sizeTempatTerakhir; i++) {
 
-                                                            String descS = tempatTerakhir.get(i).get("description").toString();
+                                                                String descS = tempatTerakhir.get(i).get("description").toString();
 
-                                                            Log.d("getDescS",descS);
-                                                            Log.d("tempatTerakhir",tempatTerakhir.toString());
+                                                                Log.d("getDescS", descS);
+                                                                Log.d("tempatTerakhir", tempatTerakhir.toString());
 
-                                                            //Build Section
-                                                            Section = new TextView(InspeksiKetiga.this);
-                                                            Section.setLayoutParams(params3);
-                                                            Section.setBackgroundResource(R.drawable.cardsection);
-                                                            Section.setTextSize(13);
-                                                            Section.setPaddingRelative(50, 25, 10, 25);
-                                                            Section.setTypeface(null, Typeface.ITALIC);
-                                                            Section.setTextColor(Color.parseColor("#767676"));
-                                                            Drawable img1 = getApplicationContext().getResources().getDrawable(R.drawable.down_icon);
-                                                            Section.setCompoundDrawablesWithIntrinsicBounds(null, null, img1, null);
-                                                            Section.setText(descS);
+                                                                //Build Section
+                                                                Section = new TextView(InspeksiKetiga.this);
+                                                                Section.setLayoutParams(params3);
+                                                                Section.setBackgroundResource(R.drawable.cardsection);
+                                                                Section.setTextSize(13);
+                                                                Section.setPaddingRelative(50, 25, 10, 25);
+                                                                Section.setTypeface(null, Typeface.ITALIC);
+                                                                Section.setTextColor(Color.parseColor("#767676"));
+                                                                Drawable img1 = getApplicationContext().getResources().getDrawable(R.drawable.down_icon);
+                                                                Section.setCompoundDrawablesWithIntrinsicBounds(null, null, img1, null);
+                                                                Section.setText(descS);
 
-                                                            myLinearLayout.addView(Section);
+                                                                myLinearLayout.addView(Section);
 
-                                                            ArrayList<Map> isi = (ArrayList<Map>) tempatTerakhir.get(i).get("childContents");
+                                                                isi = (ArrayList<Map>) tempatTerakhir.get(i).get("childContents");
+                                                                Log.d("checkIsi", isi.toString());
 
-                                                            for (int a = 0; a < isi.size(); a++) {
+                                                                for (int a = 0; a < isi.size(); a++) {
 
-                                                                //Initializing frame layout
-                                                                framelayoutSection = new FrameLayout(InspeksiKetiga.this);
-                                                                framelayoutSection.setLayoutParams(params3);
-                                                                framelayoutSection.setBackgroundResource(R.drawable.cardpertanyaan);
+                                                                    //Initializing frame layout
+                                                                    framelayoutSection = new FrameLayout(InspeksiKetiga.this);
+                                                                    framelayoutSection.setLayoutParams(params3);
+                                                                    framelayoutSection.setBackgroundResource(R.drawable.cardpertanyaan);
 
-                                                                String descIsi = isi.get(a).get("description").toString();
+                                                                    String descIsi = (String) isi.get(a).get("description").toString();
+                                                                    Log.d("iniDescSec", descIsi);
 
-                                                                Log.d("iniDescSec", descIsi);
+                                                                    Log.d("iniDescSec", "Notnull");
 
-                                                                //get Map typeOfresonse
-                                                                Map maptype = (Map) isi.get(a).get("typeOfResponse");
-                                                                Log.d("maptypeInSection", maptype.toString());
+                                                                    //get Map typeOfresonse
+                                                                    Map maptype = (Map) isi.get(a).get("typeOfResponse");
+                                                                    Log.d("maptypeInSection", maptype.toString());
 
-                                                                //get type in Map typeOfresponse
-                                                                String typeResponse = String.valueOf(maptype.get("type"));
-                                                                Log.d("getTypeResponseInsection", typeResponse);
+                                                                    //get type in Map typeOfresponse
+                                                                    String typeResponse = String.valueOf(maptype.get("type"));
+                                                                    Log.d("getTypeResponseInsection", typeResponse);
 
-                                                                // Build Description
-                                                                final TextView DescriptionSection = new TextView(InspeksiKetiga.this);
-                                                                DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
-                                                                DescriptionSection.setTextSize(11);
-                                                                DescriptionSection.setPaddingRelative(50, 25, 10, 25);
-                                                                DescriptionSection.setTypeface(null, Typeface.ITALIC);
-                                                                DescriptionSection.setTextColor(Color.parseColor("#767676"));
-                                                                DescriptionSection.setLayoutParams(params3);
+                                                                    // Build Description
+                                                                    final TextView DescriptionSection = new TextView(InspeksiKetiga.this);
+                                                                    DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
+                                                                    DescriptionSection.setTextSize(11);
+                                                                    DescriptionSection.setPaddingRelative(50, 25, 10, 25);
+                                                                    DescriptionSection.setTypeface(null, Typeface.ITALIC);
+                                                                    DescriptionSection.setTextColor(Color.parseColor("#767676"));
+                                                                    DescriptionSection.setLayoutParams(params3);
 //                                                                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
 //                                                                DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
-                                                                DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
-                                                                DescriptionSection.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
-                                                                DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
+                                                                    DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
+                                                                    DescriptionSection.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
+                                                                    DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
 
-                                                                Log.d("idclickk",DescriptionSection.getTag(R.id.idClick).toString() + "parentSection : "+ DescriptionSection.getTag(R.id.parentSection).toString());
-                                                                DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
-                                                                    @Override
-                                                                    public boolean onTouch(View v, MotionEvent event) {
-                                                                        idDesclick = DescriptionSection.getTag(R.id.idClick).toString();
-                                                                        parentSection = DescriptionSection.getTag(R.id.parentSection).toString();
-                                                                        Log.d("idDesc",idDesclick+" parent : "+parentSection);
+                                                                    Log.d("idclickk", DescriptionSection.getTag(R.id.idClick).toString() + "parentSection : " + DescriptionSection.getTag(R.id.parentSection).toString());
+                                                                    DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
+                                                                        @Override
+                                                                        public boolean onTouch(View v, MotionEvent event) {
+                                                                            idDesclick = DescriptionSection.getTag(R.id.idClick).toString();
+                                                                            parentSection = DescriptionSection.getTag(R.id.parentSection).toString();
+                                                                            Log.d("idDesc", idDesclick + " parent : " + parentSection);
 
-                                                                        //popup menu
-                                                                        final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, DescriptionSection);
-                                                                        //add menu items in popup menu
-                                                                        popupMenu2.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
-                                                                        popupMenu2.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
-                                                                        popupMenu2.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+                                                                            //popup menu
+                                                                            final PopupMenu popupMenu2 = new PopupMenu(InspeksiKetiga.this, DescriptionSection);
+                                                                            //add menu items in popup menu
+                                                                            popupMenu2.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+                                                                            popupMenu2.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+                                                                            popupMenu2.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
 
-                                                                        //handle menu item clicks
-                                                                        popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                                                            @Override
-                                                                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                                                                //get id of the clicked item
-                                                                                int id = menuItem.getItemId();
-                                                                                //handle clicks
-                                                                                if (id == 0) {
+                                                                            //handle menu item clicks
+                                                                            popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                                                                @Override
+                                                                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                                                                    //get id of the clicked item
+                                                                                    int id = menuItem.getItemId();
+                                                                                    //handle clicks
+                                                                                    if (id == 0) {
 
-                                                                                    tambahcatatanSection();
-                                                                                    //Copy clicked
-                                                                                    //set text
-                                                                                    //selectedTv.setText("Copy clicked");
-                                                                                } else if (id == 1) {
-                                                                                    ambilfotoSection();
-                                                                                    //Share clicked
-                                                                                    //set text
-                                                                                    // selectedTv.setText("Share clicked");
-                                                                                } else if (id == 2) {
-                                                                                    tindakanSection();
-                                                                                    //Save clicked
-                                                                                    //set text
-                                                                                    //selectedTv.setText("Save clicked");
+                                                                                        tambahcatatanSection();
+                                                                                        //Copy clicked
+                                                                                        //set text
+                                                                                        //selectedTv.setText("Copy clicked");
+                                                                                    } else if (id == 1) {
+                                                                                        ambilfotoSection();
+                                                                                        //Share clicked
+                                                                                        //set text
+                                                                                        // selectedTv.setText("Share clicked");
+                                                                                    } else if (id == 2) {
+                                                                                        tindakanSection();
+                                                                                        //Save clicked
+                                                                                        //set text
+                                                                                        //selectedTv.setText("Save clicked");
+                                                                                    }
+
+                                                                                    return false;
                                                                                 }
+                                                                            });
+                                                                            popupMenu2.show();
 
-                                                                                return false;
-                                                                            }
-                                                                        });
-                                                                        popupMenu2.show();
-
-                                                                        return false;
-                                                                    }
-                                                                });
+                                                                            return false;
+                                                                        }
+                                                                    });
 
 
-                                                                framelayoutSection.addView(DescriptionSection);
+                                                                    framelayoutSection.addView(DescriptionSection);
 //                                                                myLinearLayout.addView(DescriptionSection);
 
-                                                                if (typeResponse.equals("multiple-choices")) {
+                                                                    if (typeResponse.equals("multiple-choices")) {
 
-                                                                    ArrayList opsi = (ArrayList) maptype.get("option");
-                                                                    Log.d("iniOpsi", opsi.toString());
+                                                                        ArrayList opsi = (ArrayList) maptype.get("option");
+                                                                        Log.d("iniOpsi", opsi.toString());
 
-                                                                    //get Map optionObj
-                                                                    Map mapOptionObj= (Map) maptype.get("optionObj");
-                                                                    Log.d("optionObj", mapOptionObj.toString());
+                                                                        //get Map optionObj
+                                                                        Map mapOptionObj = (Map) maptype.get("optionObj");
+                                                                        Log.d("optionObj", mapOptionObj.toString());
 
-                                                                    List<Map<String, Object>> choicesSection = (List<Map<String, Object>>) mapOptionObj.get("choices");
-                                                                    Log.d("choicesSec", choicesSection.toString());
+                                                                        List<Map<String, Object>> choicesSection = (List<Map<String, Object>>) mapOptionObj.get("choices");
+                                                                        Log.d("choicesSec", choicesSection.toString());
 
-                                                                    //MapOpsiSection
-                                                                    ArrayList<String> mapOpsiSection = new ArrayList<String>();
-                                                                    RadioGroup rgs = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
-                                                                    rgs.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
-                                                                    rgs.setLayoutParams(params2);
-                                                                    for (int b = 0; b < choicesSection.size(); b++) {
-                                                                        String nameSection = (String) choicesSection.get(b).get("name");
+                                                                        //MapOpsiSection
+                                                                        ArrayList<String> mapOpsiSection = new ArrayList<String>();
+                                                                        RadioGroup rgs = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
+                                                                        rgs.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
+                                                                        rgs.setLayoutParams(params2);
+                                                                        for (int b = 0; b < choicesSection.size(); b++) {
+                                                                            String nameSection = (String) choicesSection.get(b).get("name");
 
-                                                                        // Type = checkboxes
-                                                                        boxOpsiSec = new RadioButton(InspeksiKetiga.this);
-                                                                        boxOpsiSec.setLayoutParams(params5);
-                                                                        boxOpsiSec.setId(View.generateViewId());
-                                                                        boxOpsiSec.setText(nameSection);
+                                                                            // Type = checkboxes
+                                                                            boxOpsiSec = new RadioButton(InspeksiKetiga.this);
+                                                                            boxOpsiSec.setLayoutParams(params5);
+                                                                            boxOpsiSec.setId(View.generateViewId());
+                                                                            boxOpsiSec.setText(nameSection);
 //                                                                        boxOpsiSec.setTag(R.id.idColorSection,choicesSection.get(b).get("bgColor"));
 //                                                                        boxOpsiSec.setTag(R.id.idColorTextSection,choicesSection.get(b).get("textColor"));
-                                                                        boxOpsiSec.setTag(R.id.idClick, isi.get(a).get("id"));
-                                                                        boxOpsiSec.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
-                                                                        boxOpsiSec.setBackgroundColor(Color.parseColor(choicesSection.get(b).get("bgColor").toString()));
-                                                                        boxOpsiSec.setTextColor(Color.parseColor(choicesSection.get(b).get("textColor").toString()));
-                                                                        boxOpsiSec.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                                                            boxOpsiSec.setTag(R.id.idClick, isi.get(a).get("id"));
+                                                                            boxOpsiSec.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
+                                                                            boxOpsiSec.setBackgroundColor(Color.parseColor(choicesSection.get(b).get("bgColor").toString()));
+                                                                            boxOpsiSec.setTextColor(Color.parseColor(choicesSection.get(b).get("textColor").toString()));
+                                                                            boxOpsiSec.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 //                                                                        boxOpsiSec.setButtonDrawable(new StateListDrawable()); //remove circle
-                                                                        rgs.addView(boxOpsiSec);
+                                                                            rgs.addView(boxOpsiSec);
 //                                                                        boxOpsiSec.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //                                                                            @Override
 //                                                                            public void onFocusChange(View v, boolean hasFocus) {
@@ -641,11 +658,11 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                                                }
 //                                                                            }
 //                                                                        });
-                                                                    }
-                                                                    framelayoutSection.addView(rgs);
-                                                                    rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                                                        @Override
-                                                                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                                                        }
+                                                                        framelayoutSection.addView(rgs);
+                                                                        rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                                            @Override
+                                                                            public void onCheckedChanged(RadioGroup group, int checkedId) {
 //                                                                            if (boxOpsiSec.isChecked()){
 //                                                                                String bgcolorSection = boxOpsiSec.getTag(R.id.idColorSection).toString();
 //                                                                                String bgcolorTextSection = boxOpsiSec.getTag(R.id.idColorTextSection).toString();
@@ -670,354 +687,355 @@ public class InspeksiKetiga extends AppCompatActivity {
 //                                                                                boxOpsiSec.setTextColor(Color.parseColor(bgcolorTextSection));
 //                                                                            }
 
-                                                                            boxOpsiSec = (RadioButton) findViewById(checkedId);
-                                                                            idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
-                                                                            parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
-                                                                            mapOpsiSection.add(boxOpsiSec.getText().toString());
+                                                                                boxOpsiSec = (RadioButton) findViewById(checkedId);
+                                                                                idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
+                                                                                parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
+                                                                                mapOpsiSection.add(boxOpsiSec.getText().toString());
 
-                                                                            pages.document(documentId)
-                                                                                    .collection("pages")
-                                                                                    .document(idPages)
-                                                                                    .collection("contents")
-                                                                                    .document(parentIdBox)
-                                                                                    .collection("contents")
-                                                                                    .document(idAnSectionBox)
-                                                                                    .update("answer", boxOpsiSec.getText());
-
-                                                                        }
-                                                                    });
-//                                                                    myLinearLayout.addView(rgs);
-                                                                }
-
-                                                                else {
-
-                                                                    final EditText AnswerSection = new EditText(InspeksiKetiga.this);
-                                                                    AnswerSection.setLayoutParams(params6);
-                                                                    AnswerSection.setTextSize(11);
-//                                                                    AnswerSection.setBackgroundColor(Color.parseColor("#767676"));
-                                                                    AnswerSection.setHint("Jawab disini");
-                                                                    AnswerSection.setTag(R.id.id, isi.get(a).get("id"));
-                                                                    AnswerSection.setTag(R.id.parentContentId, isi.get(a).get("parentContentId"));
-
-
-                                                                    AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                                                        @Override
-                                                                        public void onFocusChange(View v, boolean hasFocus) {
-
-                                                                            if (hasFocus) {
-                                                                                idAnSection = AnswerSection.getTag(R.id.id).toString();
-                                                                                parentId = AnswerSection.getTag(R.id.parentContentId).toString();
-
-                                                                                Log.d("getIdSectionAsu", idAnSection);
-                                                                                Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
-
-                                                                            } else {
-                                                                                //Text
-                                                                                String idaAnswer = AnswerSection.getText().toString();
                                                                                 pages.document(documentId)
                                                                                         .collection("pages")
                                                                                         .document(idPages)
                                                                                         .collection("contents")
-                                                                                        .document(parentId)
+                                                                                        .document(parentIdBox)
                                                                                         .collection("contents")
-                                                                                        .document(idAnSection)
-                                                                                        .update("answer", idaAnswer);
+                                                                                        .document(idAnSectionBox)
+                                                                                        .update("answer", boxOpsiSec.getText());
+
+                                                                            }
+                                                                        });
+//                                                                    myLinearLayout.addView(rgs);
+                                                                    } else {
+
+                                                                        final EditText AnswerSection = new EditText(InspeksiKetiga.this);
+                                                                        AnswerSection.setLayoutParams(params6);
+                                                                        AnswerSection.setTextSize(11);
+//                                                                    AnswerSection.setBackgroundColor(Color.parseColor("#767676"));
+                                                                        AnswerSection.setHint("Jawab disini");
+                                                                        AnswerSection.setTag(R.id.id, isi.get(a).get("id"));
+                                                                        AnswerSection.setTag(R.id.parentContentId, isi.get(a).get("parentContentId"));
+
+
+                                                                        AnswerSection.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                                                            @Override
+                                                                            public void onFocusChange(View v, boolean hasFocus) {
+
+                                                                                if (hasFocus) {
+                                                                                    idAnSection = AnswerSection.getTag(R.id.id).toString();
+                                                                                    parentId = AnswerSection.getTag(R.id.parentContentId).toString();
+
+                                                                                    Log.d("getIdSectionAsu", idAnSection);
+                                                                                    Log.d("fokus Ya " + "parentId", parentId + "  idaSection : " + idAnSection);
+
+                                                                                } else {
+                                                                                    //Text
+                                                                                    String idaAnswer = AnswerSection.getText().toString();
+                                                                                    pages.document(documentId)
+                                                                                            .collection("pages")
+                                                                                            .document(idPages)
+                                                                                            .collection("contents")
+                                                                                            .document(parentId)
+                                                                                            .collection("contents")
+                                                                                            .document(idAnSection)
+                                                                                            .update("answer", idaAnswer);
 
 //                                                                            Log.d("fokus Tidak " + "parentId", parentId + "  idaSection : " + idAnSection);
+                                                                                }
                                                                             }
-                                                                        }
-                                                                    });
+                                                                        });
 
-                                                                    framelayoutSection.addView(AnswerSection);
+                                                                        framelayoutSection.addView(AnswerSection);
 //                                                                    myLinearLayout.addView(AnswerSection);
-                                                                }
+                                                                    }
 
-                                                                myLinearLayout.addView(framelayoutSection);
-                                                            }
+                                                                    myLinearLayout.addView(framelayoutSection);
+//                                                                }
 
+//                                                            }
                                                         }
-                                                        }
+                                                    }
+                                                }
                                             });
 
                                     }
 
                                     else {
-                                        //Initializing frame layout
-                                        framelayout = new FrameLayout(InspeksiKetiga.this);
-                                        framelayout.setLayoutParams(params3);
-                                        framelayout.setBackgroundResource(R.drawable.cardpertanyaan);
 
-
-                                        //get Map typeOfresonse
-                                        Map maptype = (Map) document.get("typeOfResponse");
-                                        Log.d("maptype", maptype.toString());
-
-                                        //get type in Map typeOfresponse
-                                        String typeResponse = String.valueOf(maptype.get("type"));
-                                        Log.d("getTypeResponse", typeResponse);
-
-                                        TextView Description = new TextView(InspeksiKetiga.this);
-                                        Description.setBackgroundResource(R.drawable.cardpertanyaan);
-                                        Description.setTextSize(11);
-                                        Description.setPaddingRelative(50, 25, 10, 25);
-                                        Description.setTypeface(null, Typeface.ITALIC);
-                                        Description.setTextColor(Color.parseColor("#767676"));
-                                        Description.setLayoutParams(params3);
-//                                        Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
-//                                        Description.setCompoundDrawablesWithIntrinsicBounds(null, null, null, img);
-                                        Description.setText("Pertanyaan :" + "\n" + desc);
-                                        Description.setOnTouchListener(new View.OnTouchListener() {
-                                            @Override
-                                            public boolean onTouch(View v, MotionEvent event) {
-                                                idDesclick = document.getId();
-                                                qAction = Description.getText().toString();
-                                                Log.d("idDesc", idDesclick);
-
-                                                //popup menu
-                                                final PopupMenu popupMenu = new PopupMenu(InspeksiKetiga.this, Description);
-                                                //add menu items in popup menu
-                                                popupMenu.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
-                                                popupMenu.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
-                                                popupMenu.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
-
-                                                //handle menu item clicks
-                                                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                                    @Override
-                                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                                        //get id of the clicked item
-                                                        int id = menuItem.getItemId();
-                                                        //handle clicks
-                                                        if (id == 0) {
-                                                            tambahcatatan();
-                                                            //Copy clicked
-                                                            //set text
-                                                            //selectedTv.setText("Copy clicked");
-                                                        } else if (id == 1) {
-                                                            ambilfoto();
-                                                            //Share clicked
-                                                            //set text
-                                                            // selectedTv.setText("Share clicked");
-                                                        } else if (id == 2) {
-                                                            tindakan();
-                                                            //Save clicked
-                                                            //set text
-                                                            //selectedTv.setText("Save clicked");
-                                                        }
-
-                                                        return false;
-                                                    }
-                                                });
-                                                //handle button click, show popup menu
-                                                Description.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        popupMenu.show();
-
-                                                    }
-                                                });
-
-                                                return false;
-                                            }
-                                        });
-
-                                        framelayout.addView(Description);
-
-                                        if (typeResponse.equals("multiple-choices")) {
-
-                                            ArrayList opsi = (ArrayList) maptype.get("option");
-                                            Log.d("iniOpsi", opsi.toString());
-
-                                            //MapOpsi
-                                            ArrayList<String> mapOpsi = new ArrayList<String>();
-
-                                            //get Map optionObj
-                                            Map mapOptionObj= (Map) maptype.get("optionObj");
-                                            Log.d("optionObj", mapOptionObj.toString());
-
-                                            List<Map<String, Object>> choices = (List<Map<String, Object>>) mapOptionObj.get("choices");
-                                            Log.d("choices", choices.toString());
-
-
-
-                                            RadioGroup rg = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
-                                            rg.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
-                                            rg.setLayoutParams(params2);
-                                            for (int i = 0; i < choices.size(); i++) {
-
-                                                String name = (String) choices.get(i).get("name");
-
-                                                // Type = checkboxes
-                                                boxOpsi = new RadioButton(InspeksiKetiga.this);
-                                                boxOpsi.setText(name);
-                                                boxOpsi.setId(View.generateViewId());
-                                                boxOpsi.setLayoutParams(params4);
-//                                                boxOpsi.setTag(R.id.idColor,choices.get(i).get("bgColor"));
-//                                                boxOpsi.setTag(R.id.idColorText,choices.get(i).get("textColor"));
-                                                boxOpsi.setBackgroundColor(Color.parseColor(choices.get(i).get("bgColor").toString()));
-                                                boxOpsi.setTextColor(Color.parseColor(choices.get(i).get("textColor").toString()));
-//                                                boxOpsi.setButtonDrawable(new StateListDrawable()); //remove circle
-                                                boxOpsi.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                                                rg.addView(boxOpsi);
-
-                                                //                                                boxOpsi.setFocusable(true);
-//                                                boxOpsi.setFocusableInTouchMode(true);
-
-//                                                boxOpsi.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                                        //Initializing frame layout
+//                                        framelayout = new FrameLayout(InspeksiKetiga.this);
+//                                        framelayout.setLayoutParams(params3);
+//                                        framelayout.setBackgroundResource(R.drawable.cardpertanyaan);
+//
+//
+//                                        //get Map typeOfresonse
+//                                        Map maptype = (Map) document.get("typeOfResponse");
+//                                        Log.d("maptype", maptype.toString());
+//
+//                                        //get type in Map typeOfresponse
+//                                        String typeResponse = String.valueOf(maptype.get("type"));
+//                                        Log.d("getTypeResponse", typeResponse);
+//
+//                                        TextView Description = new TextView(InspeksiKetiga.this);
+//                                        Description.setBackgroundResource(R.drawable.cardpertanyaan);
+//                                        Description.setTextSize(11);
+//                                        Description.setPaddingRelative(50, 25, 10, 25);
+//                                        Description.setTypeface(null, Typeface.ITALIC);
+//                                        Description.setTextColor(Color.parseColor("#767676"));
+//                                        Description.setLayoutParams(params3);
+////                                        Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
+////                                        Description.setCompoundDrawablesWithIntrinsicBounds(null, null, null, img);
+//                                        Description.setText("Pertanyaan :" + "\n" + desc);
+//                                        Description.setOnTouchListener(new View.OnTouchListener() {
+//                                            @Override
+//                                            public boolean onTouch(View v, MotionEvent event) {
+//                                                idDesclick = document.getId();
+//                                                qAction = Description.getText().toString();
+//                                                Log.d("idDesc", idDesclick);
+//
+//                                                //popup menu
+//                                                final PopupMenu popupMenu = new PopupMenu(InspeksiKetiga.this, Description);
+//                                                //add menu items in popup menu
+//                                                popupMenu.getMenu().add(Menu.NONE, 0, 0, "Tambah Catatan"); //parm 2 is menu id, param 3 is position of this menu item in menu items list, param 4 is title of the menu
+//                                                popupMenu.getMenu().add(Menu.NONE, 1, 1, "Tambah Foto");
+//                                                popupMenu.getMenu().add(Menu.NONE, 2, 2, "Tambah Tindakan");
+//
+//                                                //handle menu item clicks
+//                                                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 //                                                    @Override
-//                                                    public void onFocusChange(View v, boolean hasFocus) {
-//
-//                                                        if (hasFocus){
-//
-//                                                            boxOpsi.setBackgroundColor(getResources().getColor(R.color.Python));
-//                                                            boxOpsi.setTextColor(Color.WHITE);
-//                                                            idOpsi = document.getId();
-//                                                            mapOpsi.add(boxOpsi.getText().toString());
-//                                                            Log.d("opsiAns", mapOpsi.toString());
-//                                                            //checkboxes update
-//                                                            pages.document(documentId)
-//                                                                    .collection("pages")
-//                                                                    .document(idPages)
-//                                                                    .collection("contents")
-//                                                                    .document(idOpsi)
-//                                                                    .update("answer", mapOpsi);
-//
-//                                                        }else{
-//
-//                                                            boxOpsi.setBackgroundColor(Color.WHITE);
-//                                                            boxOpsi.setTextColor(Color.GRAY);
-//                                                            idOpsi = document.getId();
-//                                                            mapOpsi.remove(boxOpsi.getText().toString());
-//                                                            //checkboxes update
-//                                                            pages.document(documentId)
-//                                                                    .collection("pages")
-//                                                                    .document(idPages)
-//                                                                    .collection("contents")
-//                                                                    .document(idOpsi)
-//                                                                    .update("answer", mapOpsi);
-//
-//
+//                                                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                                                        //get id of the clicked item
+//                                                        int id = menuItem.getItemId();
+//                                                        //handle clicks
+//                                                        if (id == 0) {
+//                                                            tambahcatatan();
+//                                                            //Copy clicked
+//                                                            //set text
+//                                                            //selectedTv.setText("Copy clicked");
+//                                                        } else if (id == 1) {
+//                                                            ambilfoto();
+//                                                            //Share clicked
+//                                                            //set text
+//                                                            // selectedTv.setText("Share clicked");
+//                                                        } else if (id == 2) {
+//                                                            tindakan();
+//                                                            //Save clicked
+//                                                            //set text
+//                                                            //selectedTv.setText("Save clicked");
 //                                                        }
 //
+//                                                        return false;
 //                                                    }
-//
 //                                                });
-//                                                boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                                                //handle button click, show popup menu
+//                                                Description.setOnClickListener(new View.OnClickListener() {
 //                                                    @Override
-//                                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                                                    public void onClick(View view) {
+//                                                        popupMenu.show();
 //
-//                                                        if (isChecked) {
-//                                                            idOpsi = document.getId();
-//                                                            mapOpsi.add(boxOpsi.getText().toString());
-//                                                            Log.d("opsiAns", mapOpsi.toString());
-//                                                            //checkboxes update
-//                                                            pages.document(documentId)
-//                                                                    .collection("pages")
-//                                                                    .document(idPages)
-//                                                                    .collection("contents")
-//                                                                    .document(idOpsi)
-//                                                                    .update("answer", mapOpsi);
-//                                                        } else {
-//                                                            idOpsi = document.getId();
-//                                                            mapOpsi.remove(boxOpsi.getText().toString());
-//                                                            //checkboxes update
-//                                                            pages.document(documentId)
-//                                                                    .collection("pages")
-//                                                                    .document(idPages)
-//                                                                    .collection("contents")
-//                                                                    .document(idOpsi)
-//                                                                    .update("answer", mapOpsi);
-//                                                        }
 //                                                    }
 //                                                });
-
-                                            }
-                                            framelayout.addView(rg);
-
-                                            rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                                @Override
-                                                public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-
-//                                                    if (boxOpsi.isChecked()){
 //
-//                                                        String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
-//                                                        String bgcolorText = boxOpsi.getTag(R.id.idColorText).toString();
-//                                                        Log.d("checkColor",bgcolor);
-//                                                        boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
-//                                                        boxOpsi.setTextColor(Color.parseColor(bgcolorText));
-//                                                    }else {
-//                                                        boxOpsi.setBackgroundColor(Color.parseColor("#767676"));
-//                                                        boxOpsi.setTextColor(Color.parseColor("#F1F1F1"));
-//                                                    }
-//                                                      boxOpsi = (RadioButton) findViewById(checkedId);
-////                                                    Toast.makeText(InspeksiKetiga.this, boxOpsi.getText(), Toast.LENGTH_SHORT).show();
+//                                                return false;
+//                                            }
+//                                        });
 //
-//                                                    if (boxOpsi.isChecked()){
-//                                                        String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
-//                                                        String bgcolorText = boxOpsi.getTag(R.id.idColorText).toString();
-//                                                        Log.d("checkColor",bgcolor);
-//                                                        boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
-//                                                        boxOpsi.setTextColor(Color.parseColor(bgcolorText));
+//                                        framelayout.addView(Description);
+//
+//                                        if (typeResponse.equals("multiple-choices")) {
+//
+//                                            ArrayList opsi = (ArrayList) maptype.get("option");
+//                                            Log.d("iniOpsi", opsi.toString());
+//
+//                                            //MapOpsi
+//                                            ArrayList<String> mapOpsi = new ArrayList<String>();
+//
+//                                            //get Map optionObj
+//                                            Map mapOptionObj= (Map) maptype.get("optionObj");
+//                                            Log.d("optionObj", mapOptionObj.toString());
+//
+//                                            List<Map<String, Object>> choices = (List<Map<String, Object>>) mapOptionObj.get("choices");
+//                                            Log.d("choices", choices.toString());
+//
+//
+//
+//                                            RadioGroup rg = new RadioGroup(InspeksiKetiga.this); //create the RadioGroup
+//                                            rg.setOrientation(RadioGroup.VERTICAL);//or RadioGroup.VERTICAL
+//                                            rg.setLayoutParams(params2);
+//                                            for (int i = 0; i < choices.size(); i++) {
+//
+//                                                String name = (String) choices.get(i).get("name");
+//
+//                                                // Type = checkboxes
+//                                                boxOpsi = new RadioButton(InspeksiKetiga.this);
+//                                                boxOpsi.setText(name);
+//                                                boxOpsi.setId(View.generateViewId());
+//                                                boxOpsi.setLayoutParams(params4);
+////                                                boxOpsi.setTag(R.id.idColor,choices.get(i).get("bgColor"));
+////                                                boxOpsi.setTag(R.id.idColorText,choices.get(i).get("textColor"));
+//                                                boxOpsi.setBackgroundColor(Color.parseColor(choices.get(i).get("bgColor").toString()));
+//                                                boxOpsi.setTextColor(Color.parseColor(choices.get(i).get("textColor").toString()));
+////                                                boxOpsi.setButtonDrawable(new StateListDrawable()); //remove circle
+//                                                boxOpsi.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//                                                rg.addView(boxOpsi);
+//
+//                                                //                                                boxOpsi.setFocusable(true);
+////                                                boxOpsi.setFocusableInTouchMode(true);
+//
+////                                                boxOpsi.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+////                                                    @Override
+////                                                    public void onFocusChange(View v, boolean hasFocus) {
+////
+////                                                        if (hasFocus){
+////
+////                                                            boxOpsi.setBackgroundColor(getResources().getColor(R.color.Python));
+////                                                            boxOpsi.setTextColor(Color.WHITE);
+////                                                            idOpsi = document.getId();
+////                                                            mapOpsi.add(boxOpsi.getText().toString());
+////                                                            Log.d("opsiAns", mapOpsi.toString());
+////                                                            //checkboxes update
+////                                                            pages.document(documentId)
+////                                                                    .collection("pages")
+////                                                                    .document(idPages)
+////                                                                    .collection("contents")
+////                                                                    .document(idOpsi)
+////                                                                    .update("answer", mapOpsi);
+////
+////                                                        }else{
+////
+////                                                            boxOpsi.setBackgroundColor(Color.WHITE);
+////                                                            boxOpsi.setTextColor(Color.GRAY);
+////                                                            idOpsi = document.getId();
+////                                                            mapOpsi.remove(boxOpsi.getText().toString());
+////                                                            //checkboxes update
+////                                                            pages.document(documentId)
+////                                                                    .collection("pages")
+////                                                                    .document(idPages)
+////                                                                    .collection("contents")
+////                                                                    .document(idOpsi)
+////                                                                    .update("answer", mapOpsi);
+////
+////
+////                                                        }
+////
+////                                                    }
+////
+////                                                });
+////                                                boxOpsi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+////                                                    @Override
+////                                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+////
+////                                                        if (isChecked) {
+////                                                            idOpsi = document.getId();
+////                                                            mapOpsi.add(boxOpsi.getText().toString());
+////                                                            Log.d("opsiAns", mapOpsi.toString());
+////                                                            //checkboxes update
+////                                                            pages.document(documentId)
+////                                                                    .collection("pages")
+////                                                                    .document(idPages)
+////                                                                    .collection("contents")
+////                                                                    .document(idOpsi)
+////                                                                    .update("answer", mapOpsi);
+////                                                        } else {
+////                                                            idOpsi = document.getId();
+////                                                            mapOpsi.remove(boxOpsi.getText().toString());
+////                                                            //checkboxes update
+////                                                            pages.document(documentId)
+////                                                                    .collection("pages")
+////                                                                    .document(idPages)
+////                                                                    .collection("contents")
+////                                                                    .document(idOpsi)
+////                                                                    .update("answer", mapOpsi);
+////                                                        }
+////                                                    }
+////                                                });
+//
+//                                            }
+//                                            framelayout.addView(rg);
+//
+//                                            rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                                                @Override
+//                                                public void onCheckedChanged(RadioGroup group, int checkedId) {
+//
+//
+////                                                    if (boxOpsi.isChecked()){
+////
+////                                                        String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
+////                                                        String bgcolorText = boxOpsi.getTag(R.id.idColorText).toString();
+////                                                        Log.d("checkColor",bgcolor);
+////                                                        boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
+////                                                        boxOpsi.setTextColor(Color.parseColor(bgcolorText));
+////                                                    }else {
+////                                                        boxOpsi.setBackgroundColor(Color.parseColor("#767676"));
+////                                                        boxOpsi.setTextColor(Color.parseColor("#F1F1F1"));
+////                                                    }
+////                                                      boxOpsi = (RadioButton) findViewById(checkedId);
+//////                                                    Toast.makeText(InspeksiKetiga.this, boxOpsi.getText(), Toast.LENGTH_SHORT).show();
+////
+////                                                    if (boxOpsi.isChecked()){
+////                                                        String bgcolor = boxOpsi.getTag(R.id.idColor).toString();
+////                                                        String bgcolorText = boxOpsi.getTag(R.id.idColorText).toString();
+////                                                        Log.d("checkColor",bgcolor);
+////                                                        boxOpsi.setBackgroundColor(Color.parseColor(bgcolor));
+////                                                        boxOpsi.setTextColor(Color.parseColor(bgcolorText));
+////                                                    }
+//
+//                                                    boxOpsi = (RadioButton) findViewById(checkedId);
+//                                                    idOpsi = document.getId();
+//                                                    Log.d("opsiAns", mapOpsi.toString());
+//                                                    //checkboxes update
+//                                                    pages.document(documentId)
+//                                                            .collection("pages")
+//                                                            .document(idPages)
+//                                                            .collection("contents")
+//                                                            .document(idOpsi)
+//                                                            .update("answer", boxOpsi.getText());
+//
+//                                                }
+//                                            });
+//
+//                                        }
+//
+//                                        else {
+//                                            // Type = Text
+//                                            final EditText Answer = new EditText(InspeksiKetiga.this);
+//                                            Answer.setLayoutParams(params6);
+//                                            Answer.setTextSize(11);
+////                                            Answer.setBackgroundColor(Color.parseColor("#767676"));
+//                                            Answer.setHint("Jawab disini");
+//
+//                                            Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                                                @Override
+//                                                public void onFocusChange(View v, boolean hasFocus) {
+//
+//                                                    if (hasFocus) {
+//
+//                                                        idAn = document.getId();
+//                                                        String parentId = (String) document.get("parentId");
+//                                                        Log.d("fokus", "ya");
+//                                                        Log.d("ida", idAn);
+//
+//                                                    } else {
+//                                                        //Text
+//                                                        idaAnswer = Answer.getText().toString();
+//                                                        sizeAnswer.add(idaAnswer);
+//                                                        pages.document(documentId)
+//                                                                .collection("pages")
+//                                                                .document(idPages)
+//                                                                .collection("contents")
+//                                                                .document(idAn)
+//                                                                .update("answer", idaAnswer);
+//
+//                                                        Log.d("fokus", "tidak");
 //                                                    }
-
-                                                    boxOpsi = (RadioButton) findViewById(checkedId);
-                                                    idOpsi = document.getId();
-                                                    Log.d("opsiAns", mapOpsi.toString());
-                                                    //checkboxes update
-                                                    pages.document(documentId)
-                                                            .collection("pages")
-                                                            .document(idPages)
-                                                            .collection("contents")
-                                                            .document(idOpsi)
-                                                            .update("answer", boxOpsi.getText());
-
-                                                }
-                                            });
-
-                                        }
-
-                                        else {
-                                            // Type = Text
-                                            final EditText Answer = new EditText(InspeksiKetiga.this);
-                                            Answer.setLayoutParams(params6);
-                                            Answer.setTextSize(11);
-//                                            Answer.setBackgroundColor(Color.parseColor("#767676"));
-                                            Answer.setHint("Jawab disini");
-
-                                            Answer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                                @Override
-                                                public void onFocusChange(View v, boolean hasFocus) {
-
-                                                    if (hasFocus) {
-
-                                                        idAn = document.getId();
-                                                        String parentId = (String) document.get("parentId");
-                                                        Log.d("fokus", "ya");
-                                                        Log.d("ida", idAn);
-
-                                                    } else {
-                                                        //Text
-                                                        idaAnswer = Answer.getText().toString();
-                                                        sizeAnswer.add(idaAnswer);
-                                                        pages.document(documentId)
-                                                                .collection("pages")
-                                                                .document(idPages)
-                                                                .collection("contents")
-                                                                .document(idAn)
-                                                                .update("answer", idaAnswer);
-
-                                                        Log.d("fokus", "tidak");
-                                                    }
-                                                }
-                                            });
-
-//                                            //sizeAnswer
-//                                            allAnswer.add(Answer);
-//                                            idContent = document.getId();
-
-                                            framelayout.addView(Answer);
-                                        }
-                                        myLinearLayout.addView(framelayout);
+//                                                }
+//                                            });
+//
+////                                            //sizeAnswer
+////                                            allAnswer.add(Answer);
+////                                            idContent = document.getId();
+//
+//                                            framelayout.addView(Answer);
+//                                        }
+//                                        myLinearLayout.addView(framelayout);
                                     }
 //                                    progress.dismiss();
 
@@ -1214,16 +1232,6 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        progress.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                    showtitle();
-                    progress.dismiss();
-
-            }
-        },waktu_loading);
-
         super.onStart();
     }
 
@@ -1402,9 +1410,6 @@ public class InspeksiKetiga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progress.show();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
 
                         int angkaawal = Integer.parseInt(nPage.getText().toString());
                         int tambah = 1;
@@ -1463,10 +1468,6 @@ public class InspeksiKetiga extends AppCompatActivity {
                         }
                     progress.dismiss();
                     }
-
-                }, waktu_loading);
-
-            }
         });
     }
 
