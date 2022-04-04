@@ -244,7 +244,7 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     String qAction;
 
-    private int waktu_loading = 4000;
+    private int waktu_loading = 6000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -277,7 +277,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         nPage = findViewById(R.id.nPage);
         halaman();
 
-        showtitle();
+//        showtitle();
 
         //Button
         buttonberiktunya();
@@ -314,7 +314,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         });
     }
 
-     private void showtitle() {
+    private void showtitle() {
 
         pages.document(documentId)
                 .collection("pages")
@@ -1017,7 +1017,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         }
                                         myLinearLayout.addView(framelayout);
                                     }
-                                    progress.dismiss();
+//                                    progress.dismiss();
+
         //                            documentTest = document.exists();
         //                            //get Document
         //                            Log.d("getdoc", document.getId());
@@ -1209,6 +1210,21 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        progress.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                    showtitle();
+                    progress.dismiss();
+
+            }
+        },waktu_loading);
+
+        super.onStart();
+    }
+
     private void showContentSection() {
 
         pages.document(documentId)
@@ -1384,66 +1400,71 @@ public class InspeksiKetiga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progress.show();
-                int angkaawal = Integer.parseInt(nPage.getText().toString());
-                int tambah = 1;
-                hasil = angkaawal + tambah;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        int angkaawal = Integer.parseInt(nPage.getText().toString());
+                        int tambah = 1;
+                        hasil = angkaawal + tambah;
 
 
-                int jsize = Integer.parseInt(jPage.getText().toString());
-                int jpage = Integer.parseInt(nPage.getText().toString());
+                        int jsize = Integer.parseInt(jPage.getText().toString());
+                        int jpage = Integer.parseInt(nPage.getText().toString());
 
 
-                int jsizeAnswer = allAnswer.size();
-                int jsizeinAnswer = sizeAnswer.size();
+                        int jsizeAnswer = allAnswer.size();
+                        int jsizeinAnswer = sizeAnswer.size();
 
-                Log.d("jsizeAnswer", String.valueOf(jsizeAnswer) + " sizeAnswer : " + jsizeinAnswer);
+                        Log.d("jsizeAnswer", String.valueOf(jsizeAnswer) + " sizeAnswer : " + jsizeinAnswer);
 
 
-                if (jpage >= jsize) {
-                    ttd();
-                    nPage.setText(String.valueOf(sizeawal));
+                        if (jpage >= jsize) {
+                            ttd();
+                            nPage.setText(String.valueOf(sizeawal));
 
-                } else {
-                    idPagesBefore = idPages;
-                    if (idPagesBefore == null){
-                        kembali.setVisibility(View.INVISIBLE);
-                        panah.setVisibility(View.INVISIBLE);
-                    }else{
-                        kembali.setVisibility(View.INVISIBLE);
-                        panah.setVisibility(View.INVISIBLE);
+                        } else {
+                            idPagesBefore = idPages;
+                            if (idPagesBefore == null){
+                                kembali.setVisibility(View.INVISIBLE);
+                                panah.setVisibility(View.INVISIBLE);
+                            }else{
+                                kembali.setVisibility(View.INVISIBLE);
+                                panah.setVisibility(View.INVISIBLE);
+                            }
+
+                            nPage.setText(String.valueOf(hasil));
+                            //nextPage
+                            myLinearLayout.removeAllViews();
+                            pages.document(documentId)
+                                    .collection("pages")
+                                    .startAfter(lastvisible)
+                                    .limit(1)
+                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    //title
+                                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                        String title = (String) documentSnapshot.get("pageTitle");
+                                        qtitle.setText(title);
+                                        idPages = documentSnapshot.getId();
+                                        Log.d("idclick", idPages + " title " + title);
+
+                                    }
+                                    lastvisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                                    showcontent();
+                                    progress.dismiss();
+                                }
+                            });
+
+
+                        }
+                    progress.dismiss();
                     }
 
-                    nPage.setText(String.valueOf(hasil));
-                    //nextPage
-                    myLinearLayout.removeAllViews();
-                    pages.document(documentId)
-                            .collection("pages")
-                            .startAfter(lastvisible)
-                            .limit(1)
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            //title
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                String title = (String) documentSnapshot.get("pageTitle");
-                                qtitle.setText(title);
-                                idPages = documentSnapshot.getId();
-                                Log.d("idclick", idPages + " title " + title);
-
-                            }
-                            lastvisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-                            showcontent();
-                            progress.dismiss();
-                        }
-                    });
-
-
-                }
+                }, waktu_loading);
 
             }
-//            }
-
-
         });
     }
 
