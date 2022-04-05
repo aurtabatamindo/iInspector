@@ -57,6 +57,8 @@ public class IsiTugas extends AppCompatActivity {
     //collection templates
     CollectionReference tugas = db.collection("tugasTemplate");
 
+    CollectionReference update = db.collection("inspections");
+
     TextView title,desc,tgl,pertanyaan,alamat;
     ImageView foto;
     Button selesai;
@@ -77,7 +79,7 @@ public class IsiTugas extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS = 20;
 
     String jawaban;
-
+    String idDocument;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +108,7 @@ public class IsiTugas extends AppCompatActivity {
                         }else{
                             selesai.setVisibility(View.INVISIBLE);
                         }
+                           idDocument = task.getResult().get("inspectionsId").toString();
                            title.setText("Title :" + "\n"+task.getResult().get("titleTugas").toString());
                            desc.setText("Deskripsi :" + "\n"+task.getResult().get("deskripsi").toString());
                            tgl.setText("Tanggal Inspeksi :" + "\n"+templateDate.toDate());
@@ -365,6 +368,8 @@ public class IsiTugas extends AppCompatActivity {
                                                 "photo",sPhoto,
                                                 "catatan",jawaban,
                                                 "waktuSelesai",itgl);
+
+                                update.document(idDocument).update("status","Fail close");
 
                                 Intent selesai = new Intent(IsiTugas.this, InspeksiSelesai.class);
                                 startActivity(selesai);

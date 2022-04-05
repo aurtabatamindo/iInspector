@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment {
 
         //inspeksiAman
         df.whereEqualTo("templateMonth",tgl.getText())
-                .whereEqualTo("status","Aman")
+                .whereEqualTo("status","Pass")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -164,7 +164,7 @@ public class HomeFragment extends Fragment {
                 Log.d("limitstring",kurang);
 
                 df.whereEqualTo("templateMonth",kurang)
-                        .whereEqualTo("status","Aman")
+                        .whereEqualTo("status","Pass")
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment {
 
         //inspeksiTidakAman
         df.whereEqualTo("templateMonth",tgl.getText())
-                .whereEqualTo("status","Tidak Aman")
+                .whereEqualTo("status","Fail close")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment {
                 String kurang = bulanKurang +"/"+ month.substring(2,6);
                 Log.d("limitstring",kurang);
 
-                df.whereEqualTo("status","Tidak Aman")
+                df.whereEqualTo("status","Fail close")
                         .whereEqualTo("templateMonth",kurang)
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -281,7 +281,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent detaildua = new Intent(getActivity(), InspeksiHasil.class);
                 detaildua.putExtra("month",tgl.getText());
-                detaildua.putExtra("status", "Aman");
+                detaildua.putExtra("status", "Pass");
                 startActivity(detaildua);
             }
         });
@@ -290,7 +290,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent detailtiga = new Intent(getActivity(), InspeksiHasil.class);
                 detailtiga.putExtra("month",tgl.getText());
-                detailtiga.putExtra("status", "Tidak Aman");
+                detailtiga.putExtra("status", "Fail close");
                 startActivity(detailtiga);
             }
         });
@@ -362,7 +362,7 @@ public class HomeFragment extends Fragment {
                                     }
                                 });
                         //inspeksiAman
-                        df.whereEqualTo("status","Aman")
+                        df.whereEqualTo("status","Pass")
                                 .whereEqualTo("templateMonth",tgl.getText())
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -384,7 +384,7 @@ public class HomeFragment extends Fragment {
                                         String kurang = bulanKurang +"/"+ month.substring(2,6);
                                         Log.d("limitstring",kurang);
 
-                                        df.whereEqualTo("status","Aman")
+                                        df.whereEqualTo("status","Pass")
                                                 .whereEqualTo("templateMonth",kurang)
                                                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
@@ -419,7 +419,7 @@ public class HomeFragment extends Fragment {
                                 });
 
                         //inspeksiTidakAman
-                        df.whereEqualTo("status","Tidak Aman")
+                        df.whereEqualTo("status","Fail close")
                                 .whereEqualTo("templateMonth",tgl.getText())
                                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -440,7 +440,7 @@ public class HomeFragment extends Fragment {
                                 String kurang = bulanKurang +"/"+ month.substring(2,6);
                                 Log.d("limitstring",kurang);
 
-                                df.whereEqualTo("status","Tidak Aman")
+                                df.whereEqualTo("status","Fail close")
                                         .whereEqualTo("templateMonth",kurang)
                                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override

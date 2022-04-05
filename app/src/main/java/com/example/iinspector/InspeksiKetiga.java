@@ -1417,6 +1417,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (statusTindakan == "hight"){
+
                                         FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1432,10 +1433,19 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         });
 
                                         kirim();
+                                        status = "Fail Open";
+                                        statusTindakan = "";
+                                        Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
+                                    }else if (statusTindakan == "medium"){
+                                        Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
+                                        status = "Fail close";
+                                        statusTindakan = "";
+                                    }else{
+                                        Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
+                                        status = "Fail Open";
+                                        statusTindakan = "";
                                     }
-                                    Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
-                                    status = "Tidak Aman";
-                                    statusTindakan = "";
+
                                 }
                             });
                         }
@@ -1534,6 +1544,11 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 String usertoken = dataSnapshot.getValue(String.class);
                                                 Log.d("usertoken",usertoken);
                                                 kirimnotif(usertoken, title.toString().trim(), pesan.toString().trim());
+
+                                                kirim();
+                                                status = "Fail Open";
+                                                statusTindakan = "";
+                                                Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
                                             }
 
                                             @Override
@@ -1542,11 +1557,17 @@ public class InspeksiKetiga extends AppCompatActivity {
                                             }
                                         });
 
-                                        kirim();
-                                    }
+
+                                    }else if (statusTindakan == "medium"){
                                     Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
-                                    status = "Tidak Aman";
+                                    status = "Fail close";
                                     statusTindakan = "";
+                                    }else{
+                                    Toast.makeText(InspeksiKetiga.this, "Berhasil Menambah Tindakan", Toast.LENGTH_LONG).show();
+                                    status = "Fail Open";
+                                    statusTindakan = "";
+                                }
+
                                 }
                             });
                         }
@@ -1719,11 +1740,11 @@ public class InspeksiKetiga extends AppCompatActivity {
                                 //updatestatus
                                 if (status == null) {
                                     pages.document(documentId)
-                                            .update("status", "Aman",
+                                            .update("status", "Pass",
                                                     "signature", ttd);
                                 }else {
                                     pages.document(documentId)
-                                            .update("status", "Tidak Aman",
+                                            .update("status", status,
                                                     "signature", ttd);
                                 }
                                 Intent selesai = new Intent(InspeksiKetiga.this, InspeksiSelesai.class);
