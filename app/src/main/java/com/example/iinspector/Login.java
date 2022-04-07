@@ -219,7 +219,7 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
     private void goToDashboard() {
         Intent intent = new Intent(Login.this, Side.class);
         startActivity(intent);
-
+        finish();
 
 
     }
