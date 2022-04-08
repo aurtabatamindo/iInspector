@@ -175,7 +175,7 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
 
     private void cekrulelogin(){
 
-        DocumentReference docRef = db.collection("User").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DocumentReference docRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

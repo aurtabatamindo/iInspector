@@ -71,6 +71,7 @@ public class Side extends AppCompatActivity {
                 token = FirebaseDatabase.getInstance().getReference("Tokens")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 token.getRef().removeValue();
+                silogin.setText("");
                 FirebaseAuth.getInstance().signOut();
                 Intent i = new Intent(Side.this, Login.class);
                 startActivity(i);
