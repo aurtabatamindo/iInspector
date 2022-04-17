@@ -494,7 +494,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                         Section.setLayoutParams(params3);
                                                                         Section.setBackgroundResource(R.drawable.cardsection);
                                                                         Section.setTextSize(13);
-                                                                        Section.setPaddingRelative(50, 25, 10, 25);
+                                                                        Section.setMaxLines(1);
+                                                                        Section.setPaddingRelative(25, 25, 10, 25);
                                                                         Section.setTypeface(null, Typeface.ITALIC);
                                                                         Section.setTextColor(Color.parseColor("#767676"));
                                                                         Drawable img1 = getApplicationContext().getResources().getDrawable(R.drawable.down_icon);
@@ -530,10 +531,11 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                             final TextView DescriptionSection = new TextView(InspeksiKetiga.this);
                                                                             DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
                                                                             DescriptionSection.setTextSize(11);
-                                                                            DescriptionSection.setPaddingRelative(50, 25, 10, 25);
+                                                                            DescriptionSection.setPaddingRelative(25, 25, 10, 25);
                                                                             DescriptionSection.setTypeface(null, Typeface.ITALIC);
                                                                             DescriptionSection.setTextColor(Color.parseColor("#767676"));
                                                                             DescriptionSection.setLayoutParams(params3);
+                                                                            DescriptionSection.setMaxLines(4);
 //                                                                      Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
 //                                                                      DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                                                                             DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
@@ -753,7 +755,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                                         Section.setLayoutParams(params3);
                                                                                         Section.setBackgroundResource(R.drawable.cardsection);
                                                                                         Section.setTextSize(13);
-                                                                                        Section.setPaddingRelative(50, 25, 10, 25);
+                                                                                        Section.setPaddingRelative(25, 25, 10, 25);
                                                                                         Section.setTypeface(null, Typeface.ITALIC);
                                                                                         Section.setTextColor(Color.parseColor("#767676"));
                                                                                         Drawable img1 = getApplicationContext().getResources().getDrawable(R.drawable.down_icon);
@@ -789,13 +791,14 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                                             final TextView DescriptionSection = new TextView(InspeksiKetiga.this);
                                                                                             DescriptionSection.setBackgroundResource(R.drawable.cardpertanyaan);
                                                                                             DescriptionSection.setTextSize(11);
-                                                                                            DescriptionSection.setPaddingRelative(50, 25, 10, 25);
+                                                                                            DescriptionSection.setPaddingRelative(25, 25, 10, 25);
                                                                                             DescriptionSection.setTypeface(null, Typeface.ITALIC);
                                                                                             DescriptionSection.setTextColor(Color.parseColor("#767676"));
                                                                                             DescriptionSection.setLayoutParams(params3);
                                                                                             DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
                                                                                             DescriptionSection.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
                                                                                             DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
+                                                                                            DescriptionSection.setMaxLines(4);
 
                                                                                             Log.d("idclickk", DescriptionSection.getTag(R.id.idClick).toString() + "parentSection : " + DescriptionSection.getTag(R.id.parentSection).toString());
                                                                                             DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
@@ -972,10 +975,11 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         TextView Description = new TextView(InspeksiKetiga.this);
                                         Description.setBackgroundResource(R.drawable.cardpertanyaan);
                                         Description.setTextSize(11);
-                                        Description.setPaddingRelative(50, 25, 10, 25);
+                                        Description.setPaddingRelative(25, 25, 10, 25);
                                         Description.setTypeface(null, Typeface.ITALIC);
                                         Description.setTextColor(Color.parseColor("#767676"));
                                         Description.setLayoutParams(params3);
+                                        Description.setMaxLines(4);
 //                                        Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
 //                                        Description.setCompoundDrawablesWithIntrinsicBounds(null, null, null, img);
                                         Description.setText("Pertanyaan :" + "\n" + desc);
