@@ -398,16 +398,16 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     params.setMargins(30, 20, 30, 20);
 
                                     params4 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 100);
-                                    params4.setMargins(30, 20, 30, 20);
+                                    params4.setMargins(30, 0, 30, 20);
 
                                     params5 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 100);
                                     params5.setMargins(50, 20, 50, 20);
 
                                     params2 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                                    params2.setMargins(0, 150, 0, 30);
+                                    params2.setMargins(0, 300, 0, 30);
 
                                     params6 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                                    params6.setMargins(30, 120, 30, 20);
+                                    params6.setMargins(30, 200, 30, 20);
 
                                     if (document != null && document.exists()) {
                                         desc = (String) document.get("description");
@@ -535,7 +535,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                             DescriptionSection.setTypeface(null, Typeface.ITALIC);
                                                                             DescriptionSection.setTextColor(Color.parseColor("#767676"));
                                                                             DescriptionSection.setLayoutParams(params3);
-                                                                            DescriptionSection.setMaxLines(4);
+//                                                                            DescriptionSection.setMaxLines(4);
 //                                                                      Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
 //                                                                      DescriptionSection.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
                                                                             DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
@@ -798,7 +798,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                                             DescriptionSection.setTag(R.id.idClick, isi.get(a).get("id"));
                                                                                             DescriptionSection.setTag(R.id.parentSection, isi.get(a).get("parentContentId"));
                                                                                             DescriptionSection.setText("Pertanyaan :" + "\n" + descIsi);
-                                                                                            DescriptionSection.setMaxLines(4);
+//                                                                                            DescriptionSection.setMaxLines(4);
 
                                                                                             Log.d("idclickk", DescriptionSection.getTag(R.id.idClick).toString() + "parentSection : " + DescriptionSection.getTag(R.id.parentSection).toString());
                                                                                             DescriptionSection.setOnTouchListener(new View.OnTouchListener() {
@@ -979,7 +979,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                         Description.setTypeface(null, Typeface.ITALIC);
                                         Description.setTextColor(Color.parseColor("#767676"));
                                         Description.setLayoutParams(params3);
-                                        Description.setMaxLines(4);
+//                                        Description.setMaxLines(4);
 //                                        Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.action_icon);
 //                                        Description.setCompoundDrawablesWithIntrinsicBounds(null, null, null, img);
                                         Description.setText("Pertanyaan :" + "\n" + desc);
