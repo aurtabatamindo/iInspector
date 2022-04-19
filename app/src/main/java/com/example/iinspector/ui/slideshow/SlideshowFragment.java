@@ -58,7 +58,7 @@ public class SlideshowFragment extends Fragment {
         Query query = FirebaseFirestore.getInstance()
                 .collection("tugasTemplate")
 //                .orderBy("templateDate",Query.Direction.DESCENDING)
-                .orderBy("titleTugas");
+                .whereEqualTo("statusTugas","Belum Selesai");
 
         FirestoreRecyclerOptions<GetDataTugas> options = new FirestoreRecyclerOptions.Builder<GetDataTugas>()
                 .setQuery(query, GetDataTugas.class)

@@ -121,7 +121,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     private APIService apiService;
     final private String admin1 = "4kCznhvJW5aZfz4hkBGme3ZvV1r2";
     final private String title = "!TEMUAN!";
-    final private String pesan = "!RESIKO HIGHT!";
+    final private String pesan = "!RESIKO HIGH!";
 
     //TTD
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -1379,8 +1379,8 @@ public class InspeksiKetiga extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    statusTindakan = "hight";
-                    Log.d("teststatus","hight");
+                    statusTindakan = "high";
+                    Log.d("teststatus","high");
                 }
 
             }
@@ -1405,6 +1405,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                         tugasTemplate.put("questionAnswer",qAction);
                         tugasTemplate.put("timeInspection",itgl);
                         tugasTemplate.put("alamat",alamat);
+                        tugasTemplate.put("statusTugas","Belum Selesai");
 
                         if (title.isEmpty() && deskripsi.isEmpty() && team.isEmpty()){
                             Toast.makeText(InspeksiKetiga.this, "Gagal Menambah (Data tidak lengkap)", Toast.LENGTH_LONG).show();
@@ -1420,7 +1421,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (statusTindakan == "hight"){
+                                    if (statusTindakan == "high"){
 
                                         FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
@@ -1502,8 +1503,8 @@ public class InspeksiKetiga extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    statusTindakan = "hight";
-                    Log.d("teststatus","hight");
+                    statusTindakan = "high";
+                    Log.d("teststatus","high");
                 }
 
             }
@@ -1541,7 +1542,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                                     .set(tugasTemplate).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (statusTindakan == "hight"){
+                                    if (statusTindakan == "high"){
                                         FirebaseDatabase.getInstance().getReference().child("Tokens").child(admin1).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1718,6 +1719,8 @@ public class InspeksiKetiga extends AppCompatActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
         mSignaturePad.setLayoutParams(lp);
+
+
         alertDialog.setView(mSignaturePad);
 
         alertDialog.setPositiveButton("Selesai",

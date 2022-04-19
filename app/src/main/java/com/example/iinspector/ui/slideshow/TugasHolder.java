@@ -44,12 +44,12 @@ public class TugasHolder extends RecyclerView.ViewHolder{
     void setStatus(String status){
         TextView textView = view.findViewById(R.id.status);
         textView.setText(status);
-        if (status == null){
-            textView.setText("Belum Selesai");
-            textView.setTextColor(Color.RED);
-        }else if (status.equals("Selesai")){
-            textView.setTextColor(Color.GREEN);
-        }
+//        if (status == null){
+//            textView.setText("Belum Selesai");
+//            textView.setTextColor(Color.RED);
+//        }else if (status.equals("Selesai")){
+//            textView.setTextColor(Color.GREEN);
+//        }
     }
 
     private TugasHolder.ClickListener mClickListener;

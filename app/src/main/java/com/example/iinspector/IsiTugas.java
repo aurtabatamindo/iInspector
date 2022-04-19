@@ -103,11 +103,11 @@ public class IsiTugas extends AppCompatActivity {
                         Timestamp templateDate = (Timestamp) task.getResult().get("timeInspection");
                         String photo = (String) task.getResult().get("photo");
 
-                        if (task.getResult().get("statusTugas") == null){
-                            selesai.setVisibility(View.VISIBLE);
-                        }else{
-                            selesai.setVisibility(View.INVISIBLE);
-                        }
+//                        if (task.getResult().get("statusTugas") == null){
+//                            selesai.setVisibility(View.VISIBLE);
+//                        }else{
+//                            selesai.setVisibility(View.INVISIBLE);
+//                        }
                            idDocument = task.getResult().get("inspectionsId").toString();
                            title.setText("Title :" + "\n"+task.getResult().get("titleTugas").toString());
                            desc.setText("Deskripsi :" + "\n"+task.getResult().get("deskripsi").toString());
