@@ -73,6 +73,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -119,9 +120,9 @@ import retrofit2.Response;
 public class InspeksiKetiga extends AppCompatActivity {
     //notif
     private APIService apiService;
-    final private String admin1 = "4kCznhvJW5aZfz4hkBGme3ZvV1r2";
+    final private String admin1 = "PRk9zfV1HXa3s1p4Ded9LnhO0Mg2";
     final private String title = "!TEMUAN!";
-    final private String pesan = "!RESIKO HIGH!";
+    final private String pesan = "Resiko HIGH !";
 
     //TTD
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -1611,9 +1612,12 @@ public class InspeksiKetiga extends AppCompatActivity {
     }
 
     public  void kirim(){
-        String email = "aurtafalen@batamindo.co.id";
-        String subject = "TEMUAN";
-        String message = "RESIKO HIGH";
+        String email = "septian@batamindo.co.id";
+        String subject = "[Safety Inspector] high risk finding";
+        String message = "Hi " + email + "\n"+
+                         "You have 1 finding high risk please click this link below " + "\n" +
+                         "\n" +
+                         "https://batamindo-iauditor-dev.web.app/dashboard/home";
 
         String mEmail = email.toString();
         String mSubject = subject.toString();
