@@ -3,6 +3,7 @@ package com.example.iinspector;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,6 +44,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -93,6 +97,7 @@ import com.google.firebase.storage.UploadTask;
 import com.kishan.askpermission.AskPermission;
 import com.kishan.askpermission.PermissionCallback;
 import com.kyanogen.signatureview.SignatureView;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -124,12 +129,12 @@ public class InspeksiKetiga extends AppCompatActivity {
     final private String title = "!TEMUAN!";
     final private String pesan = "Resiko HIGH !";
 
+
     //TTD
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final int REQUEST_LOCATION = 2;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 3;
-    StorageReference storageReference;
     SignatureView mSignaturePad;
     private static final int REQUEST_PERMISSIONS = 20;
 
@@ -137,6 +142,9 @@ public class InspeksiKetiga extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    public static final int GALLERY_REQUEST_CODE = 105;
+    private static final int PICK_FROM_GALLERY = 107;
+    StorageReference storageReference;
 
     //tindakan
     FloatingActionButton fab;
@@ -212,6 +220,7 @@ public class InspeksiKetiga extends AppCompatActivity {
     String idOpsi;
     String ttd;
     String sPhoto;
+    String txtfoto;
     String status;
 
 
@@ -265,6 +274,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_ketiga);
 
+        storageReference = FirebaseStorage.getInstance().getReference();
 
 //        frame = findViewById(R.id.textView4);
 //        frame.setVisibility(View.INVISIBLE);
@@ -572,7 +582,27 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                                                 //set text
                                                                                                 //selectedTv.setText("Copy clicked");
                                                                                             } else if (id == 1) {
-                                                                                                ambilfotoSection();
+                                                                                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
+                                                                                                alertDialog.setTitle("Tambah Foto ");
+
+                                                                                                alertDialog.setPositiveButton("Gallery",
+                                                                                                        new DialogInterface.OnClickListener() {
+                                                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                                                ambilgalery();
+                                                                                                            }
+                                                                                                        });
+
+                                                                                                alertDialog.setNegativeButton("Kamera",
+                                                                                                        new DialogInterface.OnClickListener() {
+                                                                                                            public void onClick(DialogInterface dialog, int which) {
+//                                                                                                              dialog.cancel();
+                                                                                                                ambilfoto();
+                                                                                                            }
+                                                                                                        });
+
+                                                                                                alertDialog.show();
+
+//                                                                                                ambilfotoSection();
                                                                                                 //Share clicked
                                                                                                 //set text
                                                                                                 // selectedTv.setText("Share clicked");
@@ -1011,7 +1041,28 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                             //set text
                                                             //selectedTv.setText("Copy clicked");
                                                         } else if (id == 1) {
-                                                            ambilfoto();
+
+                                                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(InspeksiKetiga.this);
+                                                            alertDialog.setTitle("Tambah Foto ");
+
+                                                            alertDialog.setPositiveButton("Gallery",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            ambilgalery();
+                                                                        }
+                                                                    });
+
+                                                            alertDialog.setNegativeButton("Kamera",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int which) {
+//                                                                            dialog.cancel();
+                                                                            ambilfoto();
+                                                                        }
+                                                                    });
+
+                                                            alertDialog.show();
+
+//                                                            ambilfoto();
                                                             //Share clicked
                                                             //set text
                                                             // selectedTv.setText("Share clicked");
@@ -1793,6 +1844,15 @@ public class InspeksiKetiga extends AppCompatActivity {
 
     }
 
+    private void ambilgalery(){
+
+        if (checkSelfPermission( Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions( new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_FROM_GALLERY);
+        } else {
+            Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+        }
+    }
     private void ambilfotoSection() {
         inSection = "ambilfotoSection";
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -1913,6 +1973,12 @@ public class InspeksiKetiga extends AppCompatActivity {
         }
     }
 
+    private String getFileExt(Uri contentUri) {
+        ContentResolver c = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1981,6 +2047,77 @@ public class InspeksiKetiga extends AppCompatActivity {
 
             alertDialogBuilder.show();
         }
+
+        if (requestCode == GALLERY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri contentUri = data.getData();
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+//                selectedImage.setImageURI(contentUri);
+//                uploadImageToFirebase(imageFileName, contentUri);
+
+                // Show pop up window
+                LayoutInflater layoutInflater = LayoutInflater.from(InspeksiKetiga.this);
+                View promptView = layoutInflater.inflate(R.layout.hasilfoto, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspeksiKetiga.this);
+                alertDialogBuilder.setTitle("Tambah Foto");
+                alertDialogBuilder.setView(promptView);
+                imageView = (ImageView) promptView.findViewById(R.id.gambar1);
+//                Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
+                imageView.setImageURI(contentUri);
+                Log.d("testPhoto", imageFileName.toString());
+
+                alertDialogBuilder.setPositiveButton("Tambah",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                uploadImageToFirebase(imageFileName, contentUri);
+                                if (inSection == "ambilfotoSection") {
+                                    pages.document(documentId)
+                                            .collection("pages")
+                                            .document(idPages)
+                                            .collection("contents")
+                                            .document(parentSection)
+                                            .collection("contents")
+                                            .document(idDesclick)
+                                            .update("photo", txtfoto).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
+                                            inSection = "";
+                                        }
+                                    });
+
+                                } else {
+                                    pages.document(documentId)
+                                            .collection("pages")
+                                            .document(idPages)
+                                            .collection("contents")
+                                            .document(idDesclick)
+                                            .update("photo", txtfoto).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+
+                            }
+
+                        });
+
+                alertDialogBuilder.setNegativeButton("Batal",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                inSection = "";
+                                dialog.cancel();
+                            }
+                        });
+
+                alertDialogBuilder.show();
+            }
+        }
     }
 
 
@@ -2028,6 +2165,31 @@ public class InspeksiKetiga extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void uploadImageToFirebase(String name, Uri contentUri) {
+        final StorageReference image = storageReference.child("Photo/" + name);
+        txtfoto = name;
+        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d("tag", "onSuccess: Uploaded Image URl is " + uri.toString());
+                        Picasso.get().load(uri).into(imageView);
+                    }
+                });
+
+                //        Toast.makeText(Multimedia.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(InspeksiKetiga.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
