@@ -61,7 +61,7 @@ public class IsiTugas extends AppCompatActivity {
 
     TextView title,desc,tgl,pertanyaan,alamat;
     ImageView foto;
-    Button selesai;
+    Button selesai,ambilfoto,iconcamera;
     String sPhoto,ttd;
 
     //camera
@@ -93,6 +93,11 @@ public class IsiTugas extends AppCompatActivity {
         tgl = findViewById(R.id.tglInspec);
         pertanyaan = findViewById(R.id.qAction);
         alamat = findViewById(R.id.lokasiInspec);
+        ambilfoto = findViewById(R.id.ambilfoto);
+        iconcamera = findViewById(R.id.iconcamera);
+
+        foto.setVisibility(View.GONE);
+        iconcamera.setVisibility(View.GONE);
 
         tugas.document(clickedId)
                 .get()
@@ -134,7 +139,7 @@ public class IsiTugas extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
-                                Toast.makeText(getApplicationContext(), "Klik untuk mengambil foto ", Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getApplicationContext(), "Klik untuk mengambil foto ", Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -142,17 +147,35 @@ public class IsiTugas extends AppCompatActivity {
                     }
                 });
 
-        foto.setOnClickListener(new View.OnClickListener() {
+//        foto.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////            ambilfoto();
+//            }
+//        });
+
+        ambilfoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            ambilfoto();
+                ambilfoto();
+            }
+        });
+
+        iconcamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ambilfoto();
             }
         });
 
         selesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tambahcatatan();
+                if (foto.getVisibility() == View.GONE){
+                    Toast.makeText(getApplicationContext(), "Klik Tombol ambil foto terlebih dahulu ", Toast.LENGTH_LONG).show();
+                }else{
+                    tambahcatatan();
+                }
             }
         });
     }
@@ -166,6 +189,7 @@ public class IsiTugas extends AppCompatActivity {
         } else {
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
         }
 
 
@@ -222,6 +246,10 @@ public class IsiTugas extends AppCompatActivity {
             foto.setBackgroundResource(android.R.color.transparent);
             Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
             foto.setImageBitmap(photoBitmap);
+            foto.setVisibility(View.VISIBLE);
+            ambilfoto.setVisibility(View.GONE);
+            iconcamera.setVisibility(View.VISIBLE);
+
             Log.d("testPhoto",photoBitmap.toString());
             UploadPhotoToCloudStore(photoBitmap);
         }

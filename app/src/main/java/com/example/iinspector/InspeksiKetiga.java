@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -103,6 +104,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
@@ -669,17 +671,40 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                                                         boxOpsiSec = (RadioButton) findViewById(checkedId);
                                                                                         idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
                                                                                         parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
-                                                                                        mapOpsiSection.add(boxOpsiSec.getText().toString());
 
-                                                                                        pages.document(documentId)
-                                                                                                .collection("pages")
-                                                                                                .document(idPages)
-                                                                                                .collection("contents")
-                                                                                                .document(parentIdBox)
-                                                                                                .collection("contents")
-                                                                                                .document(idAnSectionBox)
-                                                                                                .update("answer", boxOpsiSec.getText());
+                                                                                        Log.d("getcolorcheck",String.valueOf(boxOpsiSec.getTextColors().getDefaultColor()));
 
+                                                                                        if (String.valueOf(boxOpsiSec.getTextColors().getDefaultColor()).equals("-769226")){
+                                                                                            tindakanSection();
+
+                                                                                            idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
+                                                                                            parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
+                                                                                            mapOpsiSection.add(boxOpsiSec.getText().toString());
+
+                                                                                            pages.document(documentId)
+                                                                                                    .collection("pages")
+                                                                                                    .document(idPages)
+                                                                                                    .collection("contents")
+                                                                                                    .document(parentIdBox)
+                                                                                                    .collection("contents")
+                                                                                                    .document(idAnSectionBox)
+                                                                                                    .update("answer", boxOpsiSec.getText());
+
+                                                                                        }else{
+
+                                                                                            idAnSectionBox = boxOpsiSec.getTag(R.id.idClick).toString();
+                                                                                            parentIdBox = boxOpsiSec.getTag(R.id.parentSection).toString();
+                                                                                            mapOpsiSection.add(boxOpsiSec.getText().toString());
+
+                                                                                            pages.document(documentId)
+                                                                                                    .collection("pages")
+                                                                                                    .document(idPages)
+                                                                                                    .collection("contents")
+                                                                                                    .document(parentIdBox)
+                                                                                                    .collection("contents")
+                                                                                                    .document(idAnSectionBox)
+                                                                                                    .update("answer", boxOpsiSec.getText());
+                                                                                        }
                                                                                     }
                                                                                 });
 //                                                                    myLinearLayout.addView(rgs);
@@ -1136,17 +1161,36 @@ public class InspeksiKetiga extends AppCompatActivity {
                                                 @Override
                                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-
                                                     boxOpsi = (RadioButton) findViewById(checkedId);
-                                                    idOpsi = document.getId();
-                                                    Log.d("opsiAns", mapOpsi.toString());
-                                                    //checkboxes update
-                                                    pages.document(documentId)
-                                                            .collection("pages")
-                                                            .document(idPages)
-                                                            .collection("contents")
-                                                            .document(idOpsi)
-                                                            .update("answer", boxOpsi.getText());
+                                                    Log.d("getcolorcheck",String.valueOf(boxOpsi.getTextColors().getDefaultColor()));
+
+                                                    if (String.valueOf(boxOpsi.getTextColors().getDefaultColor()).equals("-769226")){
+                                                        tindakan();
+
+                                                        idDesclick = document.getId();
+                                                        qAction = Description.getText().toString();
+
+                                                        idOpsi = document.getId();
+                                                        Log.d("opsiAns", mapOpsi.toString());
+                                                        //checkboxes update
+                                                        pages.document(documentId)
+                                                                .collection("pages")
+                                                                .document(idPages)
+                                                                .collection("contents")
+                                                                .document(idOpsi)
+                                                                .update("answer", boxOpsi.getText());
+                                                    }else {
+
+                                                        idOpsi = document.getId();
+                                                        Log.d("opsiAns", mapOpsi.toString());
+                                                        //checkboxes update
+                                                        pages.document(documentId)
+                                                                .collection("pages")
+                                                                .document(idPages)
+                                                                .collection("contents")
+                                                                .document(idOpsi)
+                                                                .update("answer", boxOpsi.getText());
+                                                    }
 
                                                 }
                                             });
@@ -1408,7 +1452,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         EditText eDeskripsi = (EditText) dialogView.findViewById(R.id.teditText2);
         EditText eTeam = (EditText) dialogView.findViewById(R.id.teditText3);
 
-        CheckBox low = dialogView.findViewById(R.id.low);
+        RadioButton low = dialogView.findViewById(R.id.low);
         low.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1417,7 +1461,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                 }
             }
         });
-        CheckBox medium = dialogView.findViewById(R.id.medium);
+        RadioButton medium = dialogView.findViewById(R.id.medium);
         medium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1426,7 +1470,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                 }
             }
         });
-        CheckBox hight = dialogView.findViewById(R.id.hight);
+        RadioButton hight = dialogView.findViewById(R.id.hight);
         hight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1532,7 +1576,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         EditText eDeskripsi = (EditText) dialogView.findViewById(R.id.teditText2);
         EditText eTeam = (EditText) dialogView.findViewById(R.id.teditText3);
 
-        CheckBox low = dialogView.findViewById(R.id.low);
+        RadioButton low = dialogView.findViewById(R.id.low);
         low.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1541,7 +1585,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                 }
             }
         });
-        CheckBox medium = dialogView.findViewById(R.id.medium);
+        RadioButton medium = dialogView.findViewById(R.id.medium);
         medium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1550,7 +1594,7 @@ public class InspeksiKetiga extends AppCompatActivity {
                 }
             }
         });
-        CheckBox hight = dialogView.findViewById(R.id.hight);
+        RadioButton hight = dialogView.findViewById(R.id.hight);
         hight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -1851,6 +1895,7 @@ public class InspeksiKetiga extends AppCompatActivity {
         } else {
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+
         }
     }
     private void ambilfotoSection() {
