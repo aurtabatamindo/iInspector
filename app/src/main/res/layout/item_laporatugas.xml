@@ -11,40 +11,76 @@
 
     <TextView
         android:id="@+id/judul"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="6dp"
         android:text="Judul Inspeksi"
+        android:singleLine="true"
         android:textSize="20dp"
         android:textColor="@color/text_dark" />
 
     <TextView
         android:id="@+id/desk"
-        android:layout_width="260dp"
-        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="40dp"
+        android:text="Deskripsi"
+        android:singleLine="true"
+        android:textColor="@color/abucard" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="40dp"
-        android:text="Deskripsi ........................................................................................................................................"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/nama_icon"
+        android:singleLine="true"
         android:textColor="@color/abucard" />
 
     <TextView
         android:id="@+id/team"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="90dp"
+        android:text="Access : ?? Orang"
+        android:singleLine="true"
+        android:textColor="@color/abucard" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="90dp"
-        android:text="Access : ?? Orang"
+        android:background="@drawable/jumlah_icon"
+        android:singleLine="true"
         android:textColor="@color/abucard" />
 
     <TextView
         android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="65dp"
+        android:text="Status"
+        android:textColor="@color/abucard" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:singleLine="true"
+        android:layout_marginLeft="15dp"
         android:layout_marginRight="50dp"
-        android:layout_marginTop="90dp"
-        android:text="Status"
+        android:layout_marginTop="65dp"
+        android:background="@drawable/status_icon"
         android:textColor="@color/abucard" />
 
     <TextView

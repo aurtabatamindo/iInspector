@@ -36,6 +36,8 @@
         <entry key="..\:/iInspector/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.3828125" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/ids.xml" value="0.10555555555555556" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/labelmerah.xml" value="0.3828125" />
+        <entry key="..\:/iInspector/app/src/main/res/drawable/tambah_icon.xml" value="0.37864583333333335" />
+        <entry key="..\:/iInspector/app/src/main/res/drawable/tanggal_icon.xml" value="0.37864583333333335" />
         <entry key="..\:/iInspector/app/src/main/res/drawable/team_icon.xml" value="0.403125" />
         <entry key="..\:/iInspector/app/src/main/res/layout-land/activity_inspeksi_awal.xml" value="0.5" />
         <entry key="..\:/iInspector/app/src/main/res/layout-land/activity_inspeksi_kedua.xml" value="0.33" />
@@ -46,6 +48,7 @@
         <entry key="..\:/iInspector/app/src/main/res/layout-land/fragment_loogsheet.xml" value="0.33" />
         <entry key="..\:/iInspector/app/src/main/res/layout-land/fragment_slideshow.xml" value="0.55625" />
         <entry key="..\:/iInspector/app/src/main/res/layout-land/item.xml" value="0.4244791666666667" />
+        <entry key="..\:/iInspector/app/src/main/res/layout-land/item_Induction.xml" value="0.4739583333333333" />
         <entry key="..\:/iInspector/app/src/main/res/layout-land/item_laporan.xml" value="0.33" />
         <entry key="..\:/iInspector/app/src/main/res/layout-land/item_laporandone.xml" value="0.33" />
         <entry key="..\:/iInspector/app/src/main/res/layout-land/item_laporantest.xml" value="0.4244791666666667" />
@@ -62,6 +65,8 @@
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_inspeksi_ketiga.xml" value="0.5" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_inspeksi_selesai.xml" value="0.36666666666666664" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_isi_tugas.xml" value="0.33" />
+        <entry key="..\:/iInspector/app/src/main/res/layout/activity_list_induction.xml" value="0.3625" />
+        <entry key="..\:/iInspector/app/src/main/res/layout/activity_list_toolbox.xml" value="0.3484375" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_login.xml" value="0.35260416666666666" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_side.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/activity_splash.xml" value="0.33" />
@@ -79,11 +84,14 @@
         <entry key="..\:/iInspector/app/src/main/res/layout/fragment_tab_inspeksi.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/hasilfoto.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/ids.xml" value="0.20416666666666666" />
+        <entry key="..\:/iInspector/app/src/main/res/layout/item_Induction.xml" value="0.3625" />
         <entry key="..\:/iInspector/app/src/main/res/layout/item_card.xml" value="0.36666666666666664" />
+        <entry key="..\:/iInspector/app/src/main/res/layout/item_induction.xml" value="0.3625" />
         <entry key="..\:/iInspector/app/src/main/res/layout/item_laporan.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/item_laporandone.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/item_laporatugas.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/item_question.xml" value="0.36666666666666664" />
+        <entry key="..\:/iInspector/app/src/main/res/layout/item_toolbox.xml" value="0.3625" />
         <entry key="..\:/iInspector/app/src/main/res/layout/nav_header_main.xml" value="0.38697916666666665" />
         <entry key="..\:/iInspector/app/src/main/res/layout/spinner_list.xml" value="0.36666666666666664" />
         <entry key="..\:/iInspector/app/src/main/res/layout/tindakan.xml" value="0.36666666666666664" />

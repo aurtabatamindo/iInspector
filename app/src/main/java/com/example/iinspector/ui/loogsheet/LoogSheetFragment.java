@@ -18,6 +18,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.iinspector.Induction;
 import com.example.iinspector.InspeksiHasil;
+import com.example.iinspector.ListInduction;
+import com.example.iinspector.ListToolbox;
 import com.example.iinspector.R;
 import com.example.iinspector.Toolbox;
 import com.example.iinspector.Training;
@@ -54,7 +56,7 @@ public class LoogSheetFragment extends Fragment {
         induction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), Induction.class);
+                Intent intent = new Intent(getActivity(), ListInduction.class);
                 startActivity(intent);
             }
         });
@@ -62,7 +64,7 @@ public class LoogSheetFragment extends Fragment {
         toolbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), Toolbox.class);
+                Intent intent = new Intent(getActivity(), ListToolbox.class);
                 startActivity(intent);
             }
         });

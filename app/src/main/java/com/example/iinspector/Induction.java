@@ -50,6 +50,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Induction extends AppCompatActivity {
@@ -74,6 +75,8 @@ public class Induction extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_induction);
+
+
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -299,7 +302,7 @@ public class Induction extends AppCompatActivity {
                                 UploadPhotoToCloudStore(photoBitmap);
 
                                 progress.show();
-
+                                String dateNow = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
                                 Map<String, Object> isiInduction = new HashMap<>();
                                 isiInduction.put("nama",getNama);
                                 isiInduction.put("prusahaan",getPerusahaan);
@@ -307,6 +310,7 @@ public class Induction extends AppCompatActivity {
                                 isiInduction.put("jumlahPeserta",getjumlah);
                                 isiInduction.put("timeDate", FieldValue.serverTimestamp());
                                 isiInduction.put("foto",sPhoto);
+                                isiInduction.put("filterBulan",dateNow);
 
                                 //firestore
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -360,13 +364,13 @@ public class Induction extends AppCompatActivity {
                 imageView.setImageURI(contentUri);
                 Log.d("testPhoto", imageFileName.toString());
 
-                alertDialogBuilder.setPositiveButton("Selesi",
+                alertDialogBuilder.setPositiveButton("Selesai",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 uploadImageToFirebase(imageFileName, contentUri);
                                 progress.show();
-
+                                String dateNow = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
                                 Map<String, Object> isiInduction = new HashMap<>();
                                 isiInduction.put("nama",getNama);
                                 isiInduction.put("prusahaan",getPerusahaan);
@@ -374,6 +378,7 @@ public class Induction extends AppCompatActivity {
                                 isiInduction.put("jumlahPeserta",getjumlah);
                                 isiInduction.put("timeDate", FieldValue.serverTimestamp());
                                 isiInduction.put("foto",txtfoto);
+                                isiInduction.put("filterBulan",dateNow);
 
                                 //firestore
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
