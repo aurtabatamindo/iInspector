@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.iinspector" >
+    package="com.example.iinspector">
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -20,7 +20,10 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.IInspector"
-        tools:replace="android:icon,android:theme" >
+        tools:replace="android:icon,android:theme">
+        <activity
+            android:name=".ListTraining"
+            android:exported="false" />
         <activity
             android:name=".ListToolbox"
             android:exported="false" />
@@ -53,7 +56,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".test"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -89,7 +92,7 @@
             android:theme="@style/Theme.IInspector.NoActionBar" />
         <activity
             android:name=".Splash"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -105,7 +108,7 @@
         <service
             android:name=".SendNotificationPack.MyFireBaseMessagingService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -113,7 +116,7 @@
         <service
             android:name=".SendNotificationPack.MyFirebaseIdService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

@@ -20,6 +20,7 @@ import com.example.iinspector.Induction;
 import com.example.iinspector.InspeksiHasil;
 import com.example.iinspector.ListInduction;
 import com.example.iinspector.ListToolbox;
+import com.example.iinspector.ListTraining;
 import com.example.iinspector.R;
 import com.example.iinspector.Toolbox;
 import com.example.iinspector.Training;
@@ -72,7 +73,7 @@ public class LoogSheetFragment extends Fragment {
         training.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), Training.class);
+                Intent intent = new Intent(getActivity(), ListTraining.class);
                 startActivity(intent);
             }
         });

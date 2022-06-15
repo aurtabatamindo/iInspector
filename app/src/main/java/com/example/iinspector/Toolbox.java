@@ -18,7 +18,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Toolbox extends AppCompatActivity {
@@ -99,6 +102,7 @@ public class Toolbox extends AppCompatActivity {
 
                 }else {
                     progress.show();
+                    String dateNow = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
                     Map<String, Object> isiToolbox = new HashMap<>();
                     isiToolbox.put("lokasi",getLokasi);
                     isiToolbox.put("topik",getTopik);
@@ -108,6 +112,7 @@ public class Toolbox extends AppCompatActivity {
                     isiToolbox.put("targetWaktu",getTarget);
                     isiToolbox.put("status",getStatus);
                     isiToolbox.put("timeDate", FieldValue.serverTimestamp());
+                    isiToolbox.put("filterBulan",dateNow);
 
                     //firestore
                     FirebaseFirestore db = FirebaseFirestore.getInstance();

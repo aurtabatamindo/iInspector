@@ -27,9 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class ListToolbox extends AppCompatActivity {
+public class ListTraining extends AppCompatActivity {
     RecyclerView recyclerView;
-    FirestoreRecyclerAdapter<GetDataToolBox, ListToolboxHolder> adapterCardInduction;
+    FirestoreRecyclerAdapter<GetDataTraining, ListTrainingHolder> adapterCardInduction;
     String documentClickId;
     FloatingActionButton tambahInduction;
     TextView tgl;
@@ -38,14 +38,14 @@ public class ListToolbox extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_toolbox);
+        setContentView(R.layout.activity_list_training);
 
         tambahInduction = findViewById(R.id.tambahInduction);
         tambahInduction.setBackgroundColor(Color.WHITE);
         tambahInduction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent tambah = new Intent(ListToolbox.this, Toolbox.class);
+                Intent tambah = new Intent(ListTraining.this, Training.class);
                 startActivity(tambah);
             }
         });
@@ -66,27 +66,24 @@ public class ListToolbox extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         Query query = FirebaseFirestore.getInstance()
-                .collection("toolBox")
+                .collection("training")
 //                .orderBy("timeDate",Query.Direction.DESCENDING)
                 .whereEqualTo("filterBulan",tgl.getText());
 
-        FirestoreRecyclerOptions<GetDataToolBox> options = new FirestoreRecyclerOptions.Builder<GetDataToolBox>()
-                .setQuery(query, GetDataToolBox.class)
+        FirestoreRecyclerOptions<GetDataTraining> options = new FirestoreRecyclerOptions.Builder<GetDataTraining>()
+                .setQuery(query, GetDataTraining.class)
                 .build();
 
-        adapterCardInduction = new FirestoreRecyclerAdapter<GetDataToolBox, ListToolboxHolder>(options) {
+        adapterCardInduction = new FirestoreRecyclerAdapter<GetDataTraining, ListTrainingHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull ListToolboxHolder holder, int position, @NonNull GetDataToolBox getDataToolBox) {
-                holder.setLokasi((getDataToolBox.getLokasi()));
-                holder.setInput(getDataToolBox.getInput());
-                holder.setKehadiran("Jumlah Peserta  : "+ getDataToolBox.getKehadiran()+" Orang");
-                holder.setStatus(getDataToolBox.getStatus());
-                holder.setTimedate(getDataToolBox.getTimeDate());
-                holder.setTopik(getDataToolBox.getTopik());
-                holder.setTanggapan(getDataToolBox.getTanggapan());
-                holder.setTargetWaktu(getDataToolBox.getTargetWaktu());
+            protected void onBindViewHolder(@NonNull ListTrainingHolder holder, int position, @NonNull GetDataTraining getDataTraining) {
+                holder.setLokasi((getDataTraining.getLokasi()));
+                holder.setTrainer(getDataTraining.getTrainer());
+                holder.setKehadiran("Jumlah Peserta  : "+ getDataTraining.getKehadiran()+" Orang");
+                holder.setDeskripsi(getDataTraining.getDeskripsi());
+                holder.setTimedate(getDataTraining.getTimeDate());
 
-                holder.setOnClickListener(new ListToolboxHolder.ClickListener() {
+                holder.setOnClickListener(new ListTrainingHolder.ClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         documentClickId = getSnapshots().getSnapshot(position).getId();
@@ -104,19 +101,19 @@ public class ListToolbox extends AppCompatActivity {
 
             @NonNull
             @Override
-            public ListToolboxHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_toolbox, parent, false);
-                return new ListToolboxHolder(view);
+            public ListTrainingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_training, parent, false);
+                return new ListTrainingHolder(view);
             }
         };
         adapterCardInduction.startListening();
         recyclerView.setAdapter(adapterCardInduction);
 
-    }
 
+    }
     private void monthYear() {
         final Calendar today = Calendar.getInstance();
-        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(ListToolbox.this,
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(ListTraining.this,
                 new MonthPickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) {
@@ -124,27 +121,24 @@ public class ListToolbox extends AppCompatActivity {
                         tgl.setText((selectedMonth +1)+ "/" +selectedYear);
 
                         Query query = FirebaseFirestore.getInstance()
-                                .collection("toolBox")
+                                .collection("training")
 //                .orderBy("timeDate",Query.Direction.DESCENDING)
                                 .whereEqualTo("filterBulan",tgl.getText());
 
-                        FirestoreRecyclerOptions<GetDataToolBox> options = new FirestoreRecyclerOptions.Builder<GetDataToolBox>()
-                                .setQuery(query, GetDataToolBox.class)
+                        FirestoreRecyclerOptions<GetDataTraining> options = new FirestoreRecyclerOptions.Builder<GetDataTraining>()
+                                .setQuery(query, GetDataTraining.class)
                                 .build();
 
-                        adapterCardInduction = new FirestoreRecyclerAdapter<GetDataToolBox, ListToolboxHolder>(options) {
+                        adapterCardInduction = new FirestoreRecyclerAdapter<GetDataTraining, ListTrainingHolder>(options) {
                             @Override
-                            protected void onBindViewHolder(@NonNull ListToolboxHolder holder, int position, @NonNull GetDataToolBox getDataToolBox) {
-                                holder.setLokasi((getDataToolBox.getLokasi()));
-                                holder.setInput(getDataToolBox.getInput());
-                                holder.setKehadiran("Jumlah Peserta  : "+ getDataToolBox.getKehadiran()+" Orang");
-                                holder.setStatus(getDataToolBox.getStatus());
-                                holder.setTimedate(getDataToolBox.getTimeDate());
-                                holder.setTopik(getDataToolBox.getTopik());
-                                holder.setTanggapan(getDataToolBox.getTanggapan());
-                                holder.setTargetWaktu(getDataToolBox.getTargetWaktu());
+                            protected void onBindViewHolder(@NonNull ListTrainingHolder holder, int position, @NonNull GetDataTraining getDataTraining) {
+                                holder.setLokasi((getDataTraining.getLokasi()));
+                                holder.setTrainer(getDataTraining.getTrainer());
+                                holder.setKehadiran("Jumlah Peserta  : "+ getDataTraining.getKehadiran()+" Orang");
+                                holder.setDeskripsi(getDataTraining.getDeskripsi());
+                                holder.setTimedate(getDataTraining.getTimeDate());
 
-                                holder.setOnClickListener(new ListToolboxHolder.ClickListener() {
+                                holder.setOnClickListener(new ListTrainingHolder.ClickListener() {
                                     @Override
                                     public void onItemClick(View view, int position) {
                                         documentClickId = getSnapshots().getSnapshot(position).getId();
@@ -162,9 +156,9 @@ public class ListToolbox extends AppCompatActivity {
 
                             @NonNull
                             @Override
-                            public ListToolboxHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_toolbox, parent, false);
-                                return new ListToolboxHolder(view);
+                            public ListTrainingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_training, parent, false);
+                                return new ListTrainingHolder(view);
                             }
                         };
                         adapterCardInduction.startListening();

@@ -17,7 +17,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Training extends AppCompatActivity {
@@ -75,13 +78,14 @@ public class Training extends AppCompatActivity {
 
                 }else {
                     progress.show();
-
+                    String dateNow = new SimpleDateFormat("M/yyyy", Locale.getDefault()).format(new Date());
                     Map<String, Object> isiTraining = new HashMap<>();
                     isiTraining.put("lokasi",getLokasi);
                     isiTraining.put("trainer",getTrainer);
                     isiTraining.put("deskripsi",getDeskripsi);
                     isiTraining.put("kehadiran",getkehadiran);
                     isiTraining.put("timeDate", FieldValue.serverTimestamp());
+                    isiTraining.put("filterBulan",dateNow);
 
                     //firestore
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
