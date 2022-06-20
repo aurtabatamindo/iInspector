@@ -81,6 +81,7 @@ public class InspeksiAwal extends AppCompatActivity {
 
     Button kemali, lanjutkan;
     TextView tambah1, tambah2, tambah3, foto1, foto2, foto3, atindakan1, atindakan2, atindakan3, tglview, lokasi ,alamat,titleInspegsi;
+    EditText alamatEdit;
 
     //getlocation plus adress
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -137,6 +138,9 @@ public class InspeksiAwal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_awal);
 
+        //alamatedit
+        alamatEdit = findViewById(R.id.alamatEdit);
+
         //loading
         progress = new ProgressDialog(this);
         progress.setTitle("Loading");
@@ -158,7 +162,6 @@ public class InspeksiAwal extends AppCompatActivity {
 
         //gps
         resultReceiver = new AddressResultReceiver(new Handler());
-
 
         //tgl & jam
         String tgl = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -228,6 +231,7 @@ public class InspeksiAwal extends AppCompatActivity {
         lanjutkan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    String alamat_Edit = alamatEdit.getText().toString();
                     String lok = lokasi.getText().toString().trim();
 //                    String spinertim = spinner.getSelectedItem().toString().trim();
                     String spinertim = spinner.getText().toString();
@@ -242,8 +246,9 @@ public class InspeksiAwal extends AppCompatActivity {
                     else if (lok.isEmpty()) {
                               Snackbar.make(findViewById(R.id.inspeksiawal),"Lokasi Tidak Boleh Kosong",Snackbar.LENGTH_LONG).show();
                     }
-                    else if (spinertim.equals(pilih)){
-                             Snackbar.make(findViewById(R.id.inspeksiawal),"Harap pilih team inspeksi",Snackbar.LENGTH_LONG).show();
+                    else if (alamat_Edit.isEmpty()){
+                             alamatEdit.setError("Tidak boleh kosong !");
+                             Snackbar.make(findViewById(R.id.inspeksiawal),"Alamat Tidak Boleh Kosong",Snackbar.LENGTH_LONG).show();
                     }
                     else{
 
@@ -255,7 +260,9 @@ public class InspeksiAwal extends AppCompatActivity {
                                         "templateTemperature",suhu,
                                         "templateDate",itgl,
                                         "templateMonth",month,
-                                        "templateAddress",alamt)
+                                        "templateAddress",alamt,
+                                        "templateSecondAddress",alamatEdit.getText().toString())
+
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
