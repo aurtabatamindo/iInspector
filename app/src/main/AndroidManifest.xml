@@ -22,6 +22,9 @@
         android:theme="@style/Theme.IInspector"
         tools:replace="android:icon,android:theme">
         <activity
+            android:name=".PickFoto"
+            android:exported="false" />
+        <activity
             android:name=".ListTraining"
             android:exported="false" />
         <activity

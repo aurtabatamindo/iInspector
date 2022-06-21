@@ -21,6 +21,7 @@ import com.example.iinspector.InspeksiHasil;
 import com.example.iinspector.ListInduction;
 import com.example.iinspector.ListToolbox;
 import com.example.iinspector.ListTraining;
+import com.example.iinspector.PickFoto;
 import com.example.iinspector.R;
 import com.example.iinspector.Toolbox;
 import com.example.iinspector.Training;
@@ -57,7 +58,7 @@ public class LoogSheetFragment extends Fragment {
         induction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ListInduction.class);
+                Intent intent = new Intent(getActivity(), PickFoto.class);
                 startActivity(intent);
             }
         });
