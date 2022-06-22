@@ -10,6 +10,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -21,6 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,6 +37,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Gravity;
@@ -270,12 +273,21 @@ public class InspeksiKetiga extends AppCompatActivity {
     FrameLayout frame;
     ScrollView scrollView;
 
+    //multipleImage
+    private static final int IMAGE_CODE = 1;
+    private StorageReference mStorageReference;
+    List<ModalClass> modalClassList;
+    CustomAdapter customAdapter;
+
     private int waktu_loading = 6000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspeksi_ketiga);
 
+        //multiple
+        modalClassList = new ArrayList<>();
+        mStorageReference = FirebaseStorage.getInstance().getReference().child("Photo");
         storageReference = FirebaseStorage.getInstance().getReference();
 
 //        frame = findViewById(R.id.textView4);
@@ -1893,8 +1905,11 @@ public class InspeksiKetiga extends AppCompatActivity {
         if (checkSelfPermission( Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions( new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_FROM_GALLERY);
         } else {
-            Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+            startActivityForResult(intent,IMAGE_CODE);
 
         }
     }
@@ -2093,8 +2108,102 @@ public class InspeksiKetiga extends AppCompatActivity {
             alertDialogBuilder.show();
         }
 
-        if (requestCode == GALLERY_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == IMAGE_CODE && resultCode == RESULT_OK) {
+
+            if (data.getClipData() != null) {
+
+                // Show pop up window
+                LayoutInflater layoutInflater = LayoutInflater.from(InspeksiKetiga.this);
+                View promptView = layoutInflater.inflate(R.layout.recyclerviewimage, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InspeksiKetiga.this);
+                alertDialogBuilder.setTitle("Foto");
+                alertDialogBuilder.setView(promptView);
+                RecyclerView recyclerView = (RecyclerView) promptView.findViewById(R.id.recyclerImage);
+                recyclerView.removeAllViews();
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                modalClassList.clear();
+
+                ArrayList listImage = new ArrayList<>();
+
+                int totalitem = data.getClipData().getItemCount();
+                for (int i = 0; i < totalitem; i++) {
+                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                    String imagename = getFileName(imageUri);
+                    ModalClass modalClass = new ModalClass(imagename, imageUri);
+
+                    modalClassList.add(modalClass);
+
+                    customAdapter = new CustomAdapter(InspeksiKetiga.this, modalClassList);
+                    recyclerView.setAdapter(customAdapter);
+
+                    StorageReference mRef = mStorageReference.child(imagename);
+                    mRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            Toast.makeText(Induction.this, "Done", Toast.LENGTH_SHORT).show();
+                            listImage.add(imagename);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(InspeksiKetiga.this, "Fail" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+                }
+                alertDialogBuilder.setPositiveButton("Selesai",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (inSection == "ambilfotoSection") {
+                                    pages.document(documentId)
+                                            .collection("pages")
+                                            .document(idPages)
+                                            .collection("contents")
+                                            .document(parentSection)
+                                            .collection("contents")
+                                            .document(idDesclick)
+                                            .update("photo", listImage).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
+                                            inSection = "";
+                                        }
+                                    });
+
+                                } else {
+                                    pages.document(documentId)
+                                            .collection("pages")
+                                            .document(idPages)
+                                            .collection("contents")
+                                            .document(idDesclick)
+                                            .update("photo", listImage).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(InspeksiKetiga.this, "Berhasil Menambahkan Foto", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+
+
+                            }
+
+                        });
+
+                alertDialogBuilder.setNegativeButton("Batal",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                dialog.cancel();
+                            }
+                        });
+
+                alertDialogBuilder.show();
+
+//                Toast.makeText(this, "Multiple", Toast.LENGTH_SHORT).show();
+            } else if (data.getData() != null) {
+
                 Uri contentUri = data.getData();
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
@@ -2258,5 +2367,27 @@ public class InspeksiKetiga extends AppCompatActivity {
         inSection = "";
         statusTindakan = "";
         super.onBackPressed();
+    }
+
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 }

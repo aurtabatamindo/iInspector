@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingTop="10dp"
         android:weightSum="10"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,18 +16,25 @@
         
         <ImageView
             android:id="@+id/upload_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
             android:layout_marginStart="40dp"
-            android:background="@drawable/photo_icon"/>
+            android:layout_marginEnd="40dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/photo_icon"
+            android:scaleType="fitXY"
+            />
 
         <TextView
+            android:visibility="invisible"
             android:id="@+id/file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:text="FileName"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
