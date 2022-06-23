@@ -53,7 +53,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/tanggal_icon"
+        android:background="@drawable/filtertanggal_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

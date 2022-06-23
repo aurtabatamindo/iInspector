@@ -87,11 +87,15 @@ public class Login extends AppCompatActivity implements PermissionCallback , Err
                 String username = user.getText().toString().trim();
                 String password = pas.getText().toString().trim();
                 if (username.isEmpty()&& password.isEmpty()) {
-                   Snackbar.make(findViewById(R.id.login),"Username & Password tidak boleh kosong", Snackbar.LENGTH_LONG).show();
+//                   Snackbar.make(findViewById(R.id.login),"Username & Password tidak boleh kosong", Snackbar.LENGTH_LONG).show();
+                   user.setError("Tidak boleh kosong !");
+                   pas.setError("Tidak boleh kosong !");
                 } else if (username.isEmpty()) {
-                    Snackbar.make(findViewById(R.id.login),"Username tidak boleh kosong", Snackbar.LENGTH_LONG).show();
+//                    Snackbar.make(findViewById(R.id.login),"Username tidak boleh kosong", Snackbar.LENGTH_LONG).show();
+                    user.setError("Tidak boleh kosong !");
                 } else if (password.isEmpty()) {
-                    Snackbar.make(findViewById(R.id.login),"Password tidak boleh kosong", Snackbar.LENGTH_LONG).show();
+//                    Snackbar.make(findViewById(R.id.login),"Password tidak boleh kosong", Snackbar.LENGTH_LONG).show();
+                    pas.setError("Tidak boleh kosong !");
                 } else if (!(username.isEmpty() && password.isEmpty())) {
                     showProgress();
                     progress.show();
