@@ -28,16 +28,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -53,6 +57,8 @@ public class HomeFragment extends Fragment {
     Integer allInspeksi;
     Integer allAman;
     Integer allTidakAman;
+
+    ArrayList<String> ArrayStatus = new ArrayList<String>();
 
     //firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -93,51 +99,66 @@ public class HomeFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                allInspeksi = task.getResult().size();
-                tvR.setText(String.valueOf(allInspeksi));
-                pieChart.addPieSlice(
-                        new PieModel(
-                                "R",
-                                Integer.parseInt(tvR.getText().toString()),
-                                Color.parseColor("#29B6F6")));
+//                ArrayStatus.clear();
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        String status = (String) document.get("status");
+                        if (status != null){
+                            ArrayStatus.add(status);
+                            Log.d("isistatus",String.valueOf(ArrayStatus.size()));
 
-                int jAkhir = task.getResult().size();
+                            allInspeksi = ArrayStatus.size();
+                            tvR.setText(String.valueOf(allInspeksi));
+                            Log.d("jumlahinspeksi",tvR.getText().toString());
+                            pieChart.addPieSlice(
+                                    new PieModel(
+                                            "R",
+                                            Integer.parseInt(tvR.getText().toString()),
+                                            Color.parseColor("#29B6F6")));
 
-                int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
-                String kurang = bulanKurang +"/"+ month.substring(2,6);
-                Log.d("limitstring",kurang);
+                            int jAkhir = ArrayStatus.size();
 
-                df.whereEqualTo("templateMonth",kurang)
-                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int jAwal = task.getResult().size();
-                        int jkurang = jAkhir - jAwal;
-                        int jkurangAwal = jkurang - jAwal;
-                        int jumlah = jkurangAwal * 100;
+                            int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                            String kurang = bulanKurang +"/"+ month.substring(2,6);
+                            Log.d("limitstring",kurang);
 
-                        if (jumlah < 0) {
-                            persenAll.setText(jumlah + "%" + " Turun 30 hari terakhir");
-                            persenAll.setTextColor(Color.LTGRAY);
-                            allnaik.setVisibility(View.INVISIBLE);
-                            allturun.setVisibility(View.VISIBLE);
+                            df.whereEqualTo("templateMonth",kurang)
+                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    float jAwal = task.getResult().size();
+                                    float jkurang = jAkhir - jAwal;
+                                    float jkurangAwal = jkurang / jAwal;
+                                    float jumlah = jkurangAwal  * 100;
+                                    String jbulat = String.format("%.0f",jumlah);
 
-                        }else if (jumlah == 0){
-                            persenAll.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
-                            persenAll.setTextColor(Color.LTGRAY);
-                            allnaik.setVisibility(View.VISIBLE);
-                            allturun.setVisibility(View.VISIBLE);
-                        }else{
-                            persenAll.setText(jumlah + "%" + " Naik 30 hari terakhir");
-                            persenAll.setTextColor(Color.LTGRAY);
-                            allnaik.setVisibility(View.VISIBLE);
-                            allturun.setVisibility(View.INVISIBLE);
+                                    if (jumlah < 0) {
+                                        persenAll.setText( jbulat + "%" + " Turun 30 hari terakhir");
+                                        persenAll.setTextColor(Color.LTGRAY);
+                                        allnaik.setVisibility(View.INVISIBLE);
+                                        allturun.setVisibility(View.VISIBLE);
+
+                                    }else if (jumlah == 0){
+                                        persenAll.setText( jbulat + "%" +" Tidak ada data 30 hari terakhir");
+                                        persenAll.setTextColor(Color.LTGRAY);
+                                        allnaik.setVisibility(View.VISIBLE);
+                                        allturun.setVisibility(View.VISIBLE);
+                                    }else{
+                                        persenAll.setText( jbulat + "%" + " Naik 30 hari terakhir");
+                                        persenAll.setTextColor(Color.LTGRAY);
+                                        allnaik.setVisibility(View.VISIBLE);
+                                        allturun.setVisibility(View.INVISIBLE);
+                                    }
+
+                                    Log.d("getjumlah",String.valueOf(jumlah));
+
+                                }
+                            });
                         }
 
-                        Log.d("getjumlah",String.valueOf(jumlah));
-
                     }
-                });
+                }
+
             }
         });
 
@@ -168,24 +189,25 @@ public class HomeFragment extends Fragment {
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int jAwal = task.getResult().size();
-                        int jkurang = jAkhir - jAwal;
-                        int jkurangAwal = jkurang - jAwal;
-                        int jumlah = jkurangAwal * 100;
+                        float jAwal = task.getResult().size();
+                        float jkurang = jAkhir - jAwal;
+                        float jkurangAwal = jkurang / jAwal;
+                        float jumlah = jkurangAwal * 100;
+                        String jbulat = String.format("%.0f",jumlah);
 
                         if (jumlah < 0) {
-                            persenAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                            persenAman.setText(jbulat + "%" + " Turun 30 hari terakhir");
                             persenAman.setTextColor(Color.LTGRAY);
                             amanNaik.setVisibility(View.INVISIBLE);
                             amanTurun.setVisibility(View.VISIBLE);
 
                         }else if (jumlah == 0){
-                            persenAman.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                            persenAman.setText(jbulat + "%" +" Tidak ada data 30 hari terakhir");
                             persenAman.setTextColor(Color.LTGRAY);
                             amanNaik.setVisibility(View.VISIBLE);
                             amanTurun.setVisibility(View.VISIBLE);
                         }else{
-                            persenAman.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                            persenAman.setText(jbulat + "%" + " Naik 30 hari terakhir");
                             persenAman.setTextColor(Color.LTGRAY);
                             amanNaik.setVisibility(View.VISIBLE);
                             amanTurun.setVisibility(View.INVISIBLE);
@@ -224,24 +246,25 @@ public class HomeFragment extends Fragment {
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int jAwal = task.getResult().size();
-                        int jkurang = jAkhir - jAwal;
-                        int jkurangAwal = jkurang - jAwal;
-                        int jumlah = jkurangAwal * 100;
+                        float jAwal = task.getResult().size();
+                        float jkurang = jAkhir - jAwal;
+                        float jkurangAwal = jkurang / jAwal;
+                        float jumlah = jkurangAwal * 100;
+                        String jbulat = String.format("%.0f",jumlah);
 
                         if (jumlah < 0) {
-                            persenTidakAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                            persenTidakAman.setText(jbulat + "%" + " Turun 30 hari terakhir");
                             persenTidakAman.setTextColor(Color.LTGRAY);
                             tidakamanNaik.setVisibility(View.INVISIBLE);
                             tidakamanTurun.setVisibility(View.VISIBLE);
 
                         }else if (jumlah == 0){
-                            persenTidakAman.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                            persenTidakAman.setText(jbulat + "%" +" Tidak ada data 30 hari terakhir");
                             persenTidakAman.setTextColor(Color.LTGRAY);
                             tidakamanNaik.setVisibility(View.VISIBLE);
                             tidakamanTurun.setVisibility(View.VISIBLE);
                         }else{
-                            persenTidakAman.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                            persenTidakAman.setText(jbulat + "%" + " Naik 30 hari terakhir");
                             persenTidakAman.setTextColor(Color.LTGRAY);
                             tidakamanNaik.setVisibility(View.VISIBLE);
                             tidakamanTurun.setVisibility(View.INVISIBLE);
@@ -303,6 +326,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) {
                         pieChart.clearChart();
+                        ArrayStatus.clear();
                         // on date set
                         tgl.setText((selectedMonth +1)+ "/" +selectedYear);
 
@@ -314,50 +338,69 @@ public class HomeFragment extends Fragment {
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        allInspeksi = task.getResult().size();
-                                        tvR.setText(String.valueOf(allInspeksi));
 
-                                        pieChart.addPieSlice(
-                                                new PieModel(
-                                                        "R",
-                                                        Integer.parseInt(tvR.getText().toString()),
-                                                        Color.parseColor("#29B6F6")));
+                                        if (task.isSuccessful()) {
+                                                Log.d("checkcheck","null");
+                                                ArrayStatus.clear();
+                                                int nol = 0;
+                                                tvR.setText(String.valueOf(nol));
 
-                                        int jAkhir = task.getResult().size();
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                String status = (String) document.get("status");
+                                                if (status != null){
+                                                    ArrayStatus.add(status);
+                                                    Log.d("isistatus",String.valueOf(ArrayStatus.size()));
 
-                                        int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
-                                        String kurang = bulanKurang +"/"+ month.substring(2,6);
-                                        Log.d("limitstring",kurang);
+                                                    allInspeksi = ArrayStatus.size();
+                                                    tvR.setText(String.valueOf(allInspeksi));
+                                                    Log.d("jumlahinspeksi",tvR.getText().toString());
+                                                    pieChart.addPieSlice(
+                                                            new PieModel(
+                                                                    "R",
+                                                                    Integer.parseInt(tvR.getText().toString()),
+                                                                    Color.parseColor("#29B6F6")));
 
-                                        df.whereEqualTo("templateMonth",kurang)
-                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                int jAwal = task.getResult().size();
-                                                int jkurang = jAkhir - jAwal;
-                                                int jkurangAwal = jkurang - jAwal;
-                                                int jumlah = jkurangAwal * 100;
+                                                    int jAkhir = ArrayStatus.size();
 
-                                                if (jumlah < 0) {
-                                                    persenAll.setText(jumlah + "%" + " Turun 30 hari terakhir");
-                                                    persenAll.setTextColor(Color.LTGRAY);
-                                                    allnaik.setVisibility(View.INVISIBLE);
-                                                    allturun.setVisibility(View.VISIBLE);
+                                                    int bulanKurang = Integer.parseInt(month.substring(0,1)) -1;
+                                                    String kurang = bulanKurang +"/"+ month.substring(2,6);
+                                                    Log.d("limitstring",kurang);
 
-                                                }else if (jumlah == 0){
-                                                    persenAll.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
-                                                    persenAll.setTextColor(Color.LTGRAY);
-                                                    allnaik.setVisibility(View.VISIBLE);
-                                                    allturun.setVisibility(View.VISIBLE);
-                                                }else{
-                                                    persenAll.setText(jumlah + "%" + " Naik 30 hari terakhir");
-                                                    persenAll.setTextColor(Color.LTGRAY);
-                                                    allnaik.setVisibility(View.VISIBLE);
-                                                    allturun.setVisibility(View.INVISIBLE);
+                                                    df.whereEqualTo("templateMonth",kurang)
+                                                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            float jAwal = task.getResult().size();
+                                                            float jkurang = jAkhir - jAwal;
+                                                            float jkurangAwal = jkurang / jAwal;
+                                                            float jumlah = jkurangAwal * 100;
+
+                                                            if (jumlah < 0) {
+                                                                persenAll.setText(jumlah + "%" + " Turun 30 hari terakhir");
+                                                                persenAll.setTextColor(Color.LTGRAY);
+                                                                allnaik.setVisibility(View.INVISIBLE);
+                                                                allturun.setVisibility(View.VISIBLE);
+
+                                                            }else if (jumlah == 0){
+                                                                persenAll.setText(jumlah + "%" +" Tidak ada data 30 hari terakhir");
+                                                                persenAll.setTextColor(Color.LTGRAY);
+                                                                allnaik.setVisibility(View.VISIBLE);
+                                                                allturun.setVisibility(View.VISIBLE);
+                                                            }else{
+                                                                persenAll.setText(jumlah + "%" + " Naik 30 hari terakhir");
+                                                                persenAll.setTextColor(Color.LTGRAY);
+                                                                allnaik.setVisibility(View.VISIBLE);
+                                                                allturun.setVisibility(View.INVISIBLE);
+                                                            }
+
+                                                            Log.d("getjumlah",String.valueOf(jumlah));
+
+                                                        }
+                                                    });
                                                 }
 
                                             }
-                                        });
+                                        }
 
                                     }
                                 });
@@ -389,10 +432,10 @@ public class HomeFragment extends Fragment {
                                                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                int jAwal = task.getResult().size();
-                                                int jkurang = jAkhir - jAwal;
-                                                int jkurangAwal = jkurang - jAwal;
-                                                int jumlah = jkurangAwal * 100;
+                                                float jAwal = task.getResult().size();
+                                                float jkurang = jAkhir - jAwal;
+                                                float jkurangAwal = jkurang / jAwal;
+                                                float jumlah = jkurangAwal * 100;
 
                                                 if (jumlah < 0) {
                                                     persenAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
@@ -445,10 +488,10 @@ public class HomeFragment extends Fragment {
                                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        int jAwal = task.getResult().size();
-                                        int jkurang = jAkhir - jAwal;
-                                        int jkurangAwal = jkurang - jAwal;
-                                        int jumlah = jkurangAwal * 100;
+                                        float jAwal = task.getResult().size();
+                                        float jkurang = jAkhir - jAwal;
+                                        float jkurangAwal = jkurang / jAwal;
+                                        float jumlah = jkurangAwal * 100;
 
                                         if (jumlah < 0) {
                                             persenTidakAman.setText(jumlah + "%" + " Turun 30 hari terakhir");
